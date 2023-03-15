@@ -1,0 +1,4 @@
+SUPABASE_URL=get_a_url
+SUPABASE_ANON_KEY=get_a_key
+ROOT_URL=http://127.0.0.1
+PORT=8788
