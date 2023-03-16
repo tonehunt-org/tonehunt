@@ -1,22 +1,21 @@
-# Welcome to Remix!
+<img src="https://media.discordapp.net/attachments/1085939013476692068/1086041031570632744/Bildschirmfoto_2023-03-16_um_22.38.48.png?width=2040&height=1318">
 
-- [Remix Docs](https://remix.run/docs)
+More details incoming ...
 
-## Development
+## Tech
 
-You will be utilizing Wrangler for local development to emulate the Cloudflare runtime. This is already wired up in your package.json as the `dev` script:
+- Supabase
+- Prisma
+- Remix
+- Tailwind
+- Cloudeflare
 
-```sh
-# start the remix dev server and wrangler
-npm run dev
-```
+## Local Dev
 
-Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
+You'll need to copy the .dev.vars.example file to a file called .dev.vars. That contains all the env variables to run it locally.
 
-## Deployment
+You'll also need to set up a Supabase project to run it against and run the Prisma migrations to get the db set up.
 
-Cloudflare Pages are currently only deployable through their Git provider integrations.
+It's a bit painful right now, but it will all get easier over the next couple of weeks.
 
-If you don't already have an account, then [create a Cloudflare account here](https://dash.cloudflare.com/sign-up/pages) and after verifying your email address with Cloudflare, go to your dashboard and follow the [Cloudflare Pages deployment guide](https://developers.cloudflare.com/pages/framework-guides/deploy-anything).
-
-Configure the "Build command" should be set to `npm run build`, and the "Build output directory" should be set to `public`.
+Feel free to open PRs!

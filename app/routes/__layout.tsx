@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
+import { Form, Link, Outlet, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import Button from "~/components/ui/Button";
@@ -31,6 +31,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 export default function Layout() {
   const data = useLoaderData<LoaderData>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   return (
     <div>
@@ -46,6 +47,7 @@ export default function Layout() {
             </Button>
           </div>
         ) : null}
+
         <Form method="get" action="/" className="flex-grow text-center px-10">
           <Input
             name="search"

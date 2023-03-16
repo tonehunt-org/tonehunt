@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, useNavigate } from "@remix-run/react";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
 import type { Model } from "~/types/custom";
@@ -9,6 +9,8 @@ type ModelFormProps = {
 };
 
 export default function ModelForm({ model, action }: ModelFormProps) {
+  const navigate = useNavigate();
+
   return (
     <Form
       action={action}
@@ -33,8 +35,11 @@ export default function ModelForm({ model, action }: ModelFormProps) {
       )}
 
       <div>
-        <Button type="submit" className="mt-3 ">
+        <Button type="submit" className="mt-3 mr-3">
           {model ? "Save Model" : "Upload Model"}
+        </Button>
+        <Button variant="secondary" onClick={() => navigate(-1)}>
+          Cancel
         </Button>
       </div>
     </Form>

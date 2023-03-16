@@ -1,4 +1,4 @@
-import { Popover, Menu } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { Form, Link, Links, useLocation } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import Button from "./ui/Button";
@@ -26,19 +26,26 @@ export default function UserActions({ user, username }: UserActionsProps) {
       <Button type="submit" className="mt-3">
         Log in
       </Button>
-      <div className="text-center">
+      <div className="text-center flex items-center justify-center">
         <Button onClick={() => setAction("sign-up")} variant="link">
           Sign Up
         </Button>
+        {/* <Link to="/forgot-password" prefetch="intent">
+          Forgot Password
+        </Link> */}
       </div>
     </Form>
   );
 
   const signUpForm = (
-    <Form method="post" action="/sign-up?redirectTo=..." className="flex flex-col gap-3">
+    <Form
+      method="post"
+      action={`/sign-up?redirectTo=${location.pathname}${location.search}`}
+      className="flex flex-col gap-3"
+    >
       <Input name="email" label="Email" type="email" required />
       <Input name="username" label="Username" required />
-      <Input name="password" label="Password" required />
+      <Input name="password" type="password" label="Password" required />
       <Button type="submit" className="mt-3">
         Sign Up
       </Button>
@@ -60,6 +67,11 @@ export default function UserActions({ user, username }: UserActionsProps) {
           as="ul"
           className="list-none m-0 absolute right-0 mt-2 z-10 bg-zinc-900 border-2 border-white rounded-lg p-5 w-72 shadow-lg flex flex-col gap-3"
         >
+          <li>
+            <Link to="/change-password" prefetch="intent">
+              Change Password
+            </Link>
+          </li>
           <li>
             <Form method="post" action="/logout">
               <Button variant="link">Logout</Button>

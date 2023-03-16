@@ -1,49 +1,68 @@
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { Form, Link, useLoaderData, useLocation, useSearchParams } from "@remix-run/react";
+import { Form, useLoaderData, useLocation, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
-import { ArrowDownTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import * as timeago from "timeago.js";
 import type { Model } from "~/types/custom";
 import Table from "~/components/ui/Table";
 import type { User } from "@supabase/supabase-js";
-import Button from "~/components/ui/Button";
 import ModelEntryActions from "~/components/ModelEntryActions";
 import ButtonLink from "~/components/ui/ButtonLink";
+import Button from "~/components/ui/Button";
 
 type LoaderData = {
   models: Model[] | null;
   user?: User | null;
+  count: number;
+  page: number;
+  hasMore: boolean;
 };
+
+const PAGE_SIZE = 30;
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { supabase, session } = await getSession(request, context);
   const url = new URL(request.url);
   const search = url.searchParams.get("search");
   const userFilter = url.searchParams.get("user");
+  const page = url.searchParams.get("page") ? +(url.searchParams.get("page") ?? 0) : 0;
+  const from = page * PAGE_SIZE;
+  const to = from + PAGE_SIZE;
 
-  let query = supabase.from("models").select(`* , profiles(username)`);
+  let query = supabase.from("models").select(`* , profiles(username)`, { count: "exact" });
 
   if (search) {
     // TODO: need to be able to search more than the title
-    query = query.textSearch("title", search);
+    const searchTerms = search.split(" ").join(" | "); // Searches with 2 words of each other
+    query = query.textSearch("title", searchTerms);
   }
 
   if (userFilter) {
     query = query.eq("profile_id", userFilter);
   }
 
-  const { data } = await query.order("created_at", { ascending: false });
+  const response = await query
+    .order("created_at", { ascending: false })
+    .range(from, to)
+    .limit(PAGE_SIZE);
+
+  const data = response.data;
+  const count = response.count ?? 0;
 
   return json<LoaderData>({
     models: data,
     user: session?.user,
+    count,
+    page,
+    hasMore: count > to,
   });
 };
 export default function Index() {
   const data = useLoaderData<LoaderData>();
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const page = +(searchParams.get("page") ?? 0);
 
   const results = (
     <Table
@@ -115,20 +134,34 @@ export default function Index() {
             <ButtonLink
               to="/"
               prefetch="intent"
-              active={!searchParams.get("user") && location.pathname === "/"}
+              active={
+                !searchParams.get("user") &&
+                location.pathname === "/" &&
+                !searchParams.get("search")
+              }
             >
-              Newest Models
+              Newest
             </ButtonLink>
           </li>
-          <li>
-            <ButtonLink
-              to={`/?user=${data.user?.id}`}
-              prefetch="intent"
-              active={!!searchParams.get("user")}
-            >
-              My Models
-            </ButtonLink>
-          </li>
+
+          {data.user ? (
+            <li>
+              <ButtonLink
+                to={`/?user=${data.user?.id}`}
+                prefetch="intent"
+                active={!!searchParams.get("user")}
+              >
+                Mine
+              </ButtonLink>
+            </li>
+          ) : null}
+          {searchParams.get("search") ? (
+            <li>
+              <ButtonLink to={`/?search=${searchParams.get("search")}`} prefetch="intent" active>
+                Search: {searchParams.get("search")}
+              </ButtonLink>
+            </li>
+          ) : null}
         </ul>
       </nav>
       <div className="flex flex-col max-w-6xl m-auto">
@@ -137,6 +170,26 @@ export default function Index() {
             <div className="overflow-hidden">
               {data.models?.length === 0 ? <>No results</> : results}
             </div>
+
+            {/* move into component */}
+            {data.hasMore || data.page > 0 ? (
+              <div className="flex items-center gap-3 justify-center py-5">
+                {data.page > 0 ? (
+                  <Form method="get" className="flex justify-center">
+                    <Button type="submit" name="page" value={page - 1} variant="secondary">
+                      Previous Page
+                    </Button>
+                  </Form>
+                ) : null}
+                {data.hasMore ? (
+                  <Form method="get" className="flex justify-center">
+                    <Button type="submit" name="page" value={page + 1} variant="secondary">
+                      Next Page
+                    </Button>
+                  </Form>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
