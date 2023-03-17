@@ -1,5 +1,5 @@
-import type { ActionFunction } from "@remix-run/cloudflare";
-import { json, redirect } from "@remix-run/cloudflare";
+import type { ActionFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
@@ -13,7 +13,7 @@ type ActionData = {
 
 // TODO: make this work
 export const action: ActionFunction = async ({ request, context }) => {
-  const { supabase, session } = await getSession(request, context);
+  const { supabase, session } = await getSession(request);
   const formData = await request.formData();
 
   if (!session?.user) {

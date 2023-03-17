@@ -1,12 +1,12 @@
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import type { Database } from "./types/supabase";
 
-export const getSession = async (request: Request, context: any) => {
+export const getSession = async (request: Request) => {
   const response = new Response();
 
   const supabase = createServerClient<Database>(
-    context.SUPABASE_URL as string,
-    context.SUPABASE_ANON_KEY as string,
+    process.env.SUPABASE_URL as string,
+    process.env.SUPABASE_ANON_KEY as string,
     { request, response }
   );
 

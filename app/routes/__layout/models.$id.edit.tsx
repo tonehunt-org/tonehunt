@@ -1,5 +1,5 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/cloudflare";
-import { json, redirect } from "@remix-run/cloudflare";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import ModelForm from "~/components/ModelForm";
@@ -16,7 +16,7 @@ type ActionData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { session, supabase } = await getSession(request);
 
   if (!session?.user) {
     return redirect("/");
@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, context, params }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { session, supabase } = await getSession(request);
   const formData = await request.formData();
 
   const { error } = await supabase

@@ -1,11 +1,10 @@
-import { json, redirect } from "@remix-run/cloudflare";
+import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import { getSession } from "~/auth.server";
-import Button from "~/components/ui/Button";
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { supabase } = await getSession(request);
 
   const dbResponse = await supabase
     .from("models")

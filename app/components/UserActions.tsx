@@ -1,5 +1,5 @@
 import { Popover } from "@headlessui/react";
-import { Form, Link, Links, useLocation } from "@remix-run/react";
+import { Form, Link, useLocation } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import Button from "./ui/Button";
 import Input from "./ui/Input";

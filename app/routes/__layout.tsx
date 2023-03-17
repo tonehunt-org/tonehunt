@@ -1,6 +1,6 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
-import { Form, Link, Outlet, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import Logo from "~/components/Logo";
@@ -14,7 +14,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { session, supabase } = await getSession(request);
 
   const { data } = await supabase
     .from("profiles")
@@ -32,7 +32,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 export default function Layout() {
   const data = useLoaderData<LoaderData>();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   return (
     <div>
