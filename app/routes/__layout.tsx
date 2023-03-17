@@ -3,6 +3,7 @@ import { json } from "@remix-run/cloudflare";
 import { Form, Link, Outlet, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
+import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
 import UserActions from "~/components/UserActions";
@@ -37,7 +38,10 @@ export default function Layout() {
     <div>
       <div className="flex px-5 py-5 items-center border-b border-gray-700">
         <Link to="/" prefetch="intent">
-          <h1 className="text-3xl">Tonestack</h1>
+          <h1 className="text-3xl absolute" style={{ left: "110%", top: "110%" }}>
+            Tonestack
+          </h1>
+          <Logo />
         </Link>
 
         {data.user ? (
