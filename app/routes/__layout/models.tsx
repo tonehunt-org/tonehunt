@@ -1,6 +1,6 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData, useLocation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Table from "~/components/ui/Table";
@@ -12,7 +12,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { session, supabase } = await getSession(request);
 
   if (!session?.user) {
     return redirect("/");

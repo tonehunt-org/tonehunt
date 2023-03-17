@@ -1,6 +1,6 @@
-import type { ActionFunction } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useParams } from "@remix-run/react";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import type { AuthError, Session, User } from "@supabase/supabase-js";

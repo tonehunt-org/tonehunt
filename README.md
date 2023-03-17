@@ -12,7 +12,7 @@ More details incoming ...
 
 ## Local Dev
 
-You'll need to copy the .dev.vars.example file to a file called .dev.vars. That contains all the env variables to run it locally.
+You'll need to copy the .env.example file to a file called .env. That contains all the env variables to run it locally.
 
 You'll also need to set up a Supabase project to run it against and run the Prisma migrations to get the db set up.
 

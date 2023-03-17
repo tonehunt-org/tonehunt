@@ -1,15 +1,15 @@
-import type { ActionFunction } from "@remix-run/cloudflare";
+import type { ActionFunction } from "@remix-run/node";
 import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
-} from "@remix-run/cloudflare";
-import { json, redirect } from "@remix-run/cloudflare";
+} from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction } from "react-router";
 import { getSession } from "~/auth.server";
 import ModelForm from "~/components/ModelForm";
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { session } = await getSession(request, context);
+  const { session } = await getSession(request);
 
   if (!session) {
     return redirect("/login");
@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 //storage/v1/object/public
 
 export const action: ActionFunction = async ({ request, context }) => {
-  const { session, supabase } = await getSession(request, context);
+  const { session, supabase } = await getSession(request);
 
   if (!session) {
     return redirect("/login"); // TODO: send a redirect url

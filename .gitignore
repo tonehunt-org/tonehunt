@@ -6,3 +6,13 @@ node_modules
 /public/build
 .env
 .dev.vars
+
+.cache
+.env
+.vercel
+.output
+
+/build/
+/public/build
+/api/index.js
+/api/index.js.map

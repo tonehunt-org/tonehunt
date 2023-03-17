@@ -1,10 +1,10 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import uniqBy from "lodash/uniqBy";
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { supabase } = await getSession(request, context);
+  const { supabase } = await getSession(request);
   const url = new URL(request.url);
 
   const titleSearch = supabase

@@ -1,9 +1,9 @@
-import type { ActionFunction } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
+import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 
 export const action: ActionFunction = async ({ request, context }) => {
-  const { supabase, response } = await getSession(request, context);
+  const { supabase, response } = await getSession(request);
 
   const formData = await request.formData();
   const url = new URL(request.url);

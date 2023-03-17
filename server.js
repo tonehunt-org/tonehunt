@@ -1,12 +1,4 @@
-import { createPagesFunctionHandler } from "@remix-run/cloudflare-pages";
+import { createRequestHandler } from "@remix-run/node";
 import * as build from "@remix-run/dev/server-build";
 
-const handleRequest = createPagesFunctionHandler({
-  build,
-  mode: process.env.NODE_ENV,
-  getLoadContext: (context) => context.env,
-});
-
-export function onRequest(context) {
-  return handleRequest(context);
-}
+export default createRequestHandler({ build, mode: process.env.NODE_ENV });

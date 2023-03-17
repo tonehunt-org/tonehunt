@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, useLoaderData, useLocation, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
@@ -22,7 +22,7 @@ type LoaderData = {
 const PAGE_SIZE = 30;
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { supabase, session } = await getSession(request, context);
+  const { supabase, session } = await getSession(request);
   const url = new URL(request.url);
   const search = url.searchParams.get("search");
   const userFilter = url.searchParams.get("user");

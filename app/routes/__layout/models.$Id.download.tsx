@@ -1,8 +1,8 @@
-import type { LoaderFunction } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { supabase } = await getSession(request, context);
+  const { supabase } = await getSession(request);
   const url = new URL(request.url);
   const path = url.searchParams.get("path") as string;
 
