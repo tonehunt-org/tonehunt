@@ -29,7 +29,7 @@ model Model {
   modelPath		  String?		@db.VarChar(255)
   filename		  String?		@db.VarChar(255)
   icon			    String?		@db.VarChar(255)
-  profileId 		String		@unique
+  profileId 		String		
   profile			  Profile		@relation(fields: [profileId], references: [id])
   private			  Boolean		@default(false)
   tags			    ModelTag[]
