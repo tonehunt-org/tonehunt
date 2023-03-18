@@ -27,7 +27,7 @@ export default function Layout() {
 
 	return (
 		<div>
-			<Header user={data.user} profile={null} />
+			<Header data={data} />
 			<div className="flex-1 p-5">
 				<Outlet />
 			</div>

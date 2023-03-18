@@ -3,7 +3,7 @@ import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
 import UserActions from "~/components/UserActions";
 
-const Header = (user = null, profile = null) => {
+const Header = ({ data }) => {
 	const navigate = useNavigate();
 
 	return (
@@ -20,7 +20,7 @@ const Header = (user = null, profile = null) => {
 
 				<div className="flex-grow px-10">
 					<div className="flex justify-end align-middle content-center">
-						{user ? (
+						{data.user ? (
 							<div>
 								<Button variant="secondary" onClick={() => navigate("/models/new")}>
 									Upload
@@ -28,7 +28,7 @@ const Header = (user = null, profile = null) => {
 							</div>
 						) : null}
 						<div>
-							<UserActions user={user} username={profile?.username ?? undefined} />
+							<UserActions user={data.user} username={data.profile?.username ?? undefined} />
 						</div>
 					</div>
 				</div>
