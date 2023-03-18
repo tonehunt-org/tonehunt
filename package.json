@@ -7,6 +7,9 @@
     "typecheck": "tsc",
     "generateTypes": "npx supabase gen types typescript --local > app/database.types.ts"
   },
+  "prisma": {
+    "seed": "node --require esbuild-register prisma/seed.ts"
+  },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
@@ -30,8 +33,10 @@
     "@remix-run/dev": "^1.14.3",
     "@remix-run/eslint-config": "^1.14.3",
     "@remix-run/serve": "^1.14.3",
+    "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "esbuild-register": "^3.4.2",
     "eslint": "^8.27.0",
     "prisma": "^4.11.0",
     "tailwindcss": "^3.2.7",
