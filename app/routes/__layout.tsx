@@ -1,14 +1,10 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
-import Logo from "~/components/Logo";
-import Button from "~/components/ui/Button";
-import Input from "~/components/ui/Input";
-import UserActions from "~/components/UserActions";
-
 import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 
 type LoaderData = {
 	user?: User;
@@ -28,44 +24,14 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
 export default function Layout() {
 	const data = useLoaderData<LoaderData>();
-	const navigate = useNavigate();
 
 	return (
 		<div>
-			<Header />
-			{/* <div className="flex px-5 py-5 items-center border-b border-gray-700">
-				<Link to="/" prefetch="intent">
-					<h1 className="text-3xl absolute" style={{ left: "110%", top: "110%" }}>
-						Tonestack
-					</h1>
-					<Logo />
-				</Link>
-
-				{data.user ? (
-					<div className="pl-5">
-						<Button variant="secondary" onClick={() => navigate("/models/new")}>
-							Upload
-						</Button>
-					</div>
-				) : null}
-
-				<Form method="get" action="/" className="flex-grow text-center px-10">
-					<Input
-						name="search"
-						placeholder="Enter Search ..."
-						className="inline-block mr-3"
-						style={{ maxWidth: "420px" }}
-					/>
-					<Button type="submit">Search</Button>
-				</Form>
-				<div>
-					<UserActions user={data.user} username={data?.username ?? undefined} />
-				</div>
-			</div> */}
-
-			<div className="p-5">
+			<Header user={data.user} profile={null} />
+			<div className="flex-1 p-5">
 				<Outlet />
 			</div>
+			<Footer />
 		</div>
 	);
 }
