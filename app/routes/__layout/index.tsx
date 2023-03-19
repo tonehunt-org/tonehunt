@@ -20,6 +20,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const models = await db.model.findMany({
     include: {
       profile: true,
+      category: true,
     },
   });
 
@@ -40,6 +41,7 @@ export default function Index() {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [sort, setSort] = useState<string>("newest");
+  const limit = 5;
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
