@@ -1,18 +1,24 @@
 type AlertProps = {
   title: string;
   description?: string;
+  variant: "success" | "error";
 };
 
-export default function Alert({ title, description }: AlertProps) {
+export default function Alert({ title, description, variant }: AlertProps) {
+  const successClasses = `bg-red-100 border-t-4 border-teal-500 rounded-b text-teal-900`;
+  const successIconClasses = "text-teal-500";
+  const errorClasses = `bg-red-100 border-red-500 text-red-900`;
+  const errorIconClasses = "text-red-500";
+
+  const classes = variant === "success" ? successClasses : errorClasses;
+  const iconClasses = variant === "success" ? successIconClasses : errorIconClasses;
+
   return (
-    <div
-      className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md mb-5"
-      role="alert"
-    >
+    <div className={`border-t-4 rounded-b px-4 py-3 shadow-md mb-5 ${classes}`} role="alert">
       <div className="flex items-center">
         <div className="py-1">
           <svg
-            className="fill-current h-6 w-6 text-teal-500 mr-4"
+            className={`fill-current h-6 w-6  mr-4 ${iconClasses}`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
