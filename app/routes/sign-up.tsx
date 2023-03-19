@@ -1,39 +1,52 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
-import { Form, Link, useLocation } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
-import Header from "~/components/Header";
 import Logo from "~/components/Logo";
+import { db } from "~/utils/db.server";
+import Alert from "~/components/ui/Alert";
+
+type ActionData = {
+  error?: string;
+};
 
 export const action: ActionFunction = async ({ request, context }) => {
   const { supabase, response } = await getSession(request);
   const formData = await request.formData();
+  const url = new URL(request.url);
 
   const { data, error } = await supabase.auth.signUp({
     email: formData.get("email") as string,
     password: formData.get("password") as string,
     options: {
-      emailRedirectTo: "/confirm-email",
+      emailRedirectTo: "http://localhost:3000/confirm-email",
     },
   });
 
   if (!data.user || error) {
-    return new Response("Error creating user", { status: 500 });
+    return json<ActionData>({ error: error?.message }, { status: 500 });
   }
 
-  await supabase.from("profiles").insert({
-    id: data.user?.id,
-    username: formData.get("username") as string,
+  await db.profile.update({
+    where: {
+      id: data.user?.id,
+    },
+    data: {
+      username: formData.get("username") as string,
+    },
   });
 
-  // return redirect(url.searchParams.get("redirectTo") ?? "/", { headers: response.headers });
-  return json({}, { headers: response.headers });
+  return redirect(url.searchParams.get("redirectTo") ?? "/", { headers: response.headers });
 };
 
 export default function SignUpPage() {
-  const location = useLocation();
+  const navigation = useNavigation();
+  const actionData = useActionData<ActionData>();
+
+  const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
 
   return (
     <div className="flex flex-col h-full">
@@ -41,9 +54,8 @@ export default function SignUpPage() {
         <div
           className="flex-grow flex items-center justify-center rounded-lg m-3"
           style={{
-            flexBasis: "40%",
-            background: "radial-gradient(farthest-side at 20% 10%, red, blue)",
-            // "radial-gradient(circle, rgba(64,0,199,1) 0%, rgba(145,180,232,1) 28%, rgba(99,79,213,1) 64%, rgba(148,187,233,1) 95%)",
+            flexBasis: "50%",
+            background: "radial-gradient(farthest-side at 20% 10%, red, #4000c7)",
           }}
         >
           <div className=" bg-white bg-opacity-30 w-4/5 p-20 rounded-lg">
@@ -69,23 +81,25 @@ export default function SignUpPage() {
         </div>
         <div
           className="flex-grow  flex items-center flex-col justify-center relative"
-          style={{ top: "-50px", flexBasis: "60%" }}
+          style={{ top: "-50px", flexBasis: "50%" }}
         >
           <div className="max-w-lg pt-10" style={{ width: "500px" }}>
             <div className="text-lg font-extralight mt-5">Register for an account to start sharing you stack!</div>
           </div>
-          <Form
-            method="post"
-            action={`/sign-up?redirectTo=${location.pathname}${location.search}`}
-            className="flex flex-col gap-3 max-w-xl pt-10"
-            style={{ width: "500px" }}
-          >
+
+          {actionData?.error ? (
+            <div className="pt-10 w-full max-w-lg">
+              <Alert title="There was an error" description={actionData?.error} variant="error" />
+            </div>
+          ) : null}
+
+          <Form method="post" className="flex flex-col gap-3 max-w-xl pt-10" style={{ width: "500px" }}>
             <Input name="email" label="Email" type="email" required />
             <Input name="username" label="Username" required />
             <Input name="password" type="password" label="Password" required />
             <div className="flex justify-start items-center gap-5">
               {/* <Link to="/login">Login</Link> */}
-              <Button type="submit" className="mt-3">
+              <Button type="submit" className="mt-3" loading={isSubmitting}>
                 Sign Up
               </Button>
             </div>
