@@ -20,6 +20,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const models = await db.model.findMany({
     include: {
       profile: true,
+      category: true,
     },
   });
 
