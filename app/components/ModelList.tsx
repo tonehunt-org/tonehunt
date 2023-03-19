@@ -5,7 +5,7 @@ import * as timeago from "timeago.js";
 const ModelsListComponent = ({ data }: any) => {
   const renderModelItem = (model) => {
     return (
-      <div className="flex-1 p-5 bg-stone-800 text-white mb-5 rounded-md">
+      <div key={model.id} className="flex-1 p-5 bg-stone-800 text-white mb-5 rounded-md">
         <div className="flex">
           <div className="w-3/4">
             <div className="flex flex-col">
