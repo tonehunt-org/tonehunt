@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@mui/base": "^5.0.0-alpha.121",
     "@prisma/client": "^4.11.0",
     "@remix-run/node": "^1.14.3",
     "@remix-run/react": "^1.14.3",
