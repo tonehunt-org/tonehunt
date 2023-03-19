@@ -8,7 +8,7 @@ const Header = ({ data }) => {
 
   return (
     <>
-      <div className="flex px-5 py-5 items-center border-b border-gray-700 bg-black">
+      <div className="flex px-5 py-5 items-center  bg-black">
         <div className="flex-none">
           <Link to="/" prefetch="intent">
             <h1 className="text-3xl absolute" style={{ left: "110%", top: "110%" }}>
