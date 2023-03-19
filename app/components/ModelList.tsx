@@ -1,44 +1,11 @@
 import Button from "~/components/ui/Button";
 import ButtonLink from "~/components/ui/ButtonLink";
 import * as timeago from "timeago.js";
+import ModelListItem from "./ModelListItem";
 
-const ModelsListComponent = ({ data }: any) => {
-  const renderModelItem = (model) => {
-    return (
-      <div key={model.id} className="flex-1 p-5 bg-stone-800 text-white mb-5 rounded-md">
-        <div className="flex">
-          <div className="w-3/4">
-            <div className="flex flex-col">
-              <div className="flex-1">
-                <div className="flex align-middle">
-                  <div className="w-10 h-10 inline-block mr-2 border border-gray-600 rounded-md">Icon</div>
-                  <span className="font-bold text-3xl">{model.title}</span>
-                </div>
-              </div>
-              <div className="flex-1">
-                <span className="inline-block mr-4">{model.profile.username}</span>
-                <span className="inline-block mr-4">{timeago.format(new Date(model?.createdAt!))}</span>
-              </div>
-            </div>
-          </div>
-          <div className="w-1/4 pl-4">
-            <div className="flex items-center h-full">
-              <div className="flex-1">
-                <div className="flex justify-end">
-                  <Button type="button" variant="link" className="ml-8">
-                    Favorite
-                  </Button>
-                  <Button type="button" variant="link" className="ml-8">
-                    Download
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, onNextPage, onPreviousPage }: any) => {
+  const showNextButton = data.length >= limit;
+  const showPrevious = data.length <= limit && currentPage !== 0;
 
   return (
     <div>
@@ -46,33 +13,33 @@ const ModelsListComponent = ({ data }: any) => {
         {/* SORT AREA */}
         <div className="flex-none mb-8">
           <Button type="button" variant="link" className="mr-8">
-            Newest
+            NEWEST
           </Button>
           <Button type="button" variant="link" className="mr-8">
-            Popular
+            POPULAR
           </Button>
           <Button type="button" variant="link" className="mr-8">
-            Own Models
+            MY FAVORITES
+          </Button>
+          <Button type="button" variant="link" className="mr-8">
+            MY MODELS
           </Button>
         </div>
 
-        {/* TAGS AREA */}
+        {/* CATEGORIES AREA */}
         <div className="flex-grow justify-end">
           <div className="flex justify-end">
             <Button type="button" variant="link" className="mr-4">
-              Tag 1
+              ALL
             </Button>
             <Button type="button" variant="link" className="mr-4">
-              Tag 2
+              AMPS
             </Button>
             <Button type="button" variant="link" className="mr-4">
-              Tag 3
+              PACKS
             </Button>
             <Button type="button" variant="link" className="mr-4">
-              Tag 4
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              Tag 5
+              PEDALS
             </Button>
           </div>
         </div>
@@ -91,12 +58,21 @@ const ModelsListComponent = ({ data }: any) => {
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {data.models?.length === 0 ? <span>No results</span> : null}
-        {data.models?.length > 0 ? data.models.map((model) => renderModelItem(model)) : null}
+        {data.length === 0 ? <span>No results</span> : null}
+        {data.length > 0 ? data.map((model: any) => <ModelListItem key={model.id} model={model} />) : null}
       </div>
       {/* PAGINATION AREA */}
       <div className="flex justify-end">
-        <span>Pagination Area</span>
+        {showPrevious ? (
+          <Button type="button" variant="link" className="mr-4" onClick={onPreviousPage}>
+            PREVIOUS PAGE
+          </Button>
+        ) : null}
+        {showNextButton ? (
+          <Button type="button" variant="link" className="mr-4" onClick={onNextPage}>
+            NEXT PAGE
+          </Button>
+        ) : null}
       </div>
     </div>
   );
