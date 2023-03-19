@@ -19,38 +19,47 @@ model Profile {
   bio			    String?		  @db.Text
   active    	Boolean    	@default(true)
   models    	Model[]
+  favorites   Favorite[]
 }
 
-model Model {
-  id    			  String    @id @default(uuid())
-  title			    String		@db.VarChar(255)
-  description		String?		@db.Text
-  ampName		  	String?		@db.VarChar(255)
-  modelPath		  String?		@db.VarChar(255)
-  filename		  String?		@db.VarChar(255)
-  icon			    String?		@db.VarChar(255)
-  profileId 		String		
-  profile			  Profile		@relation(fields: [profileId], references: [id])
-  private			  Boolean		@default(false)
-  tags			    ModelTag[]
-  active			  Boolean		@default(true)
-  createdAt 		DateTime  @default(now()) @db.Timestamptz(3)
-  updatedAt 		DateTime  @updatedAt @db.Timestamptz(3)
-}
-
-model Tag {
+model Category {
   id    			Int     	@id @default(autoincrement())
   title			  String  	@db.VarChar(255)
+  slug        String    @db.VarChar(255)
+  icon			  String?		@db.VarChar(255)
+  order       Int       @unique
   active			Boolean		@default(true)
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
-  modelTags		ModelTag[]
+  models      Model[]
 }
 
-model ModelTag {
-  id    		Int     @id @default(autoincrement())
-  tagId			Int
-  tag				Tag			@relation(fields: [tagId], references: [id])
-  modelId		String
-  model			Model		@relation(fields: [modelId], references: [id])
+model Model {
+  id    			  String      @id @default(uuid())
+  title			    String		  @db.VarChar(255)
+  description		String?		  @db.Text
+  ampName		  	String?		  @db.VarChar(255)
+  modelPath		  String?		  @db.VarChar(255)
+  filename		  String?		  @db.VarChar(255)
+  icon			    String?		  @db.VarChar(255)
+  profileId 		String		
+  profile			  Profile		  @relation(fields: [profileId], references: [id])
+  categoryId    Int
+  category			Category	  @relation(fields: [categoryId], references: [id])
+  favorites     Favorite[]
+  private			  Boolean		  @default(false)
+  tags			    String      @db.VarChar(255)
+  active			  Boolean		  @default(true)
+  createdAt 		DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt 		DateTime    @updatedAt @db.Timestamptz(3)
+}
+
+model Favorite {
+  id    		  Int       @id @default(autoincrement())
+  modelId		  String
+  model			  Model		  @relation(fields: [modelId], references: [id])
+  profileId   String		
+  profile		  Profile		@relation(fields: [profileId], references: [id])
+  createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
 }
