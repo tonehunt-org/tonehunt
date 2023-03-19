@@ -1,7 +1,6 @@
 <img src="https://media.discordapp.net/attachments/1085939013476692068/1086041031570632744/Bildschirmfoto_2023-03-16_um_22.38.48.png?width=2040&height=1318">
 
 Tonestack is a web application designed to be a central repository for Neural Amp Modeler (NAM) models.
-It allows users to upload, browse and download models uploaded by others, and manage their own models in one centralized location.
 
 ## Technologies Used
 
@@ -42,19 +41,19 @@ Rename the .env.example file as .env file and set the necessary environment vari
 ```
 SUPABASE_URL=<your Supabase URL>
 SUPABASE_KEY=<your Supabase secret key>
-DATABASE_URL=<your local database URL>
+DATABASE_UEL=<your Database Connection String>
 ```
 
-Replace <your Supabase URL> and <your Supabase secret key> with your actual Supabase URL and secret key, respectively. Replace <your local database URL> with the URL of your local database.
+Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
 
 6. Set up the local database
 
-Run the following command in your terminal to set up the local database:
+Run the following command in your terminal to set up the database:
 ```
 npx prisma migrate dev
 ```
 
-This will run the Prisma migrations and create the necessary tables in your local database.
+This will run the Prisma migrations and create the necessary tables in your database.
 
 5. Start the server
 
@@ -67,7 +66,7 @@ This will start the server in development mode and allow you to access the app i
 
 6. Interact with the app
 
-You can now interact with the app in your browser. The app should be connected to your local database and Supabase, allowing you to upload, share, and manage neural amp modeler models.
+You can now interact with the app in your browser. The app should be connected to your database and Supabase, allowing you to upload, share, and manage neural amp modeler models.
 
 ## How to contribute
 
