@@ -7,31 +7,31 @@ import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 
 type LoaderData = {
-	user?: User;
-	username?: string | null;
+  user?: User;
+  username?: string | null;
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-	const { session, supabase } = await getSession(request);
+  const { session, supabase } = await getSession(request);
 
-	const { data } = await supabase.from("profiles").select().eq("id", session?.user.id).limit(1).single();
+  const { data } = await supabase.from("profiles").select().eq("id", session?.user.id).limit(1).single();
 
-	return json<LoaderData>({
-		user: session?.user,
-		username: data?.username,
-	});
+  return json<LoaderData>({
+    user: session?.user,
+    username: data?.username,
+  });
 };
 
 export default function Layout() {
-	const data = useLoaderData<LoaderData>();
+  const data = useLoaderData<LoaderData>();
 
-	return (
-		<div>
-			<Header data={data} />
-			<div className="flex-1 p-5">
-				<Outlet />
-			</div>
-			<Footer />
-		</div>
-	);
+  return (
+    <div>
+      <Header data={data} />
+      <div className="max-w-7xl m-auto mb-16 mt-16">
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
 }
