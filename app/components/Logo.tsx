@@ -1,8 +1,12 @@
-export default function Logo() {
+type LogoProps = {
+  height?: string;
+};
+
+export default function Logo({ height }: LogoProps) {
   return (
     <svg
       // width="508"
-      height="42"
+      height={height ?? "42"}
       viewBox="0 0 508 152"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

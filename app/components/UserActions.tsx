@@ -16,43 +16,16 @@ export default function UserActions({ user, username }: UserActionsProps) {
   const [action, setAction] = useState<"login" | "sign-up">("login");
 
   const loginForm = (
-    <Form
-      method="post"
-      action={`/login?redirectTo=${location.pathname}`}
-      className="flex flex-col gap-3"
-    >
+    <Form method="post" action={`/login?redirectTo=${location.pathname}`} className="flex flex-col gap-3">
       <Input name="email" label="Email" type="email" required />
       <Input name="password" label="Password" type="password" required />
       <Button type="submit" className="mt-3">
         Log in
       </Button>
       <div className="text-center flex items-center justify-center">
-        <Button onClick={() => setAction("sign-up")} variant="link">
+        <Link to="/sign-up" onClick={() => setAction("sign-up")}>
           Sign Up
-        </Button>
-        {/* <Link to="/forgot-password" prefetch="intent">
-          Forgot Password
-        </Link> */}
-      </div>
-    </Form>
-  );
-
-  const signUpForm = (
-    <Form
-      method="post"
-      action={`/sign-up?redirectTo=${location.pathname}${location.search}`}
-      className="flex flex-col gap-3"
-    >
-      <Input name="email" label="Email" type="email" required />
-      <Input name="username" label="Username" required />
-      <Input name="password" type="password" label="Password" required />
-      <Button type="submit" className="mt-3">
-        Sign Up
-      </Button>
-      <div className="text-center">
-        <Button onClick={() => setAction("login")} variant="link">
-          Login
-        </Button>
+        </Link>
       </div>
     </Form>
   );
@@ -83,10 +56,10 @@ export default function UserActions({ user, username }: UserActionsProps) {
   ) : (
     <Popover className="relative">
       <Popover.Button as={Button} variant="seconary">
-        Login or Sign Up
+        Login
       </Popover.Button>
       <Popover.Panel className="absolute right-0 mt-2 z-10 bg-zinc-800 border-2 border-white rounded-lg p-5 w-72 shadow-lg">
-        {action === "login" ? loginForm : signUpForm}
+        {loginForm}
       </Popover.Panel>
     </Popover>
   );
