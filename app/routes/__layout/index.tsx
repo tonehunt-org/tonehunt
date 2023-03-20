@@ -161,7 +161,6 @@ export default function Index() {
   const defaultFilter = findFilter ? { id: findFilter.id, label: findFilter.title } : { id: 0, label: "All" };
 
   const selectOptions: SelectOptionType[] = map(filterOptions, (option) => ({ id: option.id, label: option.title }));
-  console.log("selectOptions:", selectOptions);
 
   const [selectedFilter, setSelectedFilter] = useState<SelectOptionType>(defaultFilter);
 

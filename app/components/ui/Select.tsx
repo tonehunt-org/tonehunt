@@ -14,8 +14,6 @@ export interface SelectType {
 }
 
 const Select = ({ data = [], selected, setSelected }: SelectType) => {
-  console.log("data:", data);
-  console.log("selected:", selected);
   return (
     <div className="w-32 -mt-2">
       <Listbox value={selected} onChange={setSelected}>
