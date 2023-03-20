@@ -3,7 +3,7 @@ import Button from "./ui/Button";
 import type { ModalProps } from "./ui/Modal";
 import Modal from "./ui/Modal";
 import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Form, useFetcher, useNavigate, useNavigation } from "@remix-run/react";
+import { useFetcher, useNavigate, useNavigation } from "@remix-run/react";
 import Input from "./ui/Input";
 import type { Category } from "@prisma/client";
 import Select from "./ui/Select";

@@ -212,22 +212,23 @@ export default function Index() {
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = event.target.value;
     setSelectedFilter(selectedFilter);
-    console.log("selectedFilter:", selectedFilter);
-    // const findFilter = find(filterOptions, ["id", filter.id]);
 
-    // const params: any = {
-    //   page: 1,
-    //   filter: findFilter.slug,
-    //   sortBy: data.sortBy,
-    //   sortDirection: data.sortDirection,
-    // };
+    const findFilter = find(filterOptions, ["id", Number(selectedFilter)]);
+    console.log(findFilter);
 
-    // if (data.username) {
-    //   params.username = data.username;
-    // }
+    const params: any = {
+      page: 1,
+      filter: findFilter.slug,
+      sortBy: data.sortBy,
+      sortDirection: data.sortDirection,
+    };
 
-    // const query = qs_stringify(params);
-    // window.location.href = `/?${query}`;
+    if (data.username) {
+      params.username = data.username;
+    }
+
+    const query = qs_stringify(params);
+    window.location.href = `/?${query}`;
   };
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW

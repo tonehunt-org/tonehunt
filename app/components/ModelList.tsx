@@ -40,12 +40,12 @@ const ModelsListComponent = ({
           <div className="flex justify-end">
             <span className="inline-block mr-3">VIEW:</span>
             <Select
+              className="w-28"
               options={filterOptions}
               onChange={setSelectedFilter}
               defaultSelected={selectedFilter}
               showEmptyOption={false}
             />
-            <Select options={filterOptions} />
           </div>
         </div>
       </div>
