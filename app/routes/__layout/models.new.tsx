@@ -1,89 +1,41 @@
 import type { ActionFunction } from "@remix-run/node";
-import {
-  unstable_createMemoryUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import type { LoaderFunction } from "react-router";
 import { getSession } from "~/auth.server";
-import ModelForm from "~/components/ModelForm";
+import { db } from "~/utils/db.server";
+import type { Model } from "@prisma/client";
 
-export const loader: LoaderFunction = async ({ request, context }) => {
+export type ActionData = {
+  model?: Model;
+  error?: string;
+};
+
+export const action: ActionFunction = async ({ request, context }) => {
   const { session } = await getSession(request);
+  const profile = await db.profile.findFirst({ where: { id: session?.user?.id } });
 
-  if (!session) {
+  if (!session || !profile) {
     return redirect("/login");
   }
 
-  return new Response();
-};
-
-//storage/v1/object/public
-
-export const action: ActionFunction = async ({ request, context }) => {
-  const { session, supabase } = await getSession(request);
-
-  if (!session) {
-    return redirect("/login"); // TODO: send a redirect url
-  }
-
   try {
-    const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: 1000000 });
+    const formData = await request.formData();
 
-    const formData = await unstable_parseMultipartFormData(
-      request,
-      uploadHandler // <-- we'll look at this deeper next
-    );
+    const model = await db.model.create({
+      data: {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        ampName: formData.get("ampName") as string,
+        modelPath: formData.get("modelPath") as string,
+        filename: formData.get("filename") as string,
+        profileId: profile.id,
+        categoryId: formData.get("categoryId") ? +(formData.get("categoryId") as string) : 0,
+        tags: formData.get("tags") as string,
+      },
+    });
 
-    const model = formData.get("model") as File;
-
-    const { data, error } = await supabase.storage
-      .from("models")
-      .upload(
-        `${session.user.user_metadata.username}/${Math.random() /* tmp */}_${model.name}`,
-        model,
-        {
-          cacheControl: "3600000000000",
-          upsert: false,
-        }
-      );
-
-    if (!data || error) {
-      throw new Error("Could not upload model file");
-    }
-
-    const insertResponse = await supabase
-      .from("models")
-      .insert([
-        {
-          title: formData.get("title") as string,
-          description: formData.get("description") as string,
-          amp_name: formData.get("ampName") as string,
-          model_path: data?.path,
-          filename: model.name,
-          profile_id: session.user.id,
-        },
-      ])
-      .select();
-
-    if (!insertResponse.data || insertResponse.error) {
-      console.error("Write error:", insertResponse);
-      throw new Error("Could not save model in database");
-    }
-
-    // const formData = await request.formData();
-    return redirect(`/models/${insertResponse.data[0].id}`);
-  } catch (e) {
-    console.error("ERROR", e);
-    return json({});
+    return json<ActionData>({ model });
+  } catch (e: any) {
+    console.error("ERROR:", e);
+    return json<ActionData>({ error: e.message }, { status: 500 });
   }
 };
-
-export default function NewModelPage() {
-  return (
-    <div className="max-w-3xl m-auto">
-      <h2 className="text-2xl font-bold pb-5">Upload Model</h2>
-      <ModelForm />
-    </div>
-  );
-}

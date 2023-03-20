@@ -9,7 +9,6 @@ import { stringify as qs_stringify } from "qs";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
-import type { SelectOptionType } from "~/components/ui/Select";
 
 type LoaderData = {
   models: any;
@@ -180,11 +179,17 @@ export default function Index() {
 
   const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...data.categories];
   const findFilter = find(filterOptions, ["slug", data.filter]);
-  const defaultFilter = findFilter ? { id: findFilter.id, label: findFilter.title } : { id: 0, label: "All" };
 
-  const selectOptions: SelectOptionType[] = map(filterOptions, (option) => ({ id: option.id, label: option.title }));
+  const defaultFilter = findFilter
+    ? { value: String(findFilter.id), description: findFilter.title }
+    : { value: "0", description: "All" };
 
-  const [selectedFilter, setSelectedFilter] = useState<SelectOptionType>(defaultFilter);
+  const selectOptions = map(filterOptions, (option) => ({
+    value: String(option.id),
+    description: option.title,
+    selected: defaultFilter.value === String(option.id),
+  }));
+  const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
@@ -204,9 +209,12 @@ export default function Index() {
     window.location.href = `/?${query}`;
   };
 
-  const handleFilterChange = (filter: SelectOptionType) => {
-    setSelectedFilter(filter);
-    const findFilter = find(filterOptions, ["id", filter.id]);
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFilter = event.target.value;
+    setSelectedFilter(selectedFilter);
+
+    const findFilter = find(filterOptions, ["id", Number(selectedFilter)]);
+    console.log(findFilter);
 
     const params: any = {
       page: 1,
