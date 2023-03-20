@@ -13,9 +13,21 @@ type SelectProps = {
   label?: string;
   name?: string;
   required?: boolean;
+  defaultSelected?: string;
+  onChange?: () => void | undefined;
+  showEmptyOption?: boolean;
 };
 
-export default function Select({ options, label, name, className, required }: SelectProps) {
+export default function Select({
+  options,
+  label,
+  name,
+  className,
+  required,
+  defaultSelected,
+  onChange,
+  showEmptyOption = true,
+}: SelectProps) {
   const id = useId();
 
   const select = (
@@ -27,8 +39,10 @@ export default function Select({ options, label, name, className, required }: Se
         className={`${inputClassNames} ${className} appearance-none relative`}
         style={{ borderRadius: "27px" }}
         required={required}
+        value={defaultSelected ?? undefined}
+        onChange={onChange ?? undefined}
       >
-        <option value=""></option>
+        {showEmptyOption ? <option value=""></option> : null}
         {options.map((option) => {
           return (
             <option key={option.value} value={option.value}>
