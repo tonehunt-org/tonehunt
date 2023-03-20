@@ -1,44 +1,20 @@
 import Button from "~/components/ui/Button";
-import ButtonLink from "~/components/ui/ButtonLink";
-import * as timeago from "timeago.js";
+import ModelListItem from "./ModelListItem";
+import ReactPaginate from "react-paginate";
+import Select from "./ui/Select";
 
-const ModelsListComponent = ({ data }: any) => {
-  const renderModelItem = (model) => {
-    return (
-      <div key={model.id} className="flex-1 p-5 bg-stone-800 text-white mb-5 rounded-md">
-        <div className="flex">
-          <div className="w-3/4">
-            <div className="flex flex-col">
-              <div className="flex-1">
-                <div className="flex align-middle">
-                  <div className="w-10 h-10 inline-block mr-2 border border-gray-600 rounded-md">Icon</div>
-                  <span className="font-bold text-3xl">{model.title}</span>
-                </div>
-              </div>
-              <div className="flex-1">
-                <span className="inline-block mr-4">{model.profile.username}</span>
-                <span className="inline-block mr-4">{timeago.format(new Date(model?.createdAt!))}</span>
-              </div>
-            </div>
-          </div>
-          <div className="w-1/4 pl-4">
-            <div className="flex items-center h-full">
-              <div className="flex-1">
-                <div className="flex justify-end">
-                  <Button type="button" variant="link" className="ml-8">
-                    Favorite
-                  </Button>
-                  <Button type="button" variant="link" className="ml-8">
-                    Download
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+const ModelsListComponent = ({
+  data = [],
+  total = 0,
+  currentPage = 0,
+  limit,
+  handlePageClick,
+  filterOptions,
+  selectedFilter,
+  setSelectedFilter,
+}: any) => {
+  const pageCount = Math.ceil(total / limit);
+  const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-sm";
 
   return (
     <div>
@@ -46,34 +22,24 @@ const ModelsListComponent = ({ data }: any) => {
         {/* SORT AREA */}
         <div className="flex-none mb-8">
           <Button type="button" variant="link" className="mr-8">
-            Newest
+            NEWEST
           </Button>
           <Button type="button" variant="link" className="mr-8">
-            Popular
+            POPULAR
           </Button>
           <Button type="button" variant="link" className="mr-8">
-            Own Models
+            MY FAVORITES
+          </Button>
+          <Button type="button" variant="link" className="mr-8">
+            MY MODELS
           </Button>
         </div>
 
-        {/* TAGS AREA */}
-        <div className="flex-grow justify-end">
+        {/* CATEGORIES AREA */}
+        <div className="flex-grow">
           <div className="flex justify-end">
-            <Button type="button" variant="link" className="mr-4">
-              Tag 1
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              Tag 2
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              Tag 3
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              Tag 4
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              Tag 5
-            </Button>
+            <span className="inline-block mr-3">VIEW:</span>
+            <Select data={filterOptions} selected={selectedFilter} setSelected={setSelectedFilter} />
           </div>
         </div>
       </div>
@@ -91,12 +57,32 @@ const ModelsListComponent = ({ data }: any) => {
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {data.models?.length === 0 ? <span>No results</span> : null}
-        {data.models?.length > 0 ? data.models.map((model) => renderModelItem(model)) : null}
+        {data.length === 0 ? <span>No results</span> : null}
+        {data.length > 0 ? data.map((model: any) => <ModelListItem key={model.id} model={model} />) : null}
       </div>
       {/* PAGINATION AREA */}
-      <div className="flex justify-end">
-        <span>Pagination Area</span>
+      <div className="flex mt-5">
+        <div className="flex-1">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={(event) => handlePageClick(event.selected)}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={() => {}}
+            forcePage={currentPage}
+            containerClassName="flex flex-row justify-end"
+            pageClassName="mx-1"
+            pageLinkClassName={paginationButtonLinkStyle}
+            previousClassName="mr-1"
+            previousLinkClassName={paginationButtonLinkStyle}
+            activeClassName="text-black bg-white rounded-sm"
+            nextClassName="ml-1"
+            nextLinkClassName={paginationButtonLinkStyle}
+            disabledClassName="text-gray-600"
+          />
+        </div>
       </div>
     </div>
   );
