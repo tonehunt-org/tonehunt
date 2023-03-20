@@ -1,7 +1,7 @@
 import type { ModalUnstyledProps } from "@mui/base/ModalUnstyled";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
-type ModalProps = ModalUnstyledProps & {};
+export type ModalProps = ModalUnstyledProps & {};
 
 export default function Modal({ open, onClose, children, className, ...muiModalProps }: ModalProps) {
   return (
@@ -13,8 +13,7 @@ export default function Modal({ open, onClose, children, className, ...muiModalP
           <div
             onClick={(e) => onClose?.(e, "backdropClick")}
             className="bg-black/60 -z-10 fixed right-0 left-0 top-0 bottom-0"
-            // @ts-expect-error
-            style={{ "-webkit-tap-highlight-color": "transparent" }}
+            style={{ WebkitTapHighlightColor: "transparent" }}
           />
         ),
       }}

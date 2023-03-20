@@ -1,10 +1,11 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+import CreateModal from "~/components/CreateModal";
 
 type LoaderData = {
   user?: User;
@@ -24,6 +25,14 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
 export default function Layout() {
   const data = useLoaderData<LoaderData>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const createModalOpen = searchParams.get("create") !== null && searchParams.get("create") !== undefined;
+
+  const handelClose = () => {
+    searchParams.delete("create");
+    setSearchParams(searchParams);
+  };
 
   return (
     <div>
@@ -32,6 +41,7 @@ export default function Layout() {
         <Outlet />
       </div>
       <Footer />
+      <CreateModal open={createModalOpen} onClose={handelClose} />
     </div>
   );
 }
