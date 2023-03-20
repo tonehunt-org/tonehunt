@@ -1,10 +1,12 @@
 import Button from "~/components/ui/Button";
-import ButtonLink from "~/components/ui/ButtonLink";
 import * as timeago from "timeago.js";
 
 const ModelListItem = ({ model }: any) => {
   return (
-    <div key={model.id} className="flex-1 p-5 bg-stone-800 text-white mb-5 rounded-md">
+    <div
+      key={model.id}
+      className="transition ease-in-out flex-1 p-5 bg-stone-800 hover:bg-stone-700 text-white mb-5 rounded-md"
+    >
       <div className="flex">
         <div className="w-3/4">
           <div className="flex flex-col">

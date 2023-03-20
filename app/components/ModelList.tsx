@@ -1,9 +1,20 @@
 import Button from "~/components/ui/Button";
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
+import Select from "./ui/Select";
 
-const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, handlePageClick }: any) => {
+const ModelsListComponent = ({
+  data = [],
+  total = 0,
+  currentPage = 0,
+  limit,
+  handlePageClick,
+  filterOptions,
+  selectedFilter,
+  setSelectedFilter,
+}: any) => {
   const pageCount = Math.ceil(total / limit);
+  const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-sm";
 
   return (
     <div>
@@ -25,20 +36,10 @@ const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, han
         </div>
 
         {/* CATEGORIES AREA */}
-        <div className="flex-grow justify-end">
+        <div className="flex-grow">
           <div className="flex justify-end">
-            <Button type="button" variant="link" className="mr-4">
-              ALL
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              AMPS
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              PACKS
-            </Button>
-            <Button type="button" variant="link" className="mr-4">
-              PEDALS
-            </Button>
+            <span className="inline-block mr-3">VIEW:</span>
+            <Select data={filterOptions} selected={selectedFilter} setSelected={setSelectedFilter} />
           </div>
         </div>
       </div>
@@ -69,16 +70,16 @@ const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, han
             pageRangeDisplayed={5}
             pageCount={pageCount}
             previousLabel="<"
-            renderOnZeroPageCount={null}
+            renderOnZeroPageCount={() => {}}
             forcePage={currentPage}
             containerClassName="flex flex-row justify-end"
             pageClassName="mx-1"
-            pageLinkClassName="px-3 py-1 border border-gray-600"
+            pageLinkClassName={paginationButtonLinkStyle}
             previousClassName="mr-1"
-            previousLinkClassName="px-3 py-1 border border-gray-600"
-            activeClassName="text-black bg-white"
+            previousLinkClassName={paginationButtonLinkStyle}
+            activeClassName="text-black bg-white rounded-sm"
             nextClassName="ml-1"
-            nextLinkClassName="px-3 py-1 border border-gray-600"
+            nextLinkClassName={paginationButtonLinkStyle}
             disabledClassName="text-gray-600"
           />
         </div>

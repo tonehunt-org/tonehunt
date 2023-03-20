@@ -4,46 +4,110 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
+import { find, map } from "lodash";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
+import type { SelectOptionType } from "~/components/ui/Select";
 
 type LoaderData = {
   models: any;
   user?: User | null;
   total: number;
   page: number;
+  filter: string;
+  categories: any;
+  sortBy: string;
+  sortDirection: string;
 };
 
+// THE AMOUNT OF MODELS PER PAGE
 const MODELS_LIMIT = 4;
+
+const sortByOptions = [
+  { slug: "newest", field: "createdAt" },
+  { slug: "popular", field: "createdAt" }, // WE NEED TO ADD A COLUMN FOR THIS
+  { slug: "name", field: "title" },
+];
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const url = new URL(request.url);
-  let page = Number(url.searchParams.get("page")) ?? 1;
-  if (page === 0) page = 1;
 
+  // GET PAGE
+  let page = Number(url.searchParams.get("page")) ?? 1;
+  if (!page || page === 0) page = 1;
   const offset = (page - 1) * MODELS_LIMIT;
 
-  const models = await getModels(offset);
+  // GET SORT BY
+  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
+  const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
+  const sortBy = selectedSortBy?.field ?? "createdAt";
+
+  // GET SORT DIRECTION
+  const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
+  const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
+
+  // GET FILTER
+  const filter = url.searchParams.get("filter") ?? "all";
+
+  // GET CATEGORIES
+  const categories = await getCategories();
+  const selectedCategory = find(categories, ["slug", filter]);
+  const categoryId = selectedCategory?.id ?? null;
+
+  // GET MODELS
+  const models = await getModels(offset, categoryId, sortBy, sortDirection);
 
   return json<LoaderData>({
     models: models.data,
     total: models.total,
     user: null,
     page: page - 1,
+    filter,
+    categories,
+    sortBy: selectedSortBy?.slug ?? "newest",
+    sortDirection,
   });
 };
 
-const getModels = async (next: number) => {
+const getCategories = async () => {
+  const categories = await db.category.findMany({
+    where: {
+      active: true,
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+    },
+    orderBy: [
+      {
+        order: "asc",
+      },
+    ],
+  });
+
+  return categories;
+};
+
+const getModels = async (next: number, categoryId: number | null, sortBy: string, sortDirection: string) => {
   const models = await db.$transaction([
     db.model.count({
       where: {
         private: false,
+        active: true,
+        ...(categoryId && {
+          categoryId: categoryId,
+        }),
       },
     }),
     db.model.findMany({
       where: {
         private: false,
+        active: true,
+        ...(categoryId && {
+          categoryId: categoryId,
+        }),
       },
       select: {
         _count: {
@@ -74,7 +138,7 @@ const getModels = async (next: number) => {
       },
       orderBy: [
         {
-          createdAt: "desc",
+          [sortBy]: sortDirection,
         },
       ],
       skip: next,
@@ -92,9 +156,26 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...data.categories];
+  const findFilter = find(filterOptions, ["slug", data.filter]);
+  const defaultFilter = findFilter ? { id: findFilter.id, label: findFilter.title } : { id: 0, label: "All" };
+
+  const selectOptions: SelectOptionType[] = map(filterOptions, (option) => ({ id: option.id, label: option.title }));
+  console.log("selectOptions:", selectOptions);
+
+  const [selectedFilter, setSelectedFilter] = useState<SelectOptionType>(defaultFilter);
+
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    window.location.href = `/?page=${selectedPage + 1}`;
+    window.location.href = `/?page=${selectedPage + 1}&filter=${data.filter}&sortBy=${data.sortBy}&sortDirection=${
+      data.sortDirection
+    }`;
+  };
+
+  const handleFilterChange = (filter: SelectOptionType) => {
+    setSelectedFilter(filter);
+    const findFilter = find(filterOptions, ["id", filter.id]);
+    window.location.href = `/?page=1&filter=${findFilter.slug}&sortBy=${data.sortBy}&sortDirection=${data.sortDirection}`;
   };
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
@@ -117,6 +198,9 @@ export default function Index() {
               currentPage={data.page}
               limit={MODELS_LIMIT}
               handlePageClick={handlePageClick}
+              filterOptions={selectOptions}
+              selectedFilter={selectedFilter}
+              setSelectedFilter={handleFilterChange}
             />
           ) : null}
         </div>
