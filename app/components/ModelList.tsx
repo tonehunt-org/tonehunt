@@ -20,25 +20,26 @@ const ModelsListComponent = ({
     <div>
       <div className="flex">
         {/* SORT AREA */}
-        <div className="flex-none mb-8">
-          <Button type="button" variant="link" className="mr-8">
-            NEWEST
-          </Button>
-          <Button type="button" variant="link" className="mr-8">
-            POPULAR
-          </Button>
-          <Button type="button" variant="link" className="mr-8">
-            MY FAVORITES
-          </Button>
-          <Button type="button" variant="link" className="mr-8">
-            MY MODELS
-          </Button>
+        <div className="flex-none items-center">
+          <div className="flex items-center mt-4">
+            <Button type="button" variant="link" className="mr-8">
+              NEWEST
+            </Button>
+            <Button type="button" variant="link" className="mr-8">
+              POPULAR
+            </Button>
+            <Button type="button" variant="link" className="mr-8">
+              MY FAVORITES
+            </Button>
+            <Button type="button" variant="link" className="mr-8">
+              MY MODELS
+            </Button>
+          </div>
         </div>
 
         {/* CATEGORIES AREA */}
         <div className="flex-grow">
           <div className="flex justify-end">
-            <span className="inline-block mr-3">VIEW:</span>
             <Select
               className="w-28"
               options={filterOptions}
