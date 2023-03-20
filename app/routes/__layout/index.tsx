@@ -5,6 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
 import { find, map } from "lodash";
+import { stringify as qs_stringify } from "qs";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
@@ -19,6 +20,7 @@ type LoaderData = {
   categories: any;
   sortBy: string;
   sortDirection: string;
+  username: string | null;
 };
 
 // THE AMOUNT OF MODELS PER PAGE
@@ -47,6 +49,9 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
   const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
 
+  // GET USERNAME
+  const usernameParam = url.searchParams.get("username") ?? null;
+
   // GET FILTER
   const filter = url.searchParams.get("filter") ?? "all";
 
@@ -56,7 +61,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   // GET MODELS
-  const models = await getModels(offset, categoryId, sortBy, sortDirection);
+  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam);
 
   return json<LoaderData>({
     models: models.data,
@@ -67,6 +72,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     categories,
     sortBy: selectedSortBy?.slug ?? "newest",
     sortDirection,
+    username: usernameParam,
   });
 };
 
@@ -90,7 +96,13 @@ const getCategories = async () => {
   return categories;
 };
 
-const getModels = async (next: number, categoryId: number | null, sortBy: string, sortDirection: string) => {
+const getModels = async (
+  next: number,
+  categoryId: number | null,
+  sortBy: string,
+  sortDirection: string,
+  username: string | null
+) => {
   const models = await db.$transaction([
     db.model.count({
       where: {
@@ -98,6 +110,11 @@ const getModels = async (next: number, categoryId: number | null, sortBy: string
         active: true,
         ...(categoryId && {
           categoryId: categoryId,
+        }),
+        ...(username && {
+          profile: {
+            username: username,
+          },
         }),
       },
     }),
@@ -107,6 +124,11 @@ const getModels = async (next: number, categoryId: number | null, sortBy: string
         active: true,
         ...(categoryId && {
           categoryId: categoryId,
+        }),
+        ...(username && {
+          profile: {
+            username: username,
+          },
         }),
       },
       select: {
@@ -166,15 +188,39 @@ export default function Index() {
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    window.location.href = `/?page=${selectedPage + 1}&filter=${data.filter}&sortBy=${data.sortBy}&sortDirection=${
-      data.sortDirection
-    }`;
+
+    const params: any = {
+      page: selectedPage + 1,
+      filter: data.filter,
+      sortBy: data.sortBy,
+      sortDirection: data.sortDirection,
+    };
+
+    if (data.username) {
+      params.username = data.username;
+    }
+
+    const query = qs_stringify(params);
+    window.location.href = `/?${query}`;
   };
 
   const handleFilterChange = (filter: SelectOptionType) => {
     setSelectedFilter(filter);
     const findFilter = find(filterOptions, ["id", filter.id]);
-    window.location.href = `/?page=1&filter=${findFilter.slug}&sortBy=${data.sortBy}&sortDirection=${data.sortDirection}`;
+
+    const params: any = {
+      page: 1,
+      filter: findFilter.slug,
+      sortBy: data.sortBy,
+      sortDirection: data.sortDirection,
+    };
+
+    if (data.username) {
+      params.username = data.username;
+    }
+
+    const query = qs_stringify(params);
+    window.location.href = `/?${query}`;
   };
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
