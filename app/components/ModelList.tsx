@@ -1,11 +1,9 @@
 import Button from "~/components/ui/Button";
-import ButtonLink from "~/components/ui/ButtonLink";
-import * as timeago from "timeago.js";
 import ModelListItem from "./ModelListItem";
+import ReactPaginate from "react-paginate";
 
-const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, onNextPage, onPreviousPage }: any) => {
-  const showNextButton = data.length >= limit;
-  const showPrevious = data.length <= limit && currentPage !== 0;
+const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, handlePageClick }: any) => {
+  const pageCount = Math.ceil(total / limit);
 
   return (
     <div>
@@ -62,17 +60,28 @@ const ModelsListComponent = ({ data = [], total = 0, currentPage = 0, limit, onN
         {data.length > 0 ? data.map((model: any) => <ModelListItem key={model.id} model={model} />) : null}
       </div>
       {/* PAGINATION AREA */}
-      <div className="flex justify-end">
-        {showPrevious ? (
-          <Button type="button" variant="link" className="mr-4" onClick={onPreviousPage}>
-            PREVIOUS PAGE
-          </Button>
-        ) : null}
-        {showNextButton ? (
-          <Button type="button" variant="link" className="mr-4" onClick={onNextPage}>
-            NEXT PAGE
-          </Button>
-        ) : null}
+      <div className="flex mt-5">
+        <div className="flex-1">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={(event) => handlePageClick(event.selected)}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            forcePage={currentPage}
+            containerClassName="flex flex-row justify-end"
+            pageClassName="mx-1"
+            pageLinkClassName="px-3 py-1 border border-gray-600"
+            previousClassName="mr-1"
+            previousLinkClassName="px-3 py-1 border border-gray-600"
+            activeClassName="text-black bg-white"
+            nextClassName="ml-1"
+            nextLinkClassName="px-3 py-1 border border-gray-600"
+            disabledClassName="text-gray-600"
+          />
+        </div>
       </div>
     </div>
   );

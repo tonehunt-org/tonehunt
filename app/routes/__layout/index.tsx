@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useLocation, useSearchParams, useNavigate } from "@remix-run/react";
-// import type { Model } from "~/types/custom";
+import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
 
 import ModelsListComponent from "~/components/ModelList";
+import Loading from "~/components/ui/Loading";
 
 type LoaderData = {
   models: any;
@@ -15,13 +15,14 @@ type LoaderData = {
   page: number;
 };
 
-const MODELS_LIMIT = 3;
+const MODELS_LIMIT = 4;
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const url = new URL(request.url);
-  const page = url.searchParams.get("page") ?? 0;
+  let page = Number(url.searchParams.get("page")) ?? 1;
+  if (page === 0) page = 1;
 
-  const offset = Number(page) === 0 ? Number(page) : Number(page) * MODELS_LIMIT;
+  const offset = (page - 1) * MODELS_LIMIT;
 
   const models = await getModels(offset);
 
@@ -29,7 +30,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     models: models.data,
     total: models.total,
     user: null,
-    page: Number(page),
+    page: page - 1,
   });
 };
 
@@ -91,14 +92,9 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onNextPage = () => {
-    const nextPage = data.page ? data.page + 1 : 1;
-    window.location.href = `/?page=${nextPage}`;
-  };
-
-  const onPreviousPage = () => {
-    const previousPage = data.page !== 0 ? data.page - 1 : 0;
-    window.location.href = `/?page=${previousPage}`;
+  const handlePageClick = (selectedPage: number) => {
+    setLoading(true);
+    window.location.href = `/?page=${selectedPage + 1}`;
   };
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
@@ -109,15 +105,18 @@ export default function Index() {
       </div>
       <div className="flex">
         <div className="w-3/4">
-          {loading ? "Loading..." : null}
+          {loading ? (
+            <div className="flex justify-center px-10 py-60">
+              <Loading size="48" />
+            </div>
+          ) : null}
           {!loading ? (
             <ModelsListComponent
               data={data.models}
               total={data.total}
               currentPage={data.page}
-              onNextPage={onNextPage}
-              onPreviousPage={onPreviousPage}
               limit={MODELS_LIMIT}
+              handlePageClick={handlePageClick}
             />
           ) : null}
         </div>

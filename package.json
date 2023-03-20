@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-paginate": "^8.1.4",
     "supabase": "^1.42.7",
     "timeago.js": "^4.0.2"
   },
@@ -37,6 +38,7 @@
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/react-paginate": "^7.1.1",
     "esbuild-register": "^3.4.2",
     "eslint": "^8.27.0",
     "prisma": "^4.11.0",
