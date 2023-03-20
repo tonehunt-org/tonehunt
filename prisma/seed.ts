@@ -22,29 +22,29 @@ async function main() {
 const sampleCategories = [
   {
     id: 1,
-    title: "Amp",
-    slug: "amp",
+    title: "Amps",
+    slug: "amps",
     icon: "icon_amp.svg",
     order: 1,
   },
   {
     id: 2,
-    title: "Pedal",
-    slug: "pedal",
-    icon: "icon_pedal.svg",
+    title: "Packs",
+    slug: "packs",
+    icon: "icon_pack.svg",
     order: 2,
   },
   {
     id: 3,
-    title: "Pack",
-    slug: "pack",
-    icon: "icon_pack.svg",
+    title: "Pedals",
+    slug: "pedals",
+    icon: "icon_pedal.svg",
     order: 3,
   },
   {
     id: 4,
-    title: "IR",
-    slug: "ir",
+    title: "IRs",
+    slug: "irs",
     icon: "icon_ir.svg",
     order: 4,
   },
@@ -78,14 +78,14 @@ const sampleModels = [
     tags: "high gain, metal, mesa, rectifier, crunch",
   },
   {
-    title: "Rectifier 3",
+    title: "Dual Rectifier Collection",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
     ampName: "Mesa",
     modelPath: "Lead Channel",
-    filename: "file_3.nam",
+    filename: "file_3.zip",
     profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 1,
+    categoryId: 2,
     tags: "high gain, metal, mesa, rectifier, lead",
   },
   {
@@ -111,14 +111,14 @@ const sampleModels = [
     tags: "crunch, metal, evh, 5150",
   },
   {
-    title: "EVH 5150 Dist 2",
+    title: "EVH 5150 Collection",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
     ampName: "EVH",
     modelPath: "Dsit 2 Channel",
-    filename: "file_6.nam",
+    filename: "file_6.zip",
     profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 1,
+    categoryId: 2,
     tags: "crunch, metal, evh, 5150",
   },
   {
@@ -164,6 +164,28 @@ const sampleModels = [
     profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
     categoryId: 1,
     tags: "clean, rock, pop, fender, deluxe",
+  },
+  {
+    title: "Ibanez Tube Screamer",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
+    ampName: "Ibanez",
+    modelPath: "Boosted",
+    filename: "file_10.nam",
+    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
+    categoryId: 3,
+    tags: "pedals, tube screamer, boost",
+  },
+  {
+    title: "Boss Blues Driver",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
+    ampName: "Boss",
+    modelPath: "BD-2",
+    filename: "file_10.nam",
+    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
+    categoryId: 3,
+    tags: "pedals, tube screamer, boost",
   },
 ];
 

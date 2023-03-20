@@ -20,6 +20,7 @@ model Profile {
   active    	Boolean    	@default(true)
   models    	Model[]
   favorites   Favorite[]
+  downloads   ModelDownload[]
 }
 
 model Category {
@@ -47,6 +48,7 @@ model Model {
   categoryId    Int
   category			Category	  @relation(fields: [categoryId], references: [id])
   favorites     Favorite[]
+  downloads     ModelDownload[]
   private			  Boolean		  @default(false)
   tags			    String?      @db.VarChar(255)
   active			  Boolean		  @default(true)
@@ -60,6 +62,16 @@ model Favorite {
   model			  Model		  @relation(fields: [modelId], references: [id])
   profileId   String		
   profile		  Profile		@relation(fields: [profileId], references: [id])
+  createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
+}
+
+model ModelDownload {
+  id          Int       @id @default(autoincrement())
+  modelId		  String
+  model			  Model		  @relation(fields: [modelId], references: [id])
+  profileId   String?		
+  profile		  Profile?	@relation(fields: [profileId], references: [id])
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
 }
