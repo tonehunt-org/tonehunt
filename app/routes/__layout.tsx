@@ -6,20 +6,27 @@ import { getSession } from "~/auth.server";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import CreateModal from "~/components/CreateModal";
+import { db } from "~/utils/db.server";
+import type { Category } from "@prisma/client";
 
 type LoaderData = {
   user?: User;
   username?: string | null;
+  categories: Category[];
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { session, supabase } = await getSession(request);
+  const { session } = await getSession(request);
 
-  const { data } = await supabase.from("profiles").select().eq("id", session?.user.id).limit(1).single();
+  const profileReq = db.profile.findFirst({ where: { id: session?.user.id } });
+  const categoriesReq = db.category.findMany({ where: { NOT: { title: "IR" } } }); // Ignoring IRs for now
+
+  const [profile, categories] = await Promise.all([profileReq, categoriesReq]);
 
   return json<LoaderData>({
     user: session?.user,
-    username: data?.username,
+    categories,
+    username: profile?.username,
   });
 };
 
@@ -41,7 +48,7 @@ export default function Layout() {
         <Outlet />
       </div>
       <Footer />
-      <CreateModal open={createModalOpen} onClose={handelClose} />
+      <CreateModal open={createModalOpen} onClose={handelClose} categories={data.categories} />
     </div>
   );
 }

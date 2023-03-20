@@ -5,7 +5,7 @@
     "build": "remix build",
     "dev": "remix dev",
     "typecheck": "tsc",
-    "generateTypes": "npx supabase gen types typescript --local > app/database.types.ts"
+    "generateTypes": "npx prisma generate"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
@@ -28,7 +28,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "supabase": "^1.42.7",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.14.3",
