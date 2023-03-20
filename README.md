@@ -33,7 +33,9 @@ Go to supabase.io and create an account. Follow the instructions to create a new
 
 4. Set up Supabase credentials
 
-After creating a new project and database, go to your Supabase dashboard and click on the "Settings" tab. Under the "API" section, you will find your Supabase URL and public and secret keys. Copy these credentials as you will need them later to connect your Remix app with Supabase.
+After creating a new project and database, go to your Supabase dashboard and click on the "Settings" tab.
+Under the "API" section, you will find your Supabase URL and public and secret keys. Copy these credentials as you will need them later to connect your Remix app with Supabase.
+Under the "Database" section, you will find the Connection String to connect to your database.
 
 5. Set up environment variables
 
@@ -45,9 +47,11 @@ DATABASE_UEL=<your Database Connection String>
 ```
 
 Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
+*Use port 5432 instead of 6543 in your connection string because pooling should not be used for migrations*
 
-6. Set up the local database
+6. Set up the database
 
+Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
 Run the following command in your terminal to set up the database:
 ```
 npx prisma migrate dev
