@@ -30,7 +30,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
   // GET SEARCH VALUE
   const searchParam = url.searchParams.get("search") ?? null;
-  console.log("searchParam:", searchParam);
 
   // GET MODELS
   const models =
@@ -41,7 +40,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
           total: 0,
         };
 
-  console.log("models:", models);
   return json<LoaderData>({
     models: models.data,
     total: models.total,
