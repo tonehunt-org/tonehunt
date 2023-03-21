@@ -50,17 +50,6 @@ const ModelsListComponent = ({
           </div>
         </div>
       </div>
-      {/* <div className="flex">
-        <Form method="get" action="/" className="flex-grow text-center px-10">
-          <Input
-            name="search"
-            placeholder="Enter Search ..."
-            className="inline-block mr-3"
-            style={{ maxWidth: "420px" }}
-          />
-          <Button type="submit">Search</Button>
-        </Form>
-      </div> */}
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
