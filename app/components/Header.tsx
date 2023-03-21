@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@remix-run/react";
 import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
 import UserActions from "~/components/UserActions";
-import Searchbar from "./ui/Searchbar";
+import Searchbar from "./Searchbar";
 
 const Header = ({ data }) => {
   const navigate = useNavigate();

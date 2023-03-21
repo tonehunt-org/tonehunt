@@ -17,7 +17,7 @@ const Searchbar = ({ value, className, ...props }: InputProps) => {
 
   return (
     <div className="block relative w-full">
-      <Form replace action="/search-result" method="get" className="text-center">
+      <Form reloadDocument action="/search-results" method="get" className="text-center">
         <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           id={id}
