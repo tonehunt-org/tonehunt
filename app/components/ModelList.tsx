@@ -9,9 +9,11 @@ const ModelsListComponent = ({
   currentPage = 0,
   limit,
   handlePageClick,
-  filterOptions,
-  selectedFilter,
-  setSelectedFilter,
+  filterOptions = [],
+  selectedFilter = null,
+  setSelectedFilter = null,
+  showFilters = true,
+  showMenu = true,
 }: any) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-sm";
@@ -20,47 +22,40 @@ const ModelsListComponent = ({
     <div>
       <div className="flex">
         {/* SORT AREA */}
-        <div className="flex-none items-center">
-          <div className="flex items-center mt-4">
-            <Button type="button" variant="link" className="mr-8">
-              NEWEST
-            </Button>
-            <Button type="button" variant="link" className="mr-8">
-              POPULAR
-            </Button>
-            <Button type="button" variant="link" className="mr-8">
-              MY FAVORITES
-            </Button>
-            <Button type="button" variant="link" className="mr-8">
-              MY MODELS
-            </Button>
+        {showMenu ? (
+          <div className="flex-none items-center">
+            <div className="flex items-center mt-4">
+              <Button type="button" variant="link" className="mr-8">
+                NEWEST
+              </Button>
+              <Button type="button" variant="link" className="mr-8">
+                POPULAR
+              </Button>
+              <Button type="button" variant="link" className="mr-8">
+                MY FAVORITES
+              </Button>
+              <Button type="button" variant="link" className="mr-8">
+                MY MODELS
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {/* CATEGORIES AREA */}
-        <div className="flex-grow">
-          <div className="flex justify-end">
-            <Select
-              className="w-28"
-              options={filterOptions}
-              onChange={setSelectedFilter}
-              defaultSelected={selectedFilter}
-              showEmptyOption={false}
-            />
+        {showFilters ? (
+          <div className="flex-grow">
+            <div className="flex justify-end">
+              <Select
+                className="w-28"
+                options={filterOptions}
+                onChange={setSelectedFilter}
+                defaultSelected={selectedFilter}
+                showEmptyOption={false}
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
-      {/* <div className="flex">
-        <Form method="get" action="/" className="flex-grow text-center px-10">
-          <Input
-            name="search"
-            placeholder="Enter Search ..."
-            className="inline-block mr-3"
-            style={{ maxWidth: "420px" }}
-          />
-          <Button type="submit">Search</Button>
-        </Form>
-      </div> */}
 
       {/* MODELS LIST */}
       <div className="flex flex-col">

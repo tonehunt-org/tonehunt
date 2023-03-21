@@ -44,7 +44,7 @@ export default function Layout() {
   return (
     <div>
       <Header data={data} />
-      <div className="max-w-7xl m-auto mb-16 mt-16">
+      <div className="max-w-7xl m-auto mb-16 mt-16 px-3">
         <Outlet />
       </div>
       <Footer />
