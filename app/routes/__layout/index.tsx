@@ -238,7 +238,7 @@ export default function Index() {
         <h1 className="text-5xl font-bold mb-10">Browse NAM Models</h1>
       </div>
       <div className="flex">
-        <div className="w-3/4">
+        <div className="w-full">
           {loading ? (
             <div className="flex justify-center px-10 py-60">
               <Loading size="48" />
@@ -256,17 +256,6 @@ export default function Index() {
               setSelectedFilter={handleFilterChange}
             />
           ) : null}
-        </div>
-        <div className="w-1/4 px-4">
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 1</span>
-          </div>
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 2</span>
-          </div>
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 3</span>
-          </div>
         </div>
       </div>
     </div>

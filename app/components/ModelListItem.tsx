@@ -5,10 +5,10 @@ const ModelListItem = ({ model }: any) => {
   return (
     <div
       key={model.id}
-      className="transition ease-in-out flex-1 p-5 bg-stone-800 hover:bg-stone-700 text-white mb-5 rounded-md"
+      className="transition ease-in-out flex-1 p-5 bg-[#222222] hover:bg-stone-900 text-white mb-5 rounded-xl"
     >
       <div className="flex">
-        <div className="w-3/4">
+        <div className="flex-grow">
           <div className="flex flex-col">
             <div className="flex-1">
               <div className="flex align-middle">
@@ -16,13 +16,13 @@ const ModelListItem = ({ model }: any) => {
                 <span className="font-bold text-3xl">{model.title}</span>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 mt-2">
               <span className="inline-block mr-4">{model.profile.username}</span>
               <span className="inline-block mr-4">{timeago.format(new Date(model?.createdAt!))}</span>
             </div>
           </div>
         </div>
-        <div className="w-1/4 pl-4">
+        <div className="flex-none pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">
               <div className="flex justify-end">

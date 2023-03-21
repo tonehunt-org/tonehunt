@@ -12,7 +12,7 @@ const Header = ({ data }) => {
       <div className="flex items-center bg-black p-3 lg:p-0">
         <div className="flex-1 lg:flex-none">
           <Link to="/" prefetch="intent">
-            <h1 className="text-3xl absolute" style={{ left: "110%", top: "110%" }}>
+            <h1 className="text-3xl absolute hidden" style={{ left: "110%", top: "110%" }}>
               Tonestack
             </h1>
             <Logo />
