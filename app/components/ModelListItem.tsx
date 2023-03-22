@@ -30,7 +30,10 @@ const ModelListItem = ({ model }: any) => {
   const catIcon = getIcon(model.category.slug);
 
   return (
-    <div key={model.id} className="transition ease-in-out flex-1 p-5 bg-[#222222] text-white mb-5 rounded-xl">
+    <div
+      key={model.id}
+      className="transition ease-in-out flex-1 p-5 bg-tonestack-gray-medium text-white mb-5 rounded-xl"
+    >
       <div className="flex flex-col lg:flex-row">
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row align-middle">
@@ -42,12 +45,14 @@ const ModelListItem = ({ model }: any) => {
             <div className="flex-grow">
               <div className="flex flex-col align-middle">
                 <div className="flex-1">
-                  <span className="font-bold text-xl">{model.title}</span>
+                  <span className="font-satoshi-bold text-xl">{model.title}</span>
                 </div>
                 <div className="flex-1">
-                  <span className="inline-block mr-4 uppercase text-xs font-bold">5 models collection</span>
-                  <span className="inline-block mr-4 text-sm">{model.profile.username}</span>
-                  <span className="inline-block mr-4 text-sm">{timeago.format(new Date(model?.createdAt!))}</span>
+                  <span className="inline-block mr-4 font-satoshi-bold uppercase text-xs">5 models collection</span>
+                  <span className="inline-block mr-4 text-sm font-satoshi-bold">{model.profile.username}</span>
+                  <span className="inline-block mr-4 text-sm font-satoshi-light">
+                    {timeago.format(new Date(model?.createdAt!))}
+                  </span>
                 </div>
               </div>
             </div>
@@ -59,11 +64,11 @@ const ModelListItem = ({ model }: any) => {
               <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
                 <Button type="button" variant="secondary" className="ml-2">
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-light">999</span>
+                  <span className="inline-block text-sm font-satoshi-light">999</span>
                 </Button>
                 <Button type="button" variant="secondary" className="ml-2">
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-light">999</span>
+                  <span className="inline-block text-sm font-satoshi-light">999</span>
                 </Button>
               </div>
             </div>

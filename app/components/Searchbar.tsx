@@ -13,7 +13,7 @@ const Searchbar = ({ value, className, ...props }: InputProps) => {
   const id = useId();
 
   const inputClassNames =
-    "w-full border pl-10 pr-5 py-3 text-sm block p-2.5 bg-transparent border-gray-600 placeholder-gray-400 text-white focus:ring-violet-800 focus:border-violet-800";
+    "w-full border pl-10 pr-5 py-3 text-sm block p-2.5 bg-transparent border-gray-600 placeholder-gray-400 text-white focus:ring-tonestack-blue-medium focus:border-tonestack-blue-medium";
 
   return (
     <div className="block relative w-full">

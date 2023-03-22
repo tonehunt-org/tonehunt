@@ -21,8 +21,7 @@ const ModelsListComponent = ({
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
 
-  const activeSortStyle = "bg-[#222222]";
-  console.log(selectedSortBy);
+  const activeSortStyle = "bg-tonestack-gray-medium hover:bg-tonestack-gray-medium";
 
   return (
     <div>
@@ -34,7 +33,9 @@ const ModelsListComponent = ({
               <Button
                 type="button"
                 variant="secondary"
-                className={`mr-2 text-xs border-0 ${selectedSortBy === "newest" ? activeSortStyle : null}`}
+                className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                  selectedSortBy === "newest" ? activeSortStyle : "text-tonestack-gray-disable"
+                }`}
                 onClick={() => onSortChange("newest")}
               >
                 NEWEST
@@ -42,12 +43,18 @@ const ModelsListComponent = ({
               <Button
                 type="button"
                 variant="secondary"
-                className={`mr-2 text-xs border-0 ${selectedSortBy === "popular" ? activeSortStyle : null}`}
+                className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                  selectedSortBy === "popular" ? activeSortStyle : "text-tonestack-gray-disable hover:text-white"
+                }`}
                 onClick={() => onSortChange("popular")}
               >
                 POPULAR
               </Button>
-              <Button type="button" variant="secondary" className="hidden md:block mr-8 text-xs border-0">
+              <Button
+                type="button"
+                variant="secondary"
+                className="hidden md:block font-satoshi-bold text-tonestack-gray-disable mr-8 text-xs border-0 hover:text-white"
+              >
                 COLLECTIONS ONLY
               </Button>
             </div>
