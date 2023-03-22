@@ -111,3 +111,13 @@ If the project maintainers request changes, make the necessary changes and push 
 
 12. Celebrate!
 Congratulations, you've contributed to ToneStack! Your contributions will help improve the project for other users and help you grow as a developer.
+
+## Troubleshooting
+
+1. If you encounter an error where Prisma cannot find certain properties and types after making changes to your schemas, it's likely that you need to regenerate your types.
+To do so, run the following command:
+```
+npm run generateTypes
+```
+
+This command will generate TypeScript types based on your Prisma schema. By running this command every time you make changes to your schemas, you can ensure that Prisma can properly find all necessary properties and types.
