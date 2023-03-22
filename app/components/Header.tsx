@@ -40,7 +40,7 @@ const Header = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="flex lg:hidden bg-gray-900 px-3 justify-center">
+      <div className="flex lg:hidden bg-[#222222] px-3 justify-center">
         <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
       </div>
     </>

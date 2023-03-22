@@ -7,7 +7,7 @@ export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "ToneStack",
   viewport: "width=device-width,initial-scale=1",
 });
 

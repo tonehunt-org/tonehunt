@@ -23,7 +23,7 @@ type LoaderData = {
 };
 
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 4;
+const MODELS_LIMIT = 12;
 
 const sortByOptions = [
   { slug: "newest", field: "createdAt" },
