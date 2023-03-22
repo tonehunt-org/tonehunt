@@ -12,27 +12,23 @@ Tonestack is a web application designed to be a central repository for Neural Am
 ## How to setup your local development environment
 
 1. Clone the project
-
-Clone the existing project to your local machine using Git. Open your terminal and run the following command:
-```
-git clone https://github.com/scottcorgan/tonestack.git
-```
+    Clone the existing project to your local machine using Git. Open your terminal and run the following command:
+    ```
+    git clone https://github.com/scottcorgan/tonestack.git
+    ```
 
 2. Install dependencies
+    Navigate to the project directory in your terminal and install the project dependencies using the following command:
+    ```
+    npm install
+    ```
 
-Navigate to the project directory in your terminal and install the project dependencies using the following command:
-```
-npm install
-```
-
-This will install all the necessary dependencies for the project, including Remix, Supabase, and Prisma.
+    This will install all the necessary dependencies for the project, including Remix, Supabase, and Prisma.
 
 3. Set up a Supabase account
-
-Go to supabase.io and create an account. Follow the instructions to create a new project and database.
+    Go to supabase.io and create an account. Follow the instructions to create a new project and database.
 
 4. Setup Triggers & Functions in Supabase
-
     **Create a new Function**
 
     1. From the left side panel, select `Database`
@@ -71,45 +67,40 @@ Go to supabase.io and create an account. Follow the instructions to create a new
     * Click `Confirm`
 
 4. Set up Supabase credentials
-
-After creating a new project and database, go to your Supabase dashboard and click on the "Settings" tab.
-Under the "API" section, you will find your Supabase URL and public and secret keys. Copy these credentials as you will need them later to connect your Remix app with Supabase.
-Under the "Database" section, you will find the Connection String to connect to your database.
+    After creating a new project and database, go to your Supabase dashboard and click on the "Settings" tab.
+    Under the "API" section, you will find your Supabase URL and public and secret keys. Copy these credentials as you will need them later to connect your Remix app with Supabase.
+    Under the "Database" section, you will find the Connection String to connect to your database.
 
 5. Set up environment variables
+    Rename the .env.example file as .env file and set the necessary environment variables:
+    ```
+    SUPABASE_URL=<your Supabase URL>
+    SUPABASE_KEY=<your Supabase secret key>
+    DATABASE_UEL=<your Database Connection String>
+    ```
 
-Rename the .env.example file as .env file and set the necessary environment variables:
-```
-SUPABASE_URL=<your Supabase URL>
-SUPABASE_KEY=<your Supabase secret key>
-DATABASE_UEL=<your Database Connection String>
-```
-
-Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
-*Use port 5432 instead of 6543 in your connection string because pooling should not be used for migrations*
+    Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
+    *Use port 5432 instead of 6543 in your connection string because pooling should not be used for migrations*
 
 6. Set up the database
+    Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
+    Run the following command in your terminal to set up the database:
+    ```
+    npx prisma migrate dev
+    ```
 
-Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
-Run the following command in your terminal to set up the database:
-```
-npx prisma migrate dev
-```
-
-This will run the Prisma migrations and create the necessary tables in your database.
+    This will run the Prisma migrations and create the necessary tables in your database.
 
 5. Start the server
+    Run the following command to start the server:
+    ```
+    npm run dev
+    ```
 
-Run the following command to start the server:
-```
-npm run dev
-```
-
-This will start the server in development mode and allow you to access the app in your browser at http://localhost:3000.
+    This will start the server in development mode and allow you to access the app in your browser at http://localhost:3000.
 
 6. Interact with the app
-
-You can now interact with the app in your browser. The app should be connected to your database and Supabase, allowing you to upload, share, and manage neural amp modeler models.
+    You can now interact with the app in your browser. The app should be connected to your database and Supabase, allowing you to upload, share, and manage neural amp modeler models.
 
 ## How to contribute
 
@@ -154,12 +145,12 @@ Congratulations, you've contributed to ToneStack! Your contributions will help i
 ## Troubleshooting
 
 1. If you encounter an error where Prisma cannot find certain properties and types after making changes to your schemas, it's likely that you need to regenerate your types.
-To do so, run the following command:
-```
-npm run generateTypes
-```
+    To do so, run the following command:
+    ```
+    npm run generateTypes
+    ```
 
-This command will generate TypeScript types based on your Prisma schema. By running this command every time you make changes to your schemas, you can ensure that Prisma can properly find all necessary properties and types.
+    This command will generate TypeScript types based on your Prisma schema. By running this command every time you make changes to your schemas, you can ensure that Prisma can properly find all necessary properties and types.
 
 ## License
 
