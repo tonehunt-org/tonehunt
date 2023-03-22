@@ -74,7 +74,7 @@ const ModelListItem = ({ model }: any) => {
         <div className="flex-1 lg:flex-none lg:pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
+              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
                 <Button type="button" variant="secondary" className="ml-2">
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">999</span>

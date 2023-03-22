@@ -250,7 +250,9 @@ export default function Index() {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="text-3xl lg:text-4xl font-satoshi-bold mb-10">Browse NAM Models</h1>
+        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
+          Find amps, pedals, and packs for NAM
+        </h1>
       </div>
       <div className="flex">
         <div className="w-full">
