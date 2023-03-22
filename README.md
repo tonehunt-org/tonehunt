@@ -160,3 +160,8 @@ npm run generateTypes
 ```
 
 This command will generate TypeScript types based on your Prisma schema. By running this command every time you make changes to your schemas, you can ensure that Prisma can properly find all necessary properties and types.
+
+## License
+
+This project is licensed under the MIT License (see the
+[LICENSE](LICENSE) file for details).
