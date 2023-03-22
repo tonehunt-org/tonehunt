@@ -133,7 +133,7 @@ export default function SearchResults() {
         <h1 className="text-3xl lg:text-4xl font-satoshi-bold mb-5">Search results for:</h1>
       </div>
       <div className="flex border-b border-gray-600 mb-10">
-        <h3 className="text-3xl font-satoshi-italic pb-3">{data.search}</h3>
+        <h3 className="text-3xl font-satoshi-light pb-3">{data.search}</h3>
       </div>
       <div className="flex">
         <div className="w-full">

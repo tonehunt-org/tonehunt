@@ -23,18 +23,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        "satoshi-variable": "Satoshi-Variable",
-        "satoshi-variable-italic": "Satoshi-VariableItalic",
         "satoshi-light": "Satoshi-Light",
-        "satoshi-light-italic": "Satoshi-LightItalic",
         "satoshi-regular": "Satoshi-Regular",
-        "satoshi-italic": "Satoshi-Italic",
         "satoshi-medium": "Satoshi-Medium",
-        "satoshi-medium-italic": "Satoshi-MediumItalic",
         "satoshi-bold": "Satoshi-Bold",
-        "satoshi-bold-italic": "Satoshi-BoldItalic",
-        "satoshi-black": "Satoshi-Black",
-        "satoshi-black-italic": "Satoshi-BlackItalic",
       },
       fontSize: {
         tiny: ".625rem",
