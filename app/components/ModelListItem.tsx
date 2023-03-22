@@ -31,8 +31,8 @@ const ModelListItem = ({ model }: any) => {
 
   return (
     <div key={model.id} className="transition ease-in-out flex-1 p-5 bg-[#222222] text-white mb-5 rounded-xl">
-      <div className="flex">
-        <div className="flex-grow">
+      <div className="flex flex-col lg:flex-row">
+        <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row align-middle">
             <div className="flex-none items-center">
               <div className="w-14 h-14 inline-block mr-4 rounded-xl">
@@ -53,10 +53,10 @@ const ModelListItem = ({ model }: any) => {
             </div>
           </div>
         </div>
-        <div className="flex-none pl-4">
+        <div className="flex-1 lg:flex-none lg:pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-end">
+              <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
                 <Button type="button" variant="secondary" className="ml-2">
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-light">999</span>

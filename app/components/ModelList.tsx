@@ -15,9 +15,14 @@ const ModelsListComponent = ({
   setSelectedFilter = null,
   showFilters = true,
   showMenu = true,
+  selectedSortBy = "newest",
+  onSortChange = null,
 }: any) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
+
+  const activeSortStyle = "bg-[#222222]";
+  console.log(selectedSortBy);
 
   return (
     <div>
@@ -25,18 +30,25 @@ const ModelsListComponent = ({
         {/* SORT AREA */}
         {showMenu ? (
           <div className="flex-none items-center">
-            <div className="flex items-center mt-4">
-              <Button type="button" variant="link" className="mr-8">
+            <div className="flex items-center">
+              <Button
+                type="button"
+                variant="secondary"
+                className={`mr-2 text-xs border-0 ${selectedSortBy === "newest" ? activeSortStyle : null}`}
+                onClick={() => onSortChange("newest")}
+              >
                 NEWEST
               </Button>
-              <Button type="button" variant="link" className="mr-8">
+              <Button
+                type="button"
+                variant="secondary"
+                className={`mr-2 text-xs border-0 ${selectedSortBy === "popular" ? activeSortStyle : null}`}
+                onClick={() => onSortChange("popular")}
+              >
                 POPULAR
               </Button>
-              <Button type="button" variant="link" className="hidden md:block mr-8">
-                MY FAVORITES
-              </Button>
-              <Button type="button" variant="link" className="hidden md:block mr-8">
-                MY MODELS
+              <Button type="button" variant="secondary" className="hidden md:block mr-8 text-xs border-0">
+                COLLECTIONS ONLY
               </Button>
             </div>
           </div>

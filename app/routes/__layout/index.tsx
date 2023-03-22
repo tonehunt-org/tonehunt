@@ -214,7 +214,6 @@ export default function Index() {
     setSelectedFilter(selectedFilter);
 
     const findFilter = find(filterOptions, ["id", Number(selectedFilter)]);
-    console.log(findFilter);
 
     const params: any = {
       page: 1,
@@ -231,11 +230,27 @@ export default function Index() {
     window.location.href = `/?${query}`;
   };
 
+  const onSortChange = (sortBy: string) => {
+    const params: any = {
+      page: 1,
+      filter: findFilter.slug,
+      sortBy: sortBy,
+      sortDirection: data.sortDirection,
+    };
+
+    if (data.username) {
+      params.username = data.username;
+    }
+
+    const query = qs_stringify(params);
+    window.location.href = `/?${query}`;
+  };
+
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="text-5xl font-bold mb-10">Browse NAM Models</h1>
+        <h1 className="text-3xl lg:text-4xl font-bold mb-10">Browse NAM Models</h1>
       </div>
       <div className="flex">
         <div className="w-full">
@@ -254,6 +269,8 @@ export default function Index() {
               filterOptions={selectOptions}
               selectedFilter={selectedFilter}
               setSelectedFilter={handleFilterChange}
+              selectedSortBy={data.sortBy}
+              onSortChange={onSortChange}
             />
           ) : null}
         </div>
