@@ -7,10 +7,13 @@ import Searchbar from "./Searchbar";
 const Header = ({ data }) => {
   const navigate = useNavigate();
 
+  const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
+  const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
+
   return (
     <>
-      <div className="flex items-center bg-black p-3 lg:p-0">
-        <div className="flex-1 lg:flex-none pl-8">
+      <div className="flex items-center bg-black p-4 lg:p-0">
+        <div className="flex-1 lg:flex-grow lg:pl-4">
           <Link to="/" prefetch="intent">
             <h1 className="text-3xl absolute hidden" style={{ left: "110%", top: "110%" }}>
               Tonestack
@@ -18,19 +21,42 @@ const Header = ({ data }) => {
             <Logo />
           </Link>
         </div>
-        <div className="hidden lg:block flex-grow">
+        <div className="hidden lg:block flex-none">
           <div className="flex justify-center align-middle content-center">
             <div className="block w-96">
               <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
             </div>
           </div>
         </div>
-        <div className="flex-1 lg:flex-none px-10">
+        <div className="flex-1 lg:flex-grow pl-5 pr-1 lg:pr-4 ">
           <div className="flex justify-end align-middle content-center">
+            <div className="hidden xl:inline-block lg:mr-4">
+              <div className="inline">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate("/")}
+                  className={menuItemsStyle}
+                  style={menuItemsInlineStyle}
+                >
+                  Discover
+                </Button>
+              </div>
+              <div className="inline">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate("/")}
+                  className={menuItemsStyle}
+                  style={menuItemsInlineStyle}
+                >
+                  Tips &amp; Tricks
+                </Button>
+              </div>
+            </div>
+
             {data.user ? (
               <div>
-                <Button variant="secondary" onClick={() => navigate("/models/new")}>
-                  Upload
+                <Button variant="primary" onClick={() => navigate("/models/new")}>
+                  Upload model
                 </Button>
               </div>
             ) : null}
@@ -40,7 +66,7 @@ const Header = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="flex lg:hidden bg-[#222222] px-3 justify-center">
+      <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
         <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
       </div>
     </>

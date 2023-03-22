@@ -60,7 +60,7 @@ export default function Layout() {
   return (
     <div className="relative">
       <Header data={data} />
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col p-3 lg:flex-row">
         <div className="w-full lg:w-3/4 xl:max-w-3xl xl:m-auto mb-8 mt-8 lg:mb-16 lg:mt-16 xl:mt-16 xl:mb-16 px-3">
           <Outlet />
         </div>
