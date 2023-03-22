@@ -31,6 +31,45 @@ This will install all the necessary dependencies for the project, including Remi
 
 Go to supabase.io and create an account. Follow the instructions to create a new project and database.
 
+4. Setup Triggers & Functions in Supabase
+
+    **Create a new Function**
+
+    1. From the left side panel, select `Database`
+    2. Select `Functions` and click `Create a new function`
+    3. Enter the following:
+
+    * Name of function: can be anything
+    * Schema: select `public`
+    * Return type: select `trigger`
+    * Definition: enter the following:
+
+    ```
+    begin
+      insert into public."Profile"(id)
+      values(new.id);
+      return new;
+    end;
+    ```
+
+    4. Click on Show advanced settings
+    5. Select SECURITY DEFINER
+    6. Click Confirm
+
+    **Create a Trigger**
+
+    1. Select `Triggers` from the same previous list
+    2. Select `Create a new trigger`
+    3. Enter the following:
+
+    * Name of trigger: can be anything
+    * Table: select `users auth`
+    * Events: select `Insert`
+    * Trigger type: select `After the event`
+    * Orientation: select `Row`
+    * Function to trigger: select the newly created Function from the steps above
+    * Click `Confirm`
+
 4. Set up Supabase credentials
 
 After creating a new project and database, go to your Supabase dashboard and click on the "Settings" tab.
