@@ -76,7 +76,7 @@ Tonestack is a web application designed to be a central repository for Neural Am
     ```
     SUPABASE_URL=<your Supabase URL>
     SUPABASE_KEY=<your Supabase secret key>
-    DATABASE_UEL=<your Database Connection String>
+    DATABASE_URL=<your Database Connection String>
     ```
 
     Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
