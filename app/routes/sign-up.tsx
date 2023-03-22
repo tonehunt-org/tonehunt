@@ -49,7 +49,7 @@ export default function SignUpPage() {
   const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       <div className="flex flex-grow">
         <div
           className="flex-grow flex items-center justify-center rounded-lg m-3"
@@ -63,8 +63,8 @@ export default function SignUpPage() {
               <span className="">
                 <Logo height="80" />
               </span>{" "}
-              <div className="mt-8 text-6xl font-extrabold text-black ">The tone is in the stack.</div>
-              <div className="text-2xl font-light mt-8">
+              <div className="mt-8 text-6xl font-satoshi-bold text-black ">The tone is in the stack.</div>
+              <div className="text-xl font-satoshi-regular mt-8">
                 Find amps, pedals, and packs for
                 <br />
                 <a
@@ -84,7 +84,9 @@ export default function SignUpPage() {
           style={{ top: "-50px", flexBasis: "50%" }}
         >
           <div className="max-w-lg pt-10" style={{ width: "500px" }}>
-            <div className="text-lg font-extralight mt-5">Register for an account to start sharing you stack!</div>
+            <div className="text-3xl font-satoshi-medium mt-5 text-center">
+              Register for an account to start sharing you stack!
+            </div>
           </div>
 
           {actionData?.error ? (
@@ -99,10 +101,12 @@ export default function SignUpPage() {
             <Input name="password" type="password" label="Password" required />
             <div className="flex justify-start items-center gap-5">
               {/* <Link to="/login">Login</Link> */}
-              <Button type="submit" className="mt-3" loading={isSubmitting}>
+              <Button type="submit" className="mt-3 w-full" loading={isSubmitting}>
                 Sign Up
               </Button>
             </div>
+            <div className="text-center pt-12 text-tonestack-gray-lighter">Already have an account? Login here.</div>
+            <div className="text-center py-1 text-tonestack-gray-lighter">Return to Homepage</div>
           </Form>
         </div>
       </div>

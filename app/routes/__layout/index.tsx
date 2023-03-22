@@ -250,7 +250,7 @@ export default function Index() {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="text-3xl lg:text-4xl font-bold mb-10">Browse NAM Models</h1>
+        <h1 className="text-3xl lg:text-4xl font-satoshi-bold mb-10">Browse NAM Models</h1>
       </div>
       <div className="flex">
         <div className="w-full">

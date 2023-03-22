@@ -25,11 +25,11 @@ const ModelsListComponent = ({
 
   return (
     <div>
-      <div className="flex">
+      <div className="flex mb-2">
         {/* SORT AREA */}
         {showMenu ? (
           <div className="flex-none items-center">
-            <div className="flex items-center">
+            <div className="flex items-center mt-2">
               <Button
                 type="button"
                 variant="secondary"

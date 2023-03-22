@@ -7,7 +7,7 @@ export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "ToneStack",
+  title: "ToneStack - Find amps, pedals, and packs for Neural Amp Modeler.",
   viewport: "width=device-width,initial-scale=1",
 });
 

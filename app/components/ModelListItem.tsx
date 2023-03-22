@@ -7,50 +7,63 @@ import iconPedal from "~/assets/categories_icons/icon-pedal.svg";
 import iconIr from "~/assets/categories_icons/icon-ir.svg";
 
 const ModelListItem = ({ model }: any) => {
-  const getIcon = (catSlug: string) => {
-    let icon = iconCab;
+  const getCategoryProfile = (catSlug: string) => {
     switch (catSlug) {
       case "amps":
       default:
-        icon = iconCab;
-        break;
+        return {
+          icon: iconCab,
+          color: "text-tonestack-green",
+        };
       case "packs":
-        icon = iconFullrigPack;
-        break;
+        return {
+          icon: iconFullrigPack,
+          color: "text-tonestack-purple",
+        };
       case "pedals":
-        icon = iconPedal;
-        break;
+        return {
+          icon: iconPedal,
+          color: "text-tonestack-yellow",
+        };
       case "irs":
-        icon = iconIr;
-        break;
+        return {
+          icon: iconIr,
+          color: "text-tonestack-orange",
+        };
     }
-    return icon;
   };
 
-  const catIcon = getIcon(model.category.slug);
+  const categoryProfile = getCategoryProfile(model.category.slug);
 
   return (
     <div
       key={model.id}
-      className="transition ease-in-out flex-1 p-5 bg-tonestack-gray-medium text-white mb-5 rounded-xl"
+      className="transition ease-in-out flex-1 p-3 bg-tonestack-gray-medium text-white mb-5 rounded-xl text-to"
     >
       <div className="flex flex-col lg:flex-row">
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row align-middle">
             <div className="flex-none items-center">
               <div className="w-14 h-14 inline-block mr-4 rounded-xl">
-                <img className="w-full h-auto" src={catIcon} alt="cab" title="cab" />
+                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title="cab" />
               </div>
             </div>
             <div className="flex-grow">
-              <div className="flex flex-col align-middle">
+              <div className="flex flex-col align-middle mt-1">
                 <div className="flex-1">
                   <span className="font-satoshi-bold text-xl">{model.title}</span>
                 </div>
-                <div className="flex-1">
-                  <span className="inline-block mr-4 font-satoshi-bold uppercase text-xs">5 models collection</span>
-                  <span className="inline-block mr-4 text-sm font-satoshi-bold">{model.profile.username}</span>
-                  <span className="inline-block mr-4 text-sm font-satoshi-light">
+                <div className="flex-1 -mt-1">
+                  {model.category.slug === "packs" ? (
+                    <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
+                      models collection
+                    </span>
+                  ) : null}
+
+                  <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonestack-gray-lighter">
+                    {model.profile.username}
+                  </span>
+                  <span className="inline-block mr-4 text-sm font-satoshi-light text-tonestack-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
                 </div>
