@@ -4,10 +4,11 @@ import ReactPaginate from "react-paginate";
 import Select from "./ui/Select";
 import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
+import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 interface ModelListType {
-  data: any;
+  data: Model[];
   total: number;
   currentPage: number;
   limit: number;
@@ -41,6 +42,14 @@ const ModelsListComponent = ({
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
 
   const activeSortStyle = "bg-tonestack-gray-medium hover:bg-tonestack-gray-medium";
+
+  const onDownloadClick = (modelId: string) => {
+    console.log(modelId);
+  };
+
+  const onFavoriteClick = (modelId: string) => {
+    console.log(modelId);
+  };
 
   return (
     <div>
@@ -99,7 +108,9 @@ const ModelsListComponent = ({
       {/* MODELS LIST */}
       <div className="flex flex-col">
         {data.length === 0 ? <span>No results</span> : null}
-        {data.length > 0 ? data.map((model: any) => <ModelListItem key={model.id} model={model} />) : null}
+        {data.length > 0
+          ? data.map((model: any) => <ModelListItem key={model.id} {...{ model, onDownloadClick, onFavoriteClick }} />)
+          : null}
       </div>
       {/* PAGINATION AREA */}
       <div className="flex mt-5">

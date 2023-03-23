@@ -8,6 +8,7 @@ import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 
+import type { SelectOption } from "~/components/ui/Select";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 
@@ -187,10 +188,9 @@ export default function Index() {
     ? { value: String(findFilter.id), description: findFilter.title }
     : { value: "0", description: "All" };
 
-  const selectOptions = map(filterOptions, (option) => ({
+  const selectOptions: SelectOption[] = map(filterOptions, (option) => ({
     value: String(option.id),
     description: option.title,
-    selected: defaultFilter.value === String(option.id),
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
@@ -249,8 +249,6 @@ export default function Index() {
     window.location.href = `/?${query}`;
   };
 
-  console.log("user:", data.user);
-
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
     <div className="w-full">
@@ -278,6 +276,7 @@ export default function Index() {
               setSelectedFilter={handleFilterChange}
               selectedSortBy={data.sortBy}
               onSortChange={onSortChange}
+              user={data.user}
             />
           ) : null}
         </div>
