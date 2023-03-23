@@ -41,7 +41,7 @@ const ModelsListComponent = ({
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
 
-  const activeSortStyle = "bg-tonestack-gray-medium hover:bg-tonestack-gray-medium";
+  const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
   const onDownloadClick = (modelId: string) => {
     const params = {
@@ -70,7 +70,7 @@ const ModelsListComponent = ({
                 type="button"
                 variant="secondary"
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  selectedSortBy === "newest" ? activeSortStyle : "text-tonestack-gray-disable"
+                  selectedSortBy === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
                 onClick={() => (onSortChange ? onSortChange("newest") : null)}
               >
@@ -80,7 +80,7 @@ const ModelsListComponent = ({
                 type="button"
                 variant="secondary"
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  selectedSortBy === "popular" ? activeSortStyle : "text-tonestack-gray-disable hover:text-white"
+                  selectedSortBy === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
                 }`}
                 onClick={() => (onSortChange ? onSortChange("popular") : null)}
               >
@@ -89,7 +89,7 @@ const ModelsListComponent = ({
               <Button
                 type="button"
                 variant="secondary"
-                className="hidden md:block font-satoshi-bold text-tonestack-gray-disable mr-8 text-xs border-0 hover:text-white"
+                className="hidden md:block font-satoshi-bold text-tonehunt-gray-disable mr-8 text-xs border-0 hover:text-white"
               >
                 COLLECTIONS ONLY
               </Button>

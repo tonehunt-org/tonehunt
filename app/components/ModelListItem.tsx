@@ -29,22 +29,22 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
       default:
         return {
           icon: iconCab,
-          color: "text-tonestack-green",
+          color: "text-tonehunt-green",
         };
       case "packs":
         return {
           icon: iconFullrigPack,
-          color: "text-tonestack-purple",
+          color: "text-tonehunt-purple",
         };
       case "pedals":
         return {
           icon: iconPedal,
-          color: "text-tonestack-yellow",
+          color: "text-tonehunt-yellow",
         };
       case "irs":
         return {
           icon: iconIr,
-          color: "text-tonestack-orange",
+          color: "text-tonehunt-orange",
         };
     }
   };
@@ -54,7 +54,7 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
   return (
     <div
       key={model.id}
-      className="transition ease-in-out flex-1 p-3 bg-tonestack-gray-medium text-white mb-5 rounded-xl text-to"
+      className="transition ease-in-out flex-1 p-3 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to"
     >
       <div className="flex flex-col lg:flex-row">
         <div className="flex-1 lg:flex-grow">
@@ -76,10 +76,10 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
                     </span>
                   ) : null}
 
-                  <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonestack-gray-lighter">
+                  <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter">
                     {model.profile.username}
                   </span>
-                  <span className="inline-block mr-4 text-sm font-satoshi-light text-tonestack-gray-lighter">
+                  <span className="inline-block mr-4 text-sm font-satoshi-light text-tonehunt-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
                 </div>
