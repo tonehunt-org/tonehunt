@@ -3,8 +3,14 @@ import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
 import UserActions from "~/components/UserActions";
 import Searchbar from "./Searchbar";
+import type { User } from "@supabase/supabase-js";
 
-const Header = ({ data }) => {
+interface HeaderType {
+  user?: User | undefined;
+  username?: string | null;
+}
+
+const Header = ({ user, username }: HeaderType) => {
   const navigate = useNavigate();
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
@@ -53,7 +59,7 @@ const Header = ({ data }) => {
               </div>
             </div>
 
-            {data.user ? (
+            {user ? (
               <div>
                 <Button variant="primary" onClick={() => navigate("/models/new")}>
                   Upload model
@@ -61,7 +67,7 @@ const Header = ({ data }) => {
               </div>
             ) : null}
             <div>
-              <UserActions user={data.user} username={data.profile?.username ?? undefined} />
+              <UserActions user={user} username={username ?? undefined} />
             </div>
           </div>
         </div>
