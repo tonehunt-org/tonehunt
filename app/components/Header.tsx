@@ -16,7 +16,7 @@ const Header = ({ data }) => {
         <div className="flex-1 lg:flex-grow lg:pl-4">
           <Link to="/" prefetch="intent">
             <h1 className="text-3xl absolute hidden" style={{ left: "110%", top: "110%" }}>
-              Tonestack
+              ToneHunt
             </h1>
             <Logo />
           </Link>

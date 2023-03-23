@@ -11,7 +11,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button = forwardRef(
   ({ variant = "primary", disabled, className, loading, children, ...props }: ButtonProps, ref) => {
     const base = `relative text-white px-5 py-3 font-satoshi-bold rounded-full`;
-    const primaryClassNames = `${base} bg-tonestack-blue-dark focus:ring-2 focus:outline-none focus:ring-bg-tonestack-blue-medium text-center hover:bg-tonestack-blue-medium focus:bg-tonestack-blue-medium`;
+    const primaryClassNames = `${base} bg-tonehunt-blue-dark focus:ring-2 focus:outline-none focus:ring-bg-tonehunt-blue-medium text-center hover:bg-tonehunt-blue-medium focus:bg-tonehunt-blue-medium`;
     const secondaryClassNames = `${base} hover:bg-gray-800 focus:ring-2 focus:outline-none focus:ring-blue-300  hover:bg-gray-700 focus:ring-blue-800 border border-gray-600`;
     const disabledClassNames = `${base} bg-gray-800 text-gray-700 cursor-not-allowed`;
     const linkClassNames = "p-0 border-0";

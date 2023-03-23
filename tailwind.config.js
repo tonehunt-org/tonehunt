@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        tonestack: {
+        tonehunt: {
           gray: {
             dark: "#141414",
             medium: "#222222",
