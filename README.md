@@ -1,6 +1,7 @@
-<img src="https://media.discordapp.net/attachments/1085939013476692068/1086041031570632744/Bildschirmfoto_2023-03-16_um_22.38.48.png?width=2040&height=1318">
+<img width="697" alt="Screen Shot 2023-03-23 at 12 17 08 PM" src="https://user-images.githubusercontent.com/974723/227276744-f6bd9004-5337-4856-8896-b187f41adb82.png">
 
-Tonestack is a web application designed to be a central repository for Neural Amp Modeler (NAM) models.
+
+ToneHunt is a web application designed to be a central repository for Neural Amp Modeler (NAM) models.
 
 ## Technologies Used
 
@@ -14,7 +15,7 @@ Tonestack is a web application designed to be a central repository for Neural Am
 1. Clone the project
     Clone the existing project to your local machine using Git. Open your terminal and run the following command:
     ```
-    git clone https://github.com/scottcorgan/tonestack.git
+    git clone https://github.com/scottcorgan/tonehunt.git
     ```
 
 2. Install dependencies
@@ -140,7 +141,8 @@ Submit a pull request (PR) to the original project repository on GitHub. Make su
 If the project maintainers request changes, make the necessary changes and push them to your forked repository. This will automatically update your PR. Continue addressing feedback until your changes are accepted.
 
 12. Celebrate!
-Congratulations, you've contributed to ToneStack! Your contributions will help improve the project for other users and help you grow as a developer.
+Congratulations, you've contributed to ToneHunt
+! Your contributions will help improve the project for other users and help you grow as a developer.
 
 ## Troubleshooting
 
