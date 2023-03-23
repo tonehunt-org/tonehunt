@@ -105,8 +105,8 @@ export default function SignUpPage() {
                 Sign Up
               </Button>
             </div>
-            <div className="text-center pt-12 text-tonestack-gray-lighter">Already have an account? Login here.</div>
-            <div className="text-center py-1 text-tonestack-gray-lighter">Return to Homepage</div>
+            <div className="text-center pt-12 text-tonehunt-gray-lighter">Already have an account? Login here.</div>
+            <div className="text-center py-1 text-tonehunt-gray-lighter">Return to Homepage</div>
           </Form>
         </div>
       </div>
