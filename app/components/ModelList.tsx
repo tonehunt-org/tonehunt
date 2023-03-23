@@ -44,11 +44,19 @@ const ModelsListComponent = ({
   const activeSortStyle = "bg-tonestack-gray-medium hover:bg-tonestack-gray-medium";
 
   const onDownloadClick = (modelId: string) => {
-    console.log(modelId);
+    const params = {
+      modelId,
+      ...(user ? { userId: user.id } : null),
+    };
+    console.log(params);
   };
 
   const onFavoriteClick = (modelId: string) => {
-    console.log(modelId);
+    const params = {
+      modelId,
+      ...(user ? { userId: user.id } : null),
+    };
+    console.log(params);
   };
 
   return (
