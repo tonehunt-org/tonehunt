@@ -1,20 +1,21 @@
+import type { ChangeEvent } from "react";
 import { useId } from "react";
 import { inputClassNames } from "./Input";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 
-type Option = {
+export type SelectOption = {
   value: string;
   description: string;
 };
 
 type SelectProps = {
-  options: Option[];
+  options: SelectOption[];
   className?: string;
   label?: string;
   name?: string;
   required?: boolean;
   defaultSelected?: string;
-  onChange?: () => void | undefined;
+  onChange?: (arg: ChangeEvent<HTMLSelectElement>) => void | undefined;
   showEmptyOption?: boolean;
 };
 

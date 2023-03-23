@@ -6,6 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
 import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
+import { getSession } from "~/auth.server";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
@@ -32,6 +33,8 @@ const sortByOptions = [
 ];
 
 export const loader: LoaderFunction = async ({ request, context }) => {
+  const { session } = await getSession(request);
+
   const url = new URL(request.url);
 
   // GET PAGE
@@ -65,7 +68,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   return json<LoaderData>({
     models: models.data,
     total: models.total,
-    user: null,
+    user: session?.user,
     page: page - 1,
     filter,
     categories,
@@ -245,6 +248,8 @@ export default function Index() {
     const query = qs_stringify(params);
     window.location.href = `/?${query}`;
   };
+
+  console.log("user:", data.user);
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
