@@ -1,36 +1,87 @@
 import Button from "~/components/ui/Button";
 import * as timeago from "timeago.js";
+import { StarIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import iconCab from "~/assets/categories_icons/icon-cab.svg";
+import iconFullrigPack from "~/assets/categories_icons/icon-fullrig-pack.svg";
+import iconPedal from "~/assets/categories_icons/icon-pedal.svg";
+import iconIr from "~/assets/categories_icons/icon-ir.svg";
 
 const ModelListItem = ({ model }: any) => {
+  const getCategoryProfile = (catSlug: string) => {
+    switch (catSlug) {
+      case "amps":
+      default:
+        return {
+          icon: iconCab,
+          color: "text-tonestack-green",
+        };
+      case "packs":
+        return {
+          icon: iconFullrigPack,
+          color: "text-tonestack-purple",
+        };
+      case "pedals":
+        return {
+          icon: iconPedal,
+          color: "text-tonestack-yellow",
+        };
+      case "irs":
+        return {
+          icon: iconIr,
+          color: "text-tonestack-orange",
+        };
+    }
+  };
+
+  const categoryProfile = getCategoryProfile(model.category.slug);
+
   return (
     <div
       key={model.id}
-      className="transition ease-in-out flex-1 p-5 bg-stone-800 hover:bg-stone-700 text-white mb-5 rounded-md"
+      className="transition ease-in-out flex-1 p-3 bg-tonestack-gray-medium text-white mb-5 rounded-xl text-to"
     >
-      <div className="flex">
-        <div className="w-3/4">
-          <div className="flex flex-col">
-            <div className="flex-1">
-              <div className="flex align-middle">
-                <div className="w-10 h-10 inline-block mr-2 border border-gray-600 rounded-md">Icon</div>
-                <span className="font-bold text-3xl">{model.title}</span>
+      <div className="flex flex-col lg:flex-row">
+        <div className="flex-1 lg:flex-grow">
+          <div className="flex flex-row align-middle">
+            <div className="flex-none items-center">
+              <div className="w-14 h-14 inline-block mr-4 rounded-xl">
+                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title="cab" />
               </div>
             </div>
-            <div className="flex-1">
-              <span className="inline-block mr-4">{model.profile.username}</span>
-              <span className="inline-block mr-4">{timeago.format(new Date(model?.createdAt!))}</span>
+            <div className="flex-grow">
+              <div className="flex flex-col align-middle mt-1">
+                <div className="flex-1">
+                  <span className="font-satoshi-bold text-xl">{model.title}</span>
+                </div>
+                <div className="flex-1 -mt-1">
+                  {model.category.slug === "packs" ? (
+                    <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
+                      models collection
+                    </span>
+                  ) : null}
+
+                  <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonestack-gray-lighter">
+                    {model.profile.username}
+                  </span>
+                  <span className="inline-block mr-4 text-sm font-satoshi-light text-tonestack-gray-lighter">
+                    {timeago.format(new Date(model?.createdAt!))}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className="w-1/4 pl-4">
+        <div className="flex-1 lg:flex-none lg:pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-end">
-                <Button type="button" variant="link" className="ml-8">
-                  Favorite
+              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
+                <Button type="button" variant="secondary" className="ml-2">
+                  <StarIcon className="w-5 h-5 inline-block mr-1" />
+                  <span className="inline-block text-sm font-satoshi-light">999</span>
                 </Button>
-                <Button type="button" variant="link" className="ml-8">
-                  Download
+                <Button type="button" variant="secondary" className="ml-2">
+                  <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
+                  <span className="inline-block text-sm font-satoshi-light">999</span>
                 </Button>
               </div>
             </div>

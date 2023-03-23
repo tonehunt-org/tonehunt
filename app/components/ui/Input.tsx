@@ -30,7 +30,7 @@ export default function Input({ label, multiline, className, ...props }: InputPr
 
   return label ? (
     <label htmlFor={id}>
-      <span className="block pb-2">{label}</span>
+      <span className="block pb-2 pl-1">{label}</span>
       {input}
     </label>
   ) : (

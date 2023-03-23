@@ -41,12 +41,39 @@ export default function Layout() {
     setSearchParams(searchParams);
   };
 
-  return (
-    <div>
-      <Header data={data} />
-      <div className="max-w-7xl m-auto mb-16 mt-16 px-3">
-        <Outlet />
+  const Sidebar = () => {
+    return (
+      <div className="w-full p-4">
+        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
+          <span className="block p-20 text-center">USER AREA</span>
+        </div>
+        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
+          <span className="block p-20 text-center">TAGS AREA</span>
+        </div>
+        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
+          <span className="block p-20 text-center">ARTICLES</span>
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="relative">
+      <Header data={data} />
+      <div className="flex flex-col p-3 lg:flex-row">
+        <div className="w-full lg:w-3/4 xl:max-w-3xl xl:m-auto mb-8 mt-8 lg:mb-16 lg:mt-16 xl:mt-16 xl:mb-16 px-3">
+          <Outlet />
+        </div>
+        <div className="w-full lg:w-1/4 xl:hidden">
+          <Sidebar />
+        </div>
+      </div>
+
+      {/* FIXED DESKTOP SIDEBAR */}
+      <div className="hidden xl:block absolute top-20 right-0 w-72 min-h-full mb-20">
+        <Sidebar />
+      </div>
+
       <Footer />
       <CreateModal open={createModalOpen} onClose={handelClose} categories={data.categories} />
     </div>

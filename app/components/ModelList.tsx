@@ -2,6 +2,7 @@ import Button from "~/components/ui/Button";
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
 import Select from "./ui/Select";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const ModelsListComponent = ({
   data = [],
@@ -14,28 +15,47 @@ const ModelsListComponent = ({
   setSelectedFilter = null,
   showFilters = true,
   showMenu = true,
+  selectedSortBy = "newest",
+  onSortChange = null,
 }: any) => {
   const pageCount = Math.ceil(total / limit);
-  const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-sm";
+  const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
+
+  const activeSortStyle = "bg-tonestack-gray-medium hover:bg-tonestack-gray-medium";
 
   return (
     <div>
-      <div className="flex">
+      <div className="flex mb-2">
         {/* SORT AREA */}
         {showMenu ? (
           <div className="flex-none items-center">
-            <div className="flex items-center mt-4">
-              <Button type="button" variant="link" className="mr-8">
+            <div className="flex items-center mt-2">
+              <Button
+                type="button"
+                variant="secondary"
+                className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                  selectedSortBy === "newest" ? activeSortStyle : "text-tonestack-gray-disable"
+                }`}
+                onClick={() => onSortChange("newest")}
+              >
                 NEWEST
               </Button>
-              <Button type="button" variant="link" className="mr-8">
+              <Button
+                type="button"
+                variant="secondary"
+                className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                  selectedSortBy === "popular" ? activeSortStyle : "text-tonestack-gray-disable hover:text-white"
+                }`}
+                onClick={() => onSortChange("popular")}
+              >
                 POPULAR
               </Button>
-              <Button type="button" variant="link" className="mr-8">
-                MY FAVORITES
-              </Button>
-              <Button type="button" variant="link" className="mr-8">
-                MY MODELS
+              <Button
+                type="button"
+                variant="secondary"
+                className="hidden md:block font-satoshi-bold text-tonestack-gray-disable mr-8 text-xs border-0 hover:text-white"
+              >
+                COLLECTIONS ONLY
               </Button>
             </div>
           </div>
@@ -46,7 +66,7 @@ const ModelsListComponent = ({
           <div className="flex-grow">
             <div className="flex justify-end">
               <Select
-                className="w-28"
+                className="w-32"
                 options={filterOptions}
                 onChange={setSelectedFilter}
                 defaultSelected={selectedFilter}
@@ -67,11 +87,11 @@ const ModelsListComponent = ({
         <div className="flex-1">
           <ReactPaginate
             breakLabel="..."
-            nextLabel=">"
+            nextLabel={<ChevronRightIcon className="w-4 h-4 absolute inline left-1.5 top-1/2 -translate-y-1/2" />}
             onPageChange={(event) => handlePageClick(event.selected)}
             pageRangeDisplayed={5}
             pageCount={pageCount}
-            previousLabel="<"
+            previousLabel={<ChevronLeftIcon className="w-4 h-4 absolute inline right-1.5 top-1/2 -translate-y-1/2" />}
             renderOnZeroPageCount={() => {}}
             forcePage={currentPage}
             containerClassName="flex flex-row justify-end"
@@ -79,7 +99,7 @@ const ModelsListComponent = ({
             pageLinkClassName={paginationButtonLinkStyle}
             previousClassName="mr-1"
             previousLinkClassName={paginationButtonLinkStyle}
-            activeClassName="text-black bg-white rounded-sm"
+            activeClassName="text-black bg-white rounded-lg"
             nextClassName="ml-1"
             nextLinkClassName={paginationButtonLinkStyle}
             disabledClassName="text-gray-600"

@@ -55,7 +55,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
     </div>
   ) : (
     <Popover className="relative">
-      <Popover.Button as={Button} variant="seconary">
+      <Popover.Button as={Button} variant="primary">
         Login
       </Popover.Button>
       <Popover.Panel className="absolute right-0 mt-2 z-10 bg-zinc-800 border-2 border-white rounded-lg p-5 w-72 shadow-lg">

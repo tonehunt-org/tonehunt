@@ -23,7 +23,7 @@ type LoaderData = {
 };
 
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 4;
+const MODELS_LIMIT = 12;
 
 const sortByOptions = [
   { slug: "newest", field: "createdAt" },
@@ -214,7 +214,6 @@ export default function Index() {
     setSelectedFilter(selectedFilter);
 
     const findFilter = find(filterOptions, ["id", Number(selectedFilter)]);
-    console.log(findFilter);
 
     const params: any = {
       page: 1,
@@ -231,14 +230,32 @@ export default function Index() {
     window.location.href = `/?${query}`;
   };
 
+  const onSortChange = (sortBy: string) => {
+    const params: any = {
+      page: 1,
+      filter: findFilter.slug,
+      sortBy: sortBy,
+      sortDirection: data.sortDirection,
+    };
+
+    if (data.username) {
+      params.username = data.username;
+    }
+
+    const query = qs_stringify(params);
+    window.location.href = `/?${query}`;
+  };
+
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="text-5xl font-bold mb-10">Browse NAM Models</h1>
+        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
+          Find amps, pedals, and packs for NAM
+        </h1>
       </div>
       <div className="flex">
-        <div className="w-3/4">
+        <div className="w-full">
           {loading ? (
             <div className="flex justify-center px-10 py-60">
               <Loading size="48" />
@@ -254,19 +271,10 @@ export default function Index() {
               filterOptions={selectOptions}
               selectedFilter={selectedFilter}
               setSelectedFilter={handleFilterChange}
+              selectedSortBy={data.sortBy}
+              onSortChange={onSortChange}
             />
           ) : null}
-        </div>
-        <div className="w-1/4 px-4">
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 1</span>
-          </div>
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 2</span>
-          </div>
-          <div className="w-full text-white rounded-md p-2 mb-8 border border-gray-600">
-            <span className="block p-20 text-center">Block 3</span>
-          </div>
         </div>
       </div>
     </div>
