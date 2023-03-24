@@ -100,12 +100,15 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">{model._count.favorites}</span>
                 </Button>
-                <Button type="button" variant="secondary" className="ml-2" onClick={() => console.log(model.id)}>
+                <ButtonLink
+                  className="ml-2"
+                  variant="button"
+                  to={`/models/${model.id}/download`}
+                  reloadDocument
+                  download={model.filename}
+                >
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">{model._count.downloads}</span>
-                </Button>
-                <ButtonLink to={`/models/${model.id}/download`} reloadDocument download={model.filename}>
-                  Test
                 </ButtonLink>
               </div>
             </div>
