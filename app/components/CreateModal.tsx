@@ -135,7 +135,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
               ) : (
                 <span className="flex items-center gap-3">
                   <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                  Uploaded <strong>{fileUploadFetcher.data?.name}</strong>!
+                  Uploaded <strong>{fileUploadFetcher.data?.name}</strong>
                 </span>
               )}
             </div>
