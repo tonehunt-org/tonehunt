@@ -8,6 +8,7 @@ import Footer from "~/components/Footer";
 import CreateModal from "~/components/CreateModal";
 import { db } from "~/utils/db.server";
 import type { Category } from "@prisma/client";
+import Sidebar from "~/components/Sidebar";
 
 type LoaderData = {
   user?: User;
@@ -39,22 +40,6 @@ export default function Layout() {
   const handelClose = () => {
     searchParams.delete("create");
     setSearchParams(searchParams);
-  };
-
-  const Sidebar = () => {
-    return (
-      <div className="w-full p-4">
-        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
-          <span className="block p-20 text-center">USER AREA</span>
-        </div>
-        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
-          <span className="block p-20 text-center">TAGS AREA</span>
-        </div>
-        <div className="w-full text-white rounded-xl p-2 mb-8 border border-gray-600">
-          <span className="block p-20 text-center">ARTICLES</span>
-        </div>
-      </div>
-    );
   };
 
   return (
