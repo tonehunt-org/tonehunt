@@ -1,5 +1,6 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { Provider } from "jotai";
 
 import styles from "./tailwind.css";
 
@@ -19,12 +20,14 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-[#141414] text-slate-900 dark:text-white min-h-screen">
-        <div className="absolute w-full top-0 left-0">
-          <Outlet />
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </div>
+        <Provider>
+          <div className="absolute w-full top-0 left-0">
+            <Outlet />
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
+          </div>
+        </Provider>
       </body>
     </html>
   );

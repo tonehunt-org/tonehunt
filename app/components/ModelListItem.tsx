@@ -7,6 +7,8 @@ import iconPedal from "~/assets/categories_icons/icon-pedal.svg";
 import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
+import { Link } from "@remix-run/react";
+import { useApp } from "~/hooks/useApp";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -50,6 +52,11 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
   };
 
   const categoryProfile = getCategoryProfile(model.category.slug);
+  const { openModelPreview } = useApp();
+
+  const handleModelClick = (e: any, modelId: string) => {
+    openModelPreview(modelId);
+  };
 
   return (
     <div
@@ -66,9 +73,14 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
             </div>
             <div className="flex-grow">
               <div className="flex flex-col align-middle mt-1">
-                <div className="flex-1">
+                <Link
+                  prefetch="intent"
+                  to={`/${model.profile.username}/${model.id}`}
+                  className="flex-1 hover:underline"
+                  onClick={(e) => handleModelClick(e, model.id)}
+                >
                   <span className="font-satoshi-bold text-xl">{model.title}</span>
-                </div>
+                </Link>
                 <div className="flex-1 -mt-1">
                   {model.category.slug === "packs" ? (
                     <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
@@ -87,6 +99,7 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
             </div>
           </div>
         </div>
+
         <div className="flex-1 lg:flex-none lg:pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">

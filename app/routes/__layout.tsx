@@ -75,6 +75,7 @@ export default function Layout() {
       </div>
 
       <Footer />
+
       <CreateModal open={createModalOpen} onClose={handelClose} categories={data.categories} />
     </div>
   );
