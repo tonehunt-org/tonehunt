@@ -46,17 +46,6 @@ const ModelsListComponent = ({
 
   const submit = useSubmit();
 
-  const onDownloadClick = (modelId: string) => {
-    // let formData = new FormData();
-    // formData.append("modelId", modelId);
-
-    // if (user) {
-    //   formData.append("profileId", user.id);
-    // }
-    // submit(formData, { method: "post", action: "/favorites/add" });
-    console.log(modelId);
-  };
-
   const onFavoriteClick = (modelId: string, favoriteId: string | null) => {
     if (!user) return;
 
@@ -127,7 +116,7 @@ const ModelsListComponent = ({
       <div className="flex flex-col">
         {data.length === 0 ? <span>No results</span> : null}
         {data.length > 0
-          ? data.map((model: any) => <ModelListItem key={model.id} {...{ model, onDownloadClick, onFavoriteClick }} />)
+          ? data.map((model: any) => <ModelListItem key={model.id} {...{ model, onFavoriteClick }} />)
           : null}
       </div>
       {/* PAGINATION AREA */}

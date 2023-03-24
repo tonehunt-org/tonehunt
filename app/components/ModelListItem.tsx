@@ -6,6 +6,7 @@ import iconFullrigPack from "~/assets/categories_icons/icon-fullrig-pack.svg";
 import iconPedal from "~/assets/categories_icons/icon-pedal.svg";
 import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import { Prisma } from "@prisma/client";
+import ButtonLink from "./ui/ButtonLink";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -18,11 +19,10 @@ type ModelWithCategoryAndProfile = Prisma.ModelGetPayload<typeof modelWithCatego
 
 interface ModelListItemType {
   model: ModelWithCategoryAndProfile;
-  onDownloadClick?: (arg: string) => void | undefined;
   onFavoriteClick?: (arg1: string, arg2: string | null) => void | undefined;
 }
 
-const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListItemType) => {
+const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
   const getCategoryProfile = (catSlug: string) => {
     switch (catSlug) {
       case "amps":
@@ -100,15 +100,13 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">{model._count.favorites}</span>
                 </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="ml-2"
-                  onClick={() => (onDownloadClick ? onDownloadClick(model.id) : null)}
-                >
+                <Button type="button" variant="secondary" className="ml-2" onClick={() => console.log(model.id)}>
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">{model._count.downloads}</span>
                 </Button>
+                <ButtonLink to={`/models/${model.id}/download`} reloadDocument download={model.filename}>
+                  Test
+                </ButtonLink>
               </div>
             </div>
           </div>
