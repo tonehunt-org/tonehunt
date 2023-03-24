@@ -2,78 +2,34 @@ import { useState } from "react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import type { User } from "@supabase/supabase-js";
-import { db } from "~/utils/db.server";
 import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
-
+import { db } from "~/utils/db.server";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
+import type { User } from "@supabase/supabase-js";
+import ModelPreviewModal from "../ModelPreviewModal";
 
-type LoaderData = {
-  models: any;
+export type LoaderData = {
   user?: User | null;
-  total: number;
-  page: number;
-  filter: string;
-  categories: any;
-  sortBy: string;
-  sortDirection: string;
   username: string | null;
+  modelList?: {
+    models: any;
+    total: number;
+    page: number;
+    filter: string;
+    categories: any;
+    sortBy: string;
+    sortDirection: string;
+  };
+  modelDetail?: {};
 };
-
-// THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 12;
 
 const sortByOptions = [
   { slug: "newest", field: "createdAt" },
   { slug: "popular", field: "createdAt" }, // WE NEED TO ADD A COLUMN FOR THIS
   { slug: "name", field: "title" },
 ];
-
-export const loader: LoaderFunction = async ({ request, context }) => {
-  const url = new URL(request.url);
-
-  // GET PAGE
-  let page = Number(url.searchParams.get("page")) ?? 1;
-  if (!page || page === 0) page = 1;
-  const offset = (page - 1) * MODELS_LIMIT;
-
-  // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
-  const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
-  const sortBy = selectedSortBy?.field ?? "createdAt";
-
-  // GET SORT DIRECTION
-  const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
-  const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
-
-  // GET USERNAME
-  const usernameParam = url.searchParams.get("username") ?? null;
-
-  // GET FILTER
-  const filter = url.searchParams.get("filter") ?? "all";
-
-  // GET CATEGORIES
-  const categories = await getCategories();
-  const selectedCategory = find(categories, ["slug", filter]);
-  const categoryId = selectedCategory?.id ?? null;
-
-  // GET MODELS
-  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam);
-
-  return json<LoaderData>({
-    models: models.data,
-    total: models.total,
-    user: null,
-    page: page - 1,
-    filter,
-    categories,
-    sortBy: selectedSortBy?.slug ?? "newest",
-    sortDirection,
-    username: usernameParam,
-  });
-};
 
 const getCategories = async () => {
   const categories = await db.category.findMany({
@@ -94,6 +50,9 @@ const getCategories = async () => {
 
   return categories;
 };
+
+// THE AMOUNT OF MODELS PER PAGE
+const MODELS_LIMIT = 12;
 
 const getModels = async (
   next: number,
@@ -173,12 +132,60 @@ const getModels = async (
   };
 };
 
-export default function Index() {
-  const data = useLoaderData<LoaderData>();
+export const modelListLoader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+
+  // GET PAGE
+  let page = Number(url.searchParams.get("page")) ?? 1;
+  if (!page || page === 0) page = 1;
+  const offset = (page - 1) * MODELS_LIMIT;
+
+  // GET SORT BY
+  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
+  const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
+  const sortBy = selectedSortBy?.field ?? "createdAt";
+
+  // GET SORT DIRECTION
+  const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
+  const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
+
+  // GET USERNAME
+  const usernameParam = url.searchParams.get("username") ?? null;
+
+  // GET FILTER
+  const filter = url.searchParams.get("filter") ?? "all";
+
+  // GET CATEGORIES
+  const categories = await getCategories();
+  const selectedCategory = find(categories, ["slug", filter]);
+  const categoryId = selectedCategory?.id ?? null;
+
+  // GET MODELS
+  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam);
+
+  return json<LoaderData>({
+    user: null,
+    username: usernameParam,
+    modelList: {
+      models: models.data,
+      total: models.total,
+      page: page - 1,
+      filter,
+      categories,
+      sortBy: selectedSortBy?.slug ?? "newest",
+      sortDirection,
+    },
+  });
+};
+
+export default function ModelListPage() {
+  const data = useLoaderData();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...data.categories];
-  const findFilter = find(filterOptions, ["slug", data.filter]);
+  const modelList = data.modelList;
+
+  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...modelList.categories];
+  const findFilter = find(filterOptions, ["slug", modelList.filter]);
 
   const defaultFilter = findFilter
     ? { value: String(findFilter.id), description: findFilter.title }
@@ -191,14 +198,18 @@ export default function Index() {
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
+  if (!modelList) {
+    return <></>;
+  }
+
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
 
     const params: any = {
       page: selectedPage + 1,
-      filter: data.filter,
-      sortBy: data.sortBy,
-      sortDirection: data.sortDirection,
+      filter: modelList.filter,
+      sortBy: modelList.sortBy,
+      sortDirection: modelList.sortDirection,
     };
 
     if (data.username) {
@@ -218,8 +229,8 @@ export default function Index() {
     const params: any = {
       page: 1,
       filter: findFilter.slug,
-      sortBy: data.sortBy,
-      sortDirection: data.sortDirection,
+      sortBy: modelList.sortBy,
+      sortDirection: modelList.sortDirection,
     };
 
     if (data.username) {
@@ -235,7 +246,7 @@ export default function Index() {
       page: 1,
       filter: findFilter.slug,
       sortBy: sortBy,
-      sortDirection: data.sortDirection,
+      sortDirection: modelList.sortDirection,
     };
 
     if (data.username) {
@@ -248,35 +259,38 @@ export default function Index() {
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
-    <div className="w-full">
-      <div className="flex">
-        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
-          Find amps, pedals, and packs for NAM
-        </h1>
-      </div>
-      <div className="flex">
-        <div className="w-full">
-          {loading ? (
-            <div className="flex justify-center px-10 py-60">
-              <Loading size="48" />
-            </div>
-          ) : null}
-          {!loading ? (
-            <ModelsListComponent
-              data={data.models}
-              total={data.total}
-              currentPage={data.page}
-              limit={MODELS_LIMIT}
-              handlePageClick={handlePageClick}
-              filterOptions={selectOptions}
-              selectedFilter={selectedFilter}
-              setSelectedFilter={handleFilterChange}
-              selectedSortBy={data.sortBy}
-              onSortChange={onSortChange}
-            />
-          ) : null}
+    <>
+      <div className="w-full">
+        <div className="flex">
+          <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
+            Find amps, pedals, and packs for NAM
+          </h1>
+        </div>
+        <div className="flex">
+          <div className="w-full">
+            {loading ? (
+              <div className="flex justify-center px-10 py-60">
+                <Loading size="48" />
+              </div>
+            ) : null}
+            {!loading ? (
+              <ModelsListComponent
+                data={modelList.models}
+                total={modelList.total}
+                currentPage={modelList.page}
+                limit={MODELS_LIMIT}
+                handlePageClick={handlePageClick}
+                filterOptions={selectOptions}
+                selectedFilter={selectedFilter}
+                setSelectedFilter={handleFilterChange}
+                selectedSortBy={modelList.sortBy}
+                onSortChange={onSortChange}
+              />
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
+      <ModelPreviewModal />
+    </>
   );
 }
