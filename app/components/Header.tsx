@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { Link, useNavigate, useSearchParams } from "@remix-run/react";
 import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
 import UserActions from "~/components/UserActions";
@@ -6,6 +6,7 @@ import Searchbar from "./Searchbar";
 
 const Header = ({ data }) => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
@@ -55,7 +56,13 @@ const Header = ({ data }) => {
 
             {data.user ? (
               <div>
-                <Button variant="primary" onClick={() => navigate("/models/new")}>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    searchParams.set("create", "");
+                    setSearchParams(searchParams);
+                  }}
+                >
                   Upload model
                 </Button>
               </div>
