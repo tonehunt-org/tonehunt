@@ -25,7 +25,7 @@ const Header = ({ user, username }: HeaderType) => {
             <h1 className="text-3xl absolute hidden" style={{ left: "110%", top: "110%" }}>
               ToneHunt
             </h1>
-            <Logo className="w-40 lg:w-56" />
+            <Logo className="w-40 lg:w-52" />
           </Link>
         </div>
         <div className="hidden lg:block flex-none">
