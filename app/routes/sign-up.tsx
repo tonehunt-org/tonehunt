@@ -61,7 +61,7 @@ export default function SignUpPage() {
           <div className=" bg-white bg-opacity-30 w-4/5 p-20 rounded-lg">
             <h2 className="">
               <span className="">
-                <Logo height="80" />
+                <Logo className="w-full" />
               </span>{" "}
               <div className="mt-8 text-6xl font-satoshi-bold text-black ">The tone is in the stack.</div>
               <div className="text-xl font-satoshi-regular mt-8">
