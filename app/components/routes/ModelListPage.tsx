@@ -4,6 +4,9 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
+import { getSession } from "~/auth.server";
+
+import type { SelectOption } from "~/components/ui/Select";
 import { db } from "~/utils/db.server";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
@@ -59,7 +62,8 @@ const getModels = async (
   categoryId: number | null,
   sortBy: string,
   sortDirection: string,
-  username: string | null
+  username: string | null,
+  user: User | null | undefined
 ) => {
   const models = await db.$transaction([
     db.model.count({
@@ -93,8 +97,19 @@ const getModels = async (
         _count: {
           select: {
             favorites: true,
+            downloads: true,
           },
         },
+        ...(user && {
+          favorites: {
+            select: {
+              id: true,
+            },
+            where: {
+              profileId: user.id,
+            },
+          },
+        }),
         id: true,
         title: true,
         description: true,
@@ -133,6 +148,8 @@ const getModels = async (
 };
 
 export const modelListLoader: LoaderFunction = async ({ request }) => {
+  const { session } = await getSession(request);
+  const user = session?.user;
   const url = new URL(request.url);
 
   // GET PAGE
@@ -161,10 +178,10 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   // GET MODELS
-  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam);
+  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam, user);
 
   return json<LoaderData>({
-    user: null,
+    user,
     username: usernameParam,
     modelList: {
       models: models.data,
@@ -191,10 +208,9 @@ export default function ModelListPage() {
     ? { value: String(findFilter.id), description: findFilter.title }
     : { value: "0", description: "All" };
 
-  const selectOptions = map(filterOptions, (option) => ({
+  const selectOptions: SelectOption[] = map(filterOptions, (option) => ({
     value: String(option.id),
     description: option.title,
-    selected: defaultFilter.value === String(option.id),
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
@@ -259,38 +275,37 @@ export default function ModelListPage() {
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
-    <>
-      <div className="w-full">
-        <div className="flex">
-          <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
-            Find amps, pedals, and packs for NAM
-          </h1>
-        </div>
-        <div className="flex">
-          <div className="w-full">
-            {loading ? (
-              <div className="flex justify-center px-10 py-60">
-                <Loading size="48" />
-              </div>
-            ) : null}
-            {!loading ? (
-              <ModelsListComponent
-                data={modelList.models}
-                total={modelList.total}
-                currentPage={modelList.page}
-                limit={MODELS_LIMIT}
-                handlePageClick={handlePageClick}
-                filterOptions={selectOptions}
-                selectedFilter={selectedFilter}
-                setSelectedFilter={handleFilterChange}
-                selectedSortBy={modelList.sortBy}
-                onSortChange={onSortChange}
-              />
-            ) : null}
-          </div>
+    <div className="w-full">
+      <div className="flex">
+        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
+          Find amps, pedals, and packs for NAM
+        </h1>
+      </div>
+      <div className="flex">
+        <div className="w-full">
+          {loading ? (
+            <div className="flex justify-center px-10 py-60">
+              <Loading size="48" />
+            </div>
+          ) : null}
+          {!loading ? (
+            <ModelsListComponent
+              data={modelList.models}
+              total={modelList.total}
+              currentPage={modelList.page}
+              limit={MODELS_LIMIT}
+              handlePageClick={handlePageClick}
+              filterOptions={selectOptions}
+              selectedFilter={selectedFilter}
+              setSelectedFilter={handleFilterChange}
+              selectedSortBy={modelList.sortBy}
+              onSortChange={onSortChange}
+              user={data.user}
+            />
+          ) : null}
         </div>
       </div>
       <ModelPreviewModal />
-    </>
+    </div>
   );
 }

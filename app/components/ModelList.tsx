@@ -2,7 +2,27 @@ import Button from "~/components/ui/Button";
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
 import Select from "./ui/Select";
+import type { SelectOption } from "~/components/ui/Select";
+import type { User } from "@supabase/supabase-js";
+import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useSubmit } from "@remix-run/react";
+
+interface ModelListType {
+  data: Model[];
+  total: number;
+  currentPage: number;
+  limit: number;
+  handlePageClick: (arg: number) => void;
+  filterOptions: SelectOption[];
+  selectedFilter: string | undefined | null;
+  setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
+  showFilters?: boolean;
+  showMenu?: boolean;
+  selectedSortBy: string;
+  onSortChange?: (arg: string) => void | undefined;
+  user?: User | null | undefined;
+}
 
 const ModelsListComponent = ({
   data = [],
@@ -12,16 +32,31 @@ const ModelsListComponent = ({
   handlePageClick,
   filterOptions = [],
   selectedFilter = null,
-  setSelectedFilter = null,
+  setSelectedFilter = undefined,
   showFilters = true,
   showMenu = true,
   selectedSortBy = "newest",
-  onSortChange = null,
-}: any) => {
+  onSortChange = undefined,
+  user = null,
+}: ModelListType) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
+
+  const submit = useSubmit();
+
+  const onFavoriteClick = (modelId: string, favoriteId: string | null) => {
+    if (!user) return;
+
+    let formData = new FormData();
+    formData.append("modelId", modelId);
+    formData.append("profileId", user.id);
+    if (favoriteId) {
+      formData.append("favoriteId", favoriteId);
+    }
+    submit(formData, { method: "post", action: "/favorites/add" });
+  };
 
   return (
     <div>
@@ -36,7 +71,7 @@ const ModelsListComponent = ({
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   selectedSortBy === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
-                onClick={() => onSortChange("newest")}
+                onClick={() => (onSortChange ? onSortChange("newest") : null)}
               >
                 NEWEST
               </Button>
@@ -46,7 +81,7 @@ const ModelsListComponent = ({
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   selectedSortBy === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
                 }`}
-                onClick={() => onSortChange("popular")}
+                onClick={() => (onSortChange ? onSortChange("popular") : null)}
               >
                 POPULAR
               </Button>
@@ -68,8 +103,8 @@ const ModelsListComponent = ({
               <Select
                 className="w-32"
                 options={filterOptions}
-                onChange={setSelectedFilter}
-                defaultSelected={selectedFilter}
+                onChange={setSelectedFilter || undefined}
+                defaultSelected={selectedFilter ?? ""}
                 showEmptyOption={false}
               />
             </div>
@@ -80,7 +115,9 @@ const ModelsListComponent = ({
       {/* MODELS LIST */}
       <div className="flex flex-col">
         {data.length === 0 ? <span>No results</span> : null}
-        {data.length > 0 ? data.map((model: any) => <ModelListItem key={model.id} model={model} />) : null}
+        {data.length > 0
+          ? data.map((model: any) => <ModelListItem key={model.id} {...{ model, onFavoriteClick }} />)
+          : null}
       </div>
       {/* PAGINATION AREA */}
       <div className="flex mt-5">

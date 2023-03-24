@@ -1,20 +1,45 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { getSession } from "~/auth.server";
+import { db } from "~/utils/db.server";
+import { redirect } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { supabase } = await getSession(request);
-  const url = new URL(request.url);
-  const path = url.searchParams.get("path") as string;
+  const { supabase, session } = await getSession(request);
+  const returnUrl = request.headers.get("Referer");
+  const user = session?.user;
 
-  const { data } = await supabase.storage.from("models").download(path);
+  const modelId = params.id as string;
 
-  if (!data) {
-    return new Response("", { status: 500 });
+  try {
+    const model = await db.model.findUnique({
+      where: {
+        id: modelId,
+      },
+    });
+
+    const filename = model?.filename ?? "";
+
+    const { data } = await supabase.storage.from("models").download(filename);
+
+    if (!data) {
+      return new Response("", { status: 500 });
+    }
+
+    await db.modelDownload.create({
+      data: {
+        modelId: modelId,
+        ...(user?.id && { profileId: user.id }),
+      },
+    });
+
+    return new Response(data, {
+      status: 200,
+      headers: {
+        "Content-Type": data.type as string,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return redirect(returnUrl ?? "/", {});
   }
-
-  return new Response(data, {
-    headers: {
-      "Content-Type": data.type as string,
-    },
-  }).text();
 };
