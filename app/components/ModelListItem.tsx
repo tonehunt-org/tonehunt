@@ -19,7 +19,7 @@ type ModelWithCategoryAndProfile = Prisma.ModelGetPayload<typeof modelWithCatego
 interface ModelListItemType {
   model: ModelWithCategoryAndProfile;
   onDownloadClick?: (arg: string) => void | undefined;
-  onFavoriteClick?: (arg: string) => void | undefined;
+  onFavoriteClick?: (arg1: string, arg2: string | null) => void | undefined;
 }
 
 const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListItemType) => {
@@ -94,11 +94,11 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
                 <Button
                   type="button"
                   variant="secondary"
-                  className="ml-2"
-                  onClick={() => (onFavoriteClick ? onFavoriteClick(model.id) : null)}
+                  className={`ml-2 ${model.favorites?.length > 0 ? "bg-tonehunt-yellow" : null}`}
+                  onClick={() => (onFavoriteClick ? onFavoriteClick(model.id, model.favorites[0]?.id) : null)}
                 >
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">999</span>
+                  <span className="inline-block text-sm font-satoshi-light">{model._count.favorites}</span>
                 </Button>
                 <Button
                   type="button"
@@ -107,7 +107,7 @@ const ModelListItem = ({ model, onDownloadClick, onFavoriteClick }: ModelListIte
                   onClick={() => (onDownloadClick ? onDownloadClick(model.id) : null)}
                 >
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">999</span>
+                  <span className="inline-block text-sm font-satoshi-light">{model._count.downloads}</span>
                 </Button>
               </div>
             </div>

@@ -14,7 +14,7 @@ import Loading from "~/components/ui/Loading";
 
 type LoaderData = {
   models: any;
-  user?: User | null;
+  user?: User | null | undefined;
   total: number;
   page: number;
   filter: string;
@@ -35,6 +35,7 @@ const sortByOptions = [
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { session } = await getSession(request);
+  const user = session?.user;
 
   const url = new URL(request.url);
 
@@ -64,12 +65,12 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   // GET MODELS
-  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam);
+  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam, user);
 
   return json<LoaderData>({
     models: models.data,
     total: models.total,
-    user: session?.user,
+    user: user,
     page: page - 1,
     filter,
     categories,
@@ -104,7 +105,8 @@ const getModels = async (
   categoryId: number | null,
   sortBy: string,
   sortDirection: string,
-  username: string | null
+  username: string | null,
+  user: User | null | undefined
 ) => {
   const models = await db.$transaction([
     db.model.count({
@@ -138,8 +140,19 @@ const getModels = async (
         _count: {
           select: {
             favorites: true,
+            downloads: true,
           },
         },
+        ...(user && {
+          favorites: {
+            select: {
+              id: true,
+            },
+            where: {
+              profileId: user.id,
+            },
+          },
+        }),
         id: true,
         title: true,
         description: true,

@@ -6,6 +6,7 @@ import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useSubmit } from "@remix-run/react";
 
 interface ModelListType {
   data: Model[];
@@ -43,20 +44,29 @@ const ModelsListComponent = ({
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
+  const submit = useSubmit();
+
   const onDownloadClick = (modelId: string) => {
-    const params = {
-      modelId,
-      ...(user ? { userId: user.id } : null),
-    };
-    console.log(params);
+    // let formData = new FormData();
+    // formData.append("modelId", modelId);
+
+    // if (user) {
+    //   formData.append("profileId", user.id);
+    // }
+    // submit(formData, { method: "post", action: "/favorites/add" });
+    console.log(modelId);
   };
 
-  const onFavoriteClick = (modelId: string) => {
-    const params = {
-      modelId,
-      ...(user ? { userId: user.id } : null),
-    };
-    console.log(params);
+  const onFavoriteClick = (modelId: string, favoriteId: string | null) => {
+    if (!user) return;
+
+    let formData = new FormData();
+    formData.append("modelId", modelId);
+    formData.append("profileId", user.id);
+    if (favoriteId) {
+      formData.append("favoriteId", favoriteId);
+    }
+    submit(formData, { method: "post", action: "/favorites/add" });
   };
 
   return (
