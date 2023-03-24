@@ -25,12 +25,12 @@ const Header = ({ user, username }: HeaderType) => {
             <h1 className="text-3xl absolute hidden" style={{ left: "110%", top: "110%" }}>
               ToneHunt
             </h1>
-            <Logo />
+            <Logo className="w-40 lg:w-52" />
           </Link>
         </div>
         <div className="hidden lg:block flex-none">
           <div className="flex justify-center align-middle content-center">
-            <div className="block w-96">
+            <div className="block w-80">
               <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
             </div>
           </div>
@@ -59,9 +59,11 @@ const Header = ({ user, username }: HeaderType) => {
                 </Button>
               </div>
             </div>
-
+            <div>
+              <UserActions user={user} username={username ?? undefined} />
+            </div>
             {user ? (
-              <div>
+              <div className="hidden lg:block">
                 <Button
                   variant="primary"
                   onClick={() => {
@@ -73,9 +75,6 @@ const Header = ({ user, username }: HeaderType) => {
                 </Button>
               </div>
             ) : null}
-            <div>
-              <UserActions user={user} username={username ?? undefined} />
-            </div>
           </div>
         </div>
       </div>

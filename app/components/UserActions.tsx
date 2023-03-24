@@ -1,9 +1,9 @@
 import { Popover } from "@headlessui/react";
-import { Form, Link, useLocation } from "@remix-run/react";
+import { Form, Link, useLocation, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
 type UserActionsProps = {
@@ -14,6 +14,12 @@ type UserActionsProps = {
 export default function UserActions({ user, username }: UserActionsProps) {
   const location = useLocation();
   const [action, setAction] = useState<"login" | "sign-up">("login");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const onUploadModalClick = () => {
+    searchParams.set("create", "");
+    setSearchParams(searchParams);
+  };
 
   const loginForm = (
     <Form method="post" action={`/login?redirectTo=${location.pathname}`} className="flex flex-col gap-3">
@@ -31,15 +37,20 @@ export default function UserActions({ user, username }: UserActionsProps) {
   );
 
   return user ? (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-3 items-center px-5 py-3 -ml-5">
       <Popover className="relative">
-        <Popover.Button className="flex items-center gap-2">
-          {username} <ChevronUpDownIcon className="h-5 w-5" />
+        <Popover.Button className="flex items-center gap-2 focus:ring-transparent focus:outline-none font-satoshi-bold">
+          {username} <ChevronDownIcon className="h-4 w-4 mt-1" />
         </Popover.Button>
         <Popover.Panel
           as="ul"
           className="list-none m-0 absolute right-0 mt-2 z-10 bg-zinc-900 border-2 border-white rounded-lg p-5 w-72 shadow-lg flex flex-col gap-3"
         >
+          <li className="inline lg:hidden">
+            <Button variant="link" onClick={onUploadModalClick}>
+              Upload model
+            </Button>
+          </li>
           <li>
             <Link to="/change-password" prefetch="intent">
               Change Password
