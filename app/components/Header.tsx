@@ -30,7 +30,7 @@ const Header = ({ user, username }: HeaderType) => {
         </div>
         <div className="hidden lg:block flex-none">
           <div className="flex justify-center align-middle content-center">
-            <div className="block w-96">
+            <div className="block w-80">
               <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
             </div>
           </div>
@@ -59,9 +59,11 @@ const Header = ({ user, username }: HeaderType) => {
                 </Button>
               </div>
             </div>
-
+            <div>
+              <UserActions user={user} username={username ?? undefined} />
+            </div>
             {user ? (
-              <div>
+              <div className="hidden lg:block">
                 <Button
                   variant="primary"
                   onClick={() => {
@@ -73,9 +75,6 @@ const Header = ({ user, username }: HeaderType) => {
                 </Button>
               </div>
             ) : null}
-            <div>
-              <UserActions user={user} username={username ?? undefined} />
-            </div>
           </div>
         </div>
       </div>
