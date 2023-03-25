@@ -1,3 +1,4 @@
+const plugin = require("tailwindcss/plugin");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{ts,tsx,jsx,js}"],
@@ -6,6 +7,7 @@ module.exports = {
       colors: {
         tonehunt: {
           gray: {
+            darker: "#101010",
             dark: "#141414",
             medium: "#222222",
             light: "#4b5563",
@@ -31,7 +33,21 @@ module.exports = {
       fontSize: {
         tiny: ".625rem",
       },
+      textShadow: {
+        bg: "-1px 1px 0 rgba(255,255,255,0.06), 1px 1px 0 rgba(255,255,255,0.06), 1px -1px 0 rgba(255,255,255,0.06), -1px -1px 0 rgba(255,255,255,0.06);",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          "text-shadow": (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme("textShadow") }
+      );
+    }),
+  ],
 };
