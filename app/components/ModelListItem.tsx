@@ -108,7 +108,11 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                   type="button"
                   variant="secondary"
                   className={`ml-2 ${model.favorites?.length > 0 ? "bg-tonehunt-yellow" : null}`}
-                  onClick={() => (onFavoriteClick ? onFavoriteClick(model.id, model.favorites[0]?.id) : null)}
+                  onClick={() =>
+                    onFavoriteClick
+                      ? onFavoriteClick(model.id, model.favorites?.length > 0 ? model.favorites[0].id : null)
+                      : null
+                  }
                 >
                   <StarIcon className="w-5 h-5 inline-block mr-1" />
                   <span className="inline-block text-sm font-satoshi-light">{model._count.favorites}</span>
