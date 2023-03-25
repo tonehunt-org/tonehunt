@@ -24,7 +24,7 @@ export type LoaderData = {
 };
 
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 4;
+const MODELS_LIMIT = 8;
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);

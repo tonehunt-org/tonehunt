@@ -2,8 +2,8 @@ import { db } from "~/utils/db.server";
 import type { User } from "@supabase/supabase-js";
 
 interface getModelsType {
-  limit: number;
-  next: number;
+  limit?: number;
+  next?: number;
   categoryId?: number | null;
   sortBy?: string;
   sortDirection?: string;
@@ -103,8 +103,8 @@ export const getModels = async (params: getModelsType) => {
           [params.sortBy ?? "createdAt"]: params.sortDirection ?? "desc",
         },
       ],
-      skip: params.next,
-      take: params.limit,
+      skip: params.next ?? 0,
+      take: params.limit ?? 10,
     }),
   ]);
 
