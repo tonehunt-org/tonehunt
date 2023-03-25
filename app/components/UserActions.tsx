@@ -7,7 +7,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
 type UserActionsProps = {
-  user?: User;
+  user?: User | null | undefined;
   username?: string;
 };
 

@@ -1,18 +1,16 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
-import Header from "~/components/Header";
-import Footer from "~/components/Footer";
-import CreateModal from "~/components/CreateModal";
 import { db } from "~/utils/db.server";
 import type { Category } from "@prisma/client";
-import Sidebar from "~/components/Sidebar";
+import type { Profile } from "@prisma/client";
+import DefaultLayout from "~/layouts/DefaultLayout";
 
 type LoaderData = {
-  user?: User;
-  username?: string | null;
+  user?: User | null | undefined;
+  profile?: Profile | null | undefined;
   categories: Category[];
 };
 
@@ -27,41 +25,16 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   return json<LoaderData>({
     user: session?.user,
     categories,
-    username: profile?.username,
+    profile,
   });
 };
 
 export default function Layout() {
   const data = useLoaderData<LoaderData>();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const createModalOpen = searchParams.get("create") !== null && searchParams.get("create") !== undefined;
-
-  const handelClose = () => {
-    searchParams.delete("create");
-    setSearchParams(searchParams);
-  };
 
   return (
-    <div className="relative">
-      <Header user={data.user} username={data.username} />
-      <div className="flex flex-col p-3 lg:flex-row">
-        <div className="w-full lg:w-3/4 xl:max-w-3xl xl:m-auto mb-8 mt-8 lg:mb-16 lg:mt-16 xl:mt-16 xl:mb-16 px-3">
-          <Outlet />
-        </div>
-        <div className="w-full lg:w-1/4 xl:hidden">
-          <Sidebar />
-        </div>
-      </div>
-
-      {/* FIXED DESKTOP SIDEBAR */}
-      <div className="hidden xl:block absolute top-20 right-0 w-72 min-h-full mb-20">
-        <Sidebar />
-      </div>
-
-      <Footer />
-
-      <CreateModal open={createModalOpen} onClose={handelClose} categories={data.categories} />
-    </div>
+    <DefaultLayout user={data.user} profile={data.profile} categories={data.categories}>
+      <Outlet />
+    </DefaultLayout>
   );
 }

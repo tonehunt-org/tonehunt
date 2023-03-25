@@ -5,13 +5,14 @@ import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
 import { stringify as qs_stringify } from "qs";
+import { getSession } from "~/auth.server";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 
 type LoaderData = {
   models: any;
-  user?: User | null;
+  user?: User | null | undefined;
   total: number;
   page: number;
   search: string | null;
@@ -21,6 +22,8 @@ type LoaderData = {
 const MODELS_LIMIT = 4;
 
 export const loader: LoaderFunction = async ({ request, context }) => {
+  const { session } = await getSession(request);
+  const user = session?.user;
   const url = new URL(request.url);
 
   // GET PAGE
@@ -43,7 +46,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   return json<LoaderData>({
     models: models.data,
     total: models.total,
-    user: null,
+    user,
     page: page - 1,
     search: searchParam,
   });
@@ -151,6 +154,7 @@ export default function SearchResults() {
               handlePageClick={handlePageClick}
               showMenu={false}
               showFilters={false}
+              user={data.user}
             />
           ) : null}
         </div>
