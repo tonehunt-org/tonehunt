@@ -11,6 +11,7 @@ import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
+import { getModels } from "~/services/models";
 
 export type LoaderData = {
   user?: User | null | undefined;
@@ -23,7 +24,7 @@ export type LoaderData = {
 };
 
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 10;
+const MODELS_LIMIT = 4;
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);
@@ -45,7 +46,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   // GET MODELS
   const models = profile
-    ? await getModels(offset, profile.id)
+    ? await getModels({ limit: MODELS_LIMIT, next: offset, profileId: profile.id, user })
     : {
         data: [],
         total: 0,
@@ -60,65 +61,6 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       page: page - 1,
     },
   });
-};
-
-const getModels = async (next: number, profileId: string) => {
-  const models = await db.$transaction([
-    db.model.count({
-      where: {
-        private: false,
-        active: true,
-        profileId: profileId,
-      },
-    }),
-    db.model.findMany({
-      where: {
-        private: false,
-        active: true,
-        profileId: profileId,
-      },
-      select: {
-        _count: {
-          select: {
-            favorites: true,
-            downloads: true,
-          },
-        },
-        id: true,
-        title: true,
-        description: true,
-        tags: true,
-        createdAt: true,
-        updatedAt: true,
-        filename: true,
-        profile: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-          },
-        },
-      },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-      ],
-      skip: next,
-      take: MODELS_LIMIT,
-    }),
-  ]);
-
-  return {
-    total: models[0] ?? 0,
-    data: models[1],
-  };
 };
 
 const UserNotFound = () => (

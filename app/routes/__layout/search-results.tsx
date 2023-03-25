@@ -3,9 +3,9 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import { db } from "~/utils/db.server";
 import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
+import { getModels } from "~/services/models";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   // GET MODELS
   const models =
     searchParam && searchParam !== ""
-      ? await getModels(offset, searchParam)
+      ? await getModels({ limit: MODELS_LIMIT, next: offset, search: searchParam, user })
       : {
           data: [],
           total: 0,
@@ -50,70 +50,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     page: page - 1,
     search: searchParam,
   });
-};
-
-const getModels = async (next: number, search: string) => {
-  const models = await db.$transaction([
-    db.model.count({
-      where: {
-        private: false,
-        active: true,
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-      },
-    }),
-    db.model.findMany({
-      where: {
-        private: false,
-        active: true,
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-      },
-      select: {
-        _count: {
-          select: {
-            favorites: true,
-          },
-        },
-        id: true,
-        title: true,
-        description: true,
-        tags: true,
-        createdAt: true,
-        updatedAt: true,
-        filename: true,
-        profile: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-          },
-        },
-      },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-      ],
-      skip: next,
-      take: MODELS_LIMIT,
-    }),
-  ]);
-
-  return {
-    total: models[0] ?? 0,
-    data: models[1],
-  };
 };
 
 export default function SearchResults() {
