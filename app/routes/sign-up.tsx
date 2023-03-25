@@ -18,26 +18,44 @@ export const action: ActionFunction = async ({ request, context }) => {
   const formData = await request.formData();
   const url = new URL(request.url);
 
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-    options: {
-      emailRedirectTo: "http://localhost:3000/confirm-email",
-    },
-  });
+  const usernameParam = formData.get("username") as string;
 
-  if (!data.user || error) {
-    return json<ActionData>({ error: error?.message }, { status: 500 });
+  try {
+    const usernameFlag = await db.profile.findUnique({
+      where: {
+        username: usernameParam,
+      },
+    });
+
+    if (usernameFlag) {
+      const usernameErrorMessage = "Username already exist. Please try a new one.";
+      return json<ActionData>({ error: usernameErrorMessage }, { status: 500 });
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      options: {
+        emailRedirectTo: "http://localhost:3000/confirm-email",
+      },
+    });
+
+    if (!data.user || error) {
+      return json<ActionData>({ error: error?.message }, { status: 500 });
+    }
+
+    await db.profile.update({
+      where: {
+        id: data.user?.id,
+      },
+      data: {
+        username: usernameParam,
+      },
+    });
+  } catch (error) {
+    const errorGeneralMessage = "Unexpected error. Please try again.";
+    return json<ActionData>({ error: errorGeneralMessage }, { status: 500 });
   }
-
-  await db.profile.update({
-    where: {
-      id: data.user?.id,
-    },
-    data: {
-      username: formData.get("username") as string,
-    },
-  });
 
   return redirect(url.searchParams.get("redirectTo") ?? "/", { headers: response.headers });
 };
