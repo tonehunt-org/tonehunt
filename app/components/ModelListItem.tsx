@@ -88,9 +88,11 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                     </span>
                   ) : null}
 
-                  <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter">
-                    {model.profile.username}
-                  </span>
+                  <Link to={`/profile/${model.profile.username}`}>
+                    <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
+                      {model.profile.username}
+                    </span>
+                  </Link>
                   <span className="inline-block mr-4 text-sm font-satoshi-light text-tonehunt-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
