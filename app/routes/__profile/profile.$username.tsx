@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -7,71 +8,165 @@ import { getSession } from "~/auth.server";
 import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
 
 import ModelsListComponent from "~/components/ModelList";
+import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 
 export type LoaderData = {
   user?: User | null | undefined;
   profile?: Profile | null | undefined;
+  modelList: {
+    models: any;
+    total: number;
+    page: number;
+  };
 };
+
+// THE AMOUNT OF MODELS PER PAGE
+const MODELS_LIMIT = 10;
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);
   const user = session?.user;
+  const url = new URL(request.url);
 
-  console.log(params);
+  // GET PAGE
+  let page = Number(url.searchParams.get("page")) ?? 1;
+  if (!page || page === 0) page = 1;
+  const offset = (page - 1) * MODELS_LIMIT;
+
   const profile = params.username
     ? await db.profile.findUnique({
         where: {
           username: params.username,
         },
-        select: {
-          username: true,
-          avatar: true,
-          bio: true,
-        },
       })
     : null;
+
+  // GET MODELS
+  const models = profile
+    ? await getModels(offset, profile.id)
+    : {
+        data: [],
+        total: 0,
+      };
 
   return json<LoaderData>({
     user,
     profile,
+    modelList: {
+      models: models.data,
+      total: models.total,
+      page: page - 1,
+    },
   });
 };
 
-export default function UserProfilePage() {
-  const data = useLoaderData();
+const getModels = async (next: number, profileId: string) => {
+  const models = await db.$transaction([
+    db.model.count({
+      where: {
+        private: false,
+        active: true,
+        profileId: profileId,
+      },
+    }),
+    db.model.findMany({
+      where: {
+        private: false,
+        active: true,
+        profileId: profileId,
+      },
+      select: {
+        _count: {
+          select: {
+            favorites: true,
+            downloads: true,
+          },
+        },
+        id: true,
+        title: true,
+        description: true,
+        tags: true,
+        createdAt: true,
+        updatedAt: true,
+        filename: true,
+        profile: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+      ],
+      skip: next,
+      take: MODELS_LIMIT,
+    }),
+  ]);
 
-  if (data.profile === null) {
-    return (
-      <div className="w-full">
-        <div className="flex flex-col">
-          <div className="flex-1">
-            <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
-              <div className="flex justify-center flex-col">
-                <div className="flex-1">
-                  <div className="flex justify-center">
-                    <FaceFrownIcon className="w-32" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-center">
-                    <h1 className="text-3xl font-satoshi-bold my-5 uppercase">User not found</h1>
-                  </div>
-                </div>
+  return {
+    total: models[0] ?? 0,
+    data: models[1],
+  };
+};
+
+const UserNotFound = () => (
+  <div className="w-full">
+    <div className="flex flex-col">
+      <div className="flex-1">
+        <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
+          <div className="flex justify-center flex-col">
+            <div className="flex-1">
+              <div className="flex justify-center">
+                <FaceFrownIcon className="w-32" />
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex justify-center">
+                <h1 className="text-3xl font-satoshi-bold my-5 uppercase">User not found</h1>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
+    </div>
+  </div>
+);
+
+export default function UserProfilePage() {
+  const data = useLoaderData();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  if (data.profile === null) {
+    return <UserNotFound />;
   }
 
-  const { user, profile } = data;
+  const { user, profile, modelList } = data;
+
   let textForBG = "";
   for (let x = 0; x < 30; x++) {
     textForBG += `${profile?.username} `;
   }
+
+  const handlePageClick = (selectedPage: number) => {
+    setLoading(true);
+    const params: any = {
+      page: selectedPage + 1,
+    };
+    const query = qs_stringify(params);
+    window.location.href = `/profile/${profile.username}?${query}`;
+  };
 
   return (
     <div className="w-full">
@@ -96,7 +191,7 @@ export default function UserProfilePage() {
                     {profile.bio ?? "No description available"}
                   </span>
                 </div>
-                {/* LOGIC NOT IN PLACE YET */}
+                {/* LOGIC NOT IN PLACE YET. LEAVING FOR REFERENCE */}
                 {/* <div className="flex justify-center flex-row">
                   <div>
                     <span className="text-lg font-satoshi-regular mb-5">241 Followers</span>
@@ -115,7 +210,25 @@ export default function UserProfilePage() {
         <div className="flex-1">
           <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
             <div className="flex justify-center">
-              <h1 className="text-3xl font-satoshi-bold mb-5">TABLE HERE</h1>
+              <div className="w-full">
+                {loading ? (
+                  <div className="flex justify-center px-10 py-60">
+                    <Loading size="48" />
+                  </div>
+                ) : null}
+                {!loading ? (
+                  <ModelsListComponent
+                    data={modelList.models}
+                    total={modelList.total}
+                    currentPage={modelList.page}
+                    limit={MODELS_LIMIT}
+                    handlePageClick={handlePageClick}
+                    showMenu={false}
+                    showFilters={false}
+                    user={user}
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
