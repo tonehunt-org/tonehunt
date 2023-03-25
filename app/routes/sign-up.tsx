@@ -8,6 +8,7 @@ import Input from "~/components/ui/Input";
 import Logo from "~/components/Logo";
 import { db } from "~/utils/db.server";
 import Alert from "~/components/ui/Alert";
+import { Link } from "@remix-run/react";
 
 type ActionData = {
   error?: string;
@@ -123,8 +124,16 @@ export default function SignUpPage() {
                 Sign Up
               </Button>
             </div>
-            <div className="text-center pt-12 text-tonehunt-gray-lighter">Already have an account? Login here.</div>
-            <div className="text-center py-1 text-tonehunt-gray-lighter">Return to Homepage</div>
+            <div className="text-center pt-12 text-tonehunt-gray-lighter">
+              <Link to="/" className="hover:underline">
+                Already have an account? Login here.
+              </Link>
+            </div>
+            <div className="text-center py-1 text-tonehunt-gray-lighter">
+              <Link to="/" className="hover:underline">
+                Return to Homepage
+              </Link>
+            </div>
           </Form>
         </div>
       </div>
