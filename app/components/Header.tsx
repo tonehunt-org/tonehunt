@@ -4,13 +4,14 @@ import Button from "~/components/ui/Button";
 import UserActions from "~/components/UserActions";
 import Searchbar from "./Searchbar";
 import type { User } from "@supabase/supabase-js";
+import type { Profile } from "@prisma/client";
 
 interface HeaderType {
-  user?: User | undefined;
-  username?: string | null;
+  user?: User | undefined | null;
+  profile?: Profile | null | undefined;
 }
 
-const Header = ({ user, username }: HeaderType) => {
+const Header = ({ user, profile }: HeaderType) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -60,7 +61,7 @@ const Header = ({ user, username }: HeaderType) => {
               </div>
             </div>
             <div>
-              <UserActions user={user} username={username ?? undefined} />
+              <UserActions user={user} username={profile?.username ?? undefined} />
             </div>
             {user ? (
               <div className="hidden lg:block">

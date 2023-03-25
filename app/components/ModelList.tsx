@@ -14,12 +14,12 @@ interface ModelListType {
   currentPage: number;
   limit: number;
   handlePageClick: (arg: number) => void;
-  filterOptions: SelectOption[];
-  selectedFilter: string | undefined | null;
+  filterOptions?: SelectOption[];
+  selectedFilter?: string | undefined | null;
   setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
   showFilters?: boolean;
   showMenu?: boolean;
-  selectedSortBy: string;
+  selectedSortBy?: string;
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
 }
