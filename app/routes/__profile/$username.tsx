@@ -114,7 +114,7 @@ export default function UserProfilePage() {
     <div className="w-full">
       <div className="flex flex-col">
         <div className="flex-1 relative">
-          <div className="block absolute top-0 left-0 w-full h-full bg-tonehunt-gray-darker -z-10 uppercase text-8xl font-bold overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker">
+          <div className="block absolute top-0 left-0 w-full h-full leading-[88%] bg-tonehunt-gray-darker font-satoshi-bold -z-10 uppercase text-[80px] overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker">
             {textForBG}
           </div>
           <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
