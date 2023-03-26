@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
@@ -63,7 +64,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   });
 };
 
-const UserNotFound = () => (
+export const NotFound = ({ children }: PropsWithChildren) => (
   <div className="w-full">
     <div className="flex flex-col">
       <div className="flex-1">
@@ -76,7 +77,7 @@ const UserNotFound = () => (
             </div>
             <div className="flex-1">
               <div className="flex justify-center">
-                <h1 className="text-3xl font-satoshi-bold my-5 uppercase">User not found</h1>
+                <h1 className="text-3xl font-satoshi-bold my-5 uppercase">{children}</h1>
               </div>
             </div>
           </div>
@@ -91,7 +92,7 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   if (data.profile === null) {
-    return <UserNotFound />;
+    return <UserNotFound>User not found</UserNotFound>;
   }
 
   const { user, profile, modelList } = data;
