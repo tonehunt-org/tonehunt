@@ -33,6 +33,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       filename: true,
       private: true,
       active: true,
+      profileId: true,
       category: {
         select: {
           id: true,
@@ -58,11 +59,12 @@ const MyModelsPage = () => {
   const data = useLoaderData();
   const submit = useSubmit();
 
-  const onDeleteClick = (modelId: string) => {
+  const onDeleteClick = (modelId: string, profileId: string) => {
     if (window.confirm("Do you really want to delete this model?")) {
       console.log("remove:", modelId);
       let formData = new FormData();
       formData.append("modelId", modelId);
+      formData.append("profileId", profileId);
       submit(formData, { method: "post", action: "/models/delete" });
     }
   };
@@ -106,7 +108,7 @@ const MyModelsPage = () => {
                 type="button"
                 variant="secondary"
                 className="ml-2 bg-red-600 hover:bg-red-800 border-none"
-                onClick={() => onDeleteClick(model.id)}
+                onClick={() => onDeleteClick(model.id, model.profileId)}
               >
                 <TrashIcon className="w-5 h-5 inline-block" />
               </Button>
