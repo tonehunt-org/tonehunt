@@ -1,4 +1,5 @@
 import { LinkIcon } from "@heroicons/react/24/outline";
+import { forwardRef } from "react";
 import Button from "~/components/ui/Button";
 
 type FavoriteButtonProps = {
@@ -6,9 +7,10 @@ type FavoriteButtonProps = {
   className?: string;
 };
 
-export default function ShareButton({ onClick, className }: FavoriteButtonProps) {
+const ShareButton = forwardRef(({ onClick, className }: FavoriteButtonProps, ref) => {
   return (
     <Button
+      ref={ref}
       type="button"
       variant="secondary"
       className={`flex items-center text-white/60 hover:border-white hover:bg-transparent hover:text-white ${className}`}
@@ -18,4 +20,8 @@ export default function ShareButton({ onClick, className }: FavoriteButtonProps)
       <span className="inline-block text-sm font-satoshi-bold text-[16px]">Share</span>
     </Button>
   );
-}
+});
+
+ShareButton.displayName = "ShareButton";
+
+export default ShareButton;
