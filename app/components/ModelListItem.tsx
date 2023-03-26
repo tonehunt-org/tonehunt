@@ -8,6 +8,7 @@ import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
+import { getCategoryProfile } from "~/services/categories";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -24,32 +25,6 @@ interface ModelListItemType {
 }
 
 const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
-  const getCategoryProfile = (catSlug: string) => {
-    switch (catSlug) {
-      case "amps":
-      default:
-        return {
-          icon: iconCab,
-          color: "text-tonehunt-green",
-        };
-      case "packs":
-        return {
-          icon: iconFullrigPack,
-          color: "text-tonehunt-purple",
-        };
-      case "pedals":
-        return {
-          icon: iconPedal,
-          color: "text-tonehunt-yellow",
-        };
-      case "irs":
-        return {
-          icon: iconIr,
-          color: "text-tonehunt-orange",
-        };
-    }
-  };
-
   const categoryProfile = getCategoryProfile(model.category.slug);
 
   return (

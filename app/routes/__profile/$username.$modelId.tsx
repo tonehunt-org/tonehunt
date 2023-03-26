@@ -1,30 +1,95 @@
+import * as timeago from "timeago.js";
 import iconFullrigPack from "~/assets/categories_icons/icon-fullrig-pack.svg";
 import FavoriteButton from "~/components/FavoriteButton";
 import DownloadButton from "~/components/DownloadButton";
 import ShareButton from "~/components/ShareButton";
-import Button from "~/components/ui/Button";
-import { Link } from "@remix-run/react";
+import { Link, useCatch, useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { NotFound } from "./$username";
+import type { Category, Favorite, Model, ModelDownload, Profile } from "@prisma/client";
+import { db } from "~/utils/db.server";
+import { UserIcon } from "@heroicons/react/24/outline";
+import { useRef, useState } from "react";
+import { getCategoryProfile } from "~/services/categories";
+
+type LoaderData = {
+  model: Model & {
+    profile: Profile;
+    category: Category;
+    favorites: { id: Favorite["id"] }[];
+    downloads: { id: ModelDownload["id"] }[];
+  };
+};
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const model = await db.model.findFirst({
+    where: {
+      id: params.modelId as string,
+    },
+    include: {
+      downloads: {
+        select: {
+          id: true,
+        },
+      },
+      profile: true,
+      category: true,
+      favorites: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  if (!model) {
+    throw new Response("", { status: 404 });
+  }
+
+  return json<LoaderData>({ model });
+};
 
 export default function ModelDetailPage() {
-  const textForBG = [...new Array(30)].map(() => "test model");
+  const data = useLoaderData<LoaderData>();
+  const shareButtonRef = useRef(null);
+
+  const textForBG = [...new Array(30)].map(() => data.model.title);
 
   return (
     <section className="w-full">
       <header className="pt-[80px] text-center relative">
         <div className="relative z-10">
           <div className="pb-[40px]">
-            <img className="m-auto w-32 h-32" src={iconFullrigPack} alt="Model Type: TODO" />
+            <img
+              className="m-auto w-32 h-32"
+              src={getCategoryProfile(data.model.category.slug).icon}
+              alt={data.model.category.title}
+            />
           </div>
 
           <h4 className="mb-0 pb-[12] leading-[19px] text-[14px] font-satoshi-bold uppercase text-tonehunt-green">
-            Full Rig Model
+            {data.model.category.title}
           </h4>
-          <h3 className="font-satoshi-bold text-[47px] pb-8">VOX AC 30 '92</h3>
+          <h3 className="font-satoshi-bold text-[47px] pb-8">{data.model.title}</h3>
 
           <div className="flex gap-[12px] justify-center pb-16">
-            <DownloadButton count={0} onClick={() => {}} />
-            <FavoriteButton count={0} onClick={() => {}} className="bg-tonehunt-gray-darker" />
-            <ShareButton onClick={() => {}} className="bg-tonehunt-gray-darker" />
+            <DownloadButton count={data.model.downloads.length} onClick={() => {}} />
+            <FavoriteButton
+              count={data.model.favorites.length}
+              onClick={() => {}}
+              className="bg-tonehunt-gray-darker"
+            />
+            <ShareButton
+              ref={shareButtonRef}
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(window.location.href);
+                  alert("Url copied to clipboard");
+                } catch (e) {}
+              }}
+              className="bg-tonehunt-gray-darker"
+            />
           </div>
         </div>
 
@@ -35,11 +100,11 @@ export default function ModelDetailPage() {
 
       <div className="pt-16 flex gap-[40px] max-w-[990px] m-auto px-4">
         <div className="border border-white/20 rounded-2xl p-4 text-center w-[270px]">
-          <div className="rounded-full bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 "></div>
-          <h4 className="text-xl leading-[27px] opacity-50 mb-8">scottcorgan</h4>
+          <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
+          <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
 
           <Link
-            to="/"
+            to={`/${data.model.profile.username}`}
             className="block hover:bg-tonehunt-gray-light text-base text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl"
           >
             Profile
@@ -47,26 +112,40 @@ export default function ModelDetailPage() {
         </div>
 
         <div className="flex-grow">
-          <h4 className="text-[22px] opacity-70 pb-[40px]">
-            Captured through a magical Neve preamp with my beloved 4x12 box
-          </h4>
+          <h4 className="pb-2">{data.model.ampName}</h4>
+          <p className="text-[22px] opacity-70 pb-[40px]">{data.model.description}</p>
 
           <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
-          <ul className="pb-[44px]">
-            <li>
-              <Link
-                to="/"
-                prefetch="intent"
-                className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
-              >
-                #Metal
-              </Link>
-            </li>
+
+          <ul className="pb-[44px] flex gap-1">
+            {data.model.tags?.split(",").map((tag) => {
+              return (
+                <li key={tag}>
+                  <Link
+                    to="/"
+                    prefetch="intent"
+                    className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
+                  >
+                    #{tag}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
-          <span className="opacity-60 text-sm leading-[19px]">Uploaded 15 hours ago</span>
+          <span className="opacity-60 text-sm leading-[19px]">Uploaded {timeago.format(data.model.createdAt)}</span>
         </div>
       </div>
     </section>
   );
 }
+
+export const CatchBoundary = () => {
+  const data = useCatch();
+
+  if (data.status === 404) {
+    return <NotFound>Model not found.</NotFound>;
+  }
+
+  return <div>An unknown error occurred</div>;
+};
