@@ -6,12 +6,7 @@ import { getSession } from "~/auth.server";
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { supabase } = await getSession(request);
 
-  const dbResponse = await supabase
-    .from("models")
-    .select("*")
-    .eq("id", params.id)
-    .limit(1)
-    .single();
+  const dbResponse = await supabase.from("models").select("*").eq("id", params.id).limit(1).single();
 
   if (!dbResponse.data) {
     return redirect("/not-found");

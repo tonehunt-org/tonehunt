@@ -8,7 +8,6 @@ import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
-import { useApp } from "~/hooks/useApp";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -52,11 +51,6 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
   };
 
   const categoryProfile = getCategoryProfile(model.category.slug);
-  const { openModelPreview } = useApp();
-
-  const handleModelClick = (e: any, modelId: string) => {
-    openModelPreview(modelId);
-  };
 
   return (
     <div
@@ -77,7 +71,6 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                   prefetch="intent"
                   to={`/${model.profile.username}/${model.id}`}
                   className="flex-1 hover:underline"
-                  onClick={(e) => handleModelClick(e, model.id)}
                 >
                   <span className="font-satoshi-bold text-xl">{model.title}</span>
                 </Link>
@@ -88,7 +81,7 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                     </span>
                   ) : null}
 
-                  <Link to={`/profile/${model.profile.username}`}>
+                  <Link to={`/${model.profile.username}`}>
                     <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>

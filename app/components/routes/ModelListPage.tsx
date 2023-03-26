@@ -10,7 +10,6 @@ import type { SelectOption } from "~/components/ui/Select";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
-import ModelPreviewModal from "../ModelPreviewModal";
 import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 
@@ -204,7 +203,6 @@ export default function ModelListPage() {
           ) : null}
         </div>
       </div>
-      <ModelPreviewModal />
     </div>
   );
 }
