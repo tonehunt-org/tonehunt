@@ -7,6 +7,7 @@ import { db } from "~/utils/db.server";
 import { map } from "lodash";
 import * as timeago from "timeago.js";
 import Button from "~/components/ui/Button";
+import ButtonLink from "~/components/ui/ButtonLink";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type LoaderData = {
@@ -96,18 +97,17 @@ const MyModelsPage = () => {
           </div>
           <div className="w-full lg:w-1/4 lg:pl-3">
             <div className="flex items-center h-full justify-center">
-              <Button
-                type="button"
-                variant="secondary"
-                className="ml-2 bg-cyan-600 hover:bg-cyan-800 border-none"
-                onClick={() => console.log("edit")}
+              <ButtonLink
+                className="ml-2 bg-cyan-600 hover:bg-cyan-700 border-none"
+                variant="button"
+                to={`/account/my-models/${model.id}`}
               >
                 <PencilSquareIcon className="w-5 h-5 inline-block" />
-              </Button>
+              </ButtonLink>
               <Button
                 type="button"
                 variant="secondary"
-                className="ml-2 bg-red-600 hover:bg-red-800 border-none"
+                className="ml-2 bg-red-600 hover:bg-red-700 border-none"
                 onClick={() => onDeleteClick(model.id, model.profileId)}
               >
                 <TrashIcon className="w-5 h-5 inline-block" />
