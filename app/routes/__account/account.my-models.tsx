@@ -1,20 +1,16 @@
 import { getSession } from "~/auth.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import type { User } from "@supabase/supabase-js";
 
-export type LoaderData = {
-  user?: User | null;
+type LoaderData = {
+  user: User | null | undefined;
 };
 
-export const modelListLoader: LoaderFunction = async ({ request }) => {
-  const { session, response } = await getSession(request);
+export const loader: LoaderFunction = async ({ request }) => {
+  const { session } = await getSession(request);
   const user = session?.user;
-
-  if (!user) {
-    return redirect("/", { headers: response.headers });
-  }
 
   return json<LoaderData>({
     user,
