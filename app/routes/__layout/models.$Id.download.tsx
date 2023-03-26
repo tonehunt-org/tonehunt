@@ -8,7 +8,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const returnUrl = request.headers.get("Referer");
   const user = session?.user;
 
-  const modelId = params.id as string;
+  const modelId = params.Id as string;
 
   try {
     const model = await db.model.findUnique({

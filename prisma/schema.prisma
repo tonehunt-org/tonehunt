@@ -33,6 +33,7 @@ model Category {
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
   models      Model[]
+  deleted     Boolean   @default(false)
 }
 
 model Model {
@@ -50,10 +51,12 @@ model Model {
   favorites     Favorite[]
   downloads     ModelDownload[]
   private			  Boolean		  @default(false)
-  tags			    String?      @db.VarChar(255)
+  tags			    String?     @db.VarChar(255)
   active			  Boolean		  @default(true)
   createdAt 		DateTime    @default(now()) @db.Timestamptz(3)
   updatedAt 		DateTime    @updatedAt @db.Timestamptz(3)
+  deleted       Boolean     @default(false)
+  link          String?     @db.VarChar(255)
 }
 
 model Favorite {
@@ -64,6 +67,7 @@ model Favorite {
   profile		  Profile		@relation(fields: [profileId], references: [id])
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
+  deleted     Boolean   @default(false)
 }
 
 model ModelDownload {
@@ -74,4 +78,5 @@ model ModelDownload {
   profile		  Profile?	@relation(fields: [profileId], references: [id])
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
+  deleted     Boolean   @default(false)
 }

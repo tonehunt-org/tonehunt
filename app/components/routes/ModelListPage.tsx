@@ -7,11 +7,12 @@ import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 
 import type { SelectOption } from "~/components/ui/Select";
-import { db } from "~/utils/db.server";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import ModelPreviewModal from "../ModelPreviewModal";
+import { getModels } from "~/services/models";
+import { getCategories } from "~/services/categories";
 
 export type LoaderData = {
   user?: User | null;
@@ -34,118 +35,8 @@ const sortByOptions = [
   { slug: "name", field: "title" },
 ];
 
-const getCategories = async () => {
-  const categories = await db.category.findMany({
-    where: {
-      active: true,
-    },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-    },
-    orderBy: [
-      {
-        order: "asc",
-      },
-    ],
-  });
-
-  return categories;
-};
-
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 12;
-
-const getModels = async (
-  next: number,
-  categoryId: number | null,
-  sortBy: string,
-  sortDirection: string,
-  username: string | null,
-  user: User | null | undefined
-) => {
-  const models = await db.$transaction([
-    db.model.count({
-      where: {
-        private: false,
-        active: true,
-        ...(categoryId && {
-          categoryId: categoryId,
-        }),
-        ...(username && {
-          profile: {
-            username: username,
-          },
-        }),
-      },
-    }),
-    db.model.findMany({
-      where: {
-        private: false,
-        active: true,
-        ...(categoryId && {
-          categoryId: categoryId,
-        }),
-        ...(username && {
-          profile: {
-            username: username,
-          },
-        }),
-      },
-      select: {
-        _count: {
-          select: {
-            favorites: true,
-            downloads: true,
-          },
-        },
-        ...(user && {
-          favorites: {
-            select: {
-              id: true,
-            },
-            where: {
-              profileId: user.id,
-            },
-          },
-        }),
-        id: true,
-        title: true,
-        description: true,
-        tags: true,
-        createdAt: true,
-        updatedAt: true,
-        filename: true,
-        profile: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-          },
-        },
-      },
-      orderBy: [
-        {
-          [sortBy]: sortDirection,
-        },
-      ],
-      skip: next,
-      take: MODELS_LIMIT,
-    }),
-  ]);
-
-  return {
-    total: models[0] ?? 0,
-    data: models[1],
-  };
-};
+const MODELS_LIMIT = 8;
 
 export const modelListLoader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
@@ -178,7 +69,15 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   // GET MODELS
-  const models = await getModels(offset, categoryId, sortBy, sortDirection, usernameParam, user);
+  const models = await getModels({
+    limit: MODELS_LIMIT,
+    next: offset,
+    categoryId,
+    sortBy,
+    sortDirection,
+    username: usernameParam,
+    user,
+  });
 
   return json<LoaderData>({
     user,

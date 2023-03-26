@@ -101,7 +101,7 @@ const ModelsListComponent = ({
           <div className="flex-grow">
             <div className="flex justify-end">
               <Select
-                className="w-32"
+                className="w-36"
                 options={filterOptions}
                 onChange={setSelectedFilter || undefined}
                 defaultSelected={selectedFilter ?? ""}
