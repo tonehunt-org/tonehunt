@@ -6,7 +6,7 @@ import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
 import type { Category } from "@prisma/client";
 import type { Profile } from "@prisma/client";
-import ProfileLayout from "~/layouts/ProfileLayout";
+import DefaultLayout from "~/layouts/DefaultLayout";
 
 type LoaderData = {
   user?: User | null | undefined;
@@ -38,8 +38,8 @@ export default function Layout() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <ProfileLayout user={data.user} profile={data.profile} categories={data.categories}>
+    <DefaultLayout user={data.user} profile={data.profile} categories={data.categories}>
       <Outlet />
-    </ProfileLayout>
+    </DefaultLayout>
   );
 }
