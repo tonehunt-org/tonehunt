@@ -1,6 +1,6 @@
 import { getSession } from "~/auth.server";
 import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
@@ -21,6 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const models = await db.model.findMany({
     where: {
       profileId: user?.id,
+      deleted: false,
     },
     select: {
       id: true,
@@ -55,6 +56,16 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const MyModelsPage = () => {
   const data = useLoaderData();
+  const submit = useSubmit();
+
+  const onDeleteClick = (modelId: string) => {
+    if (window.confirm("Do you really want to delete this model?")) {
+      console.log("remove:", modelId);
+      let formData = new FormData();
+      formData.append("modelId", modelId);
+      submit(formData, { method: "post", action: "/models/delete" });
+    }
+  };
 
   const renderItems = map(data.models, (model) => {
     return (
@@ -95,7 +106,7 @@ const MyModelsPage = () => {
                 type="button"
                 variant="secondary"
                 className="ml-2 bg-red-600 hover:bg-red-800 border-none"
-                onClick={() => console.log("remove")}
+                onClick={() => onDeleteClick(model.id)}
               >
                 <TrashIcon className="w-5 h-5 inline-block" />
               </Button>
