@@ -24,6 +24,7 @@ export type LoaderData = {
     categories: any;
     sortBy: string;
     sortDirection: string;
+    tags: string | null;
   };
   modelDetail?: {};
 };
@@ -62,6 +63,9 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
   // GET FILTER
   const filter = url.searchParams.get("filter") ?? "all";
 
+  // GET TAGS
+  const tagsParam = url.searchParams.get("tags") ?? null;
+
   // GET CATEGORIES
   const categories = await getCategories();
   const selectedCategory = find(categories, ["slug", filter]);
@@ -76,6 +80,7 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
     sortDirection,
     username: usernameParam,
     user,
+    tags: tagsParam,
   });
 
   return json<LoaderData>({
@@ -89,6 +94,7 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
       categories,
       sortBy: selectedSortBy?.slug ?? "newest",
       sortDirection,
+      tags: tagsParam,
     },
   });
 };
@@ -151,6 +157,10 @@ export default function ModelListPage() {
       params.username = data.username;
     }
 
+    if (data.tags) {
+      params.tags = data.tags;
+    }
+
     const query = qs_stringify(params);
     window.location.href = `/?${query}`;
   };
@@ -165,6 +175,10 @@ export default function ModelListPage() {
 
     if (data.username) {
       params.username = data.username;
+    }
+
+    if (data.tags) {
+      params.tags = data.tags;
     }
 
     const query = qs_stringify(params);

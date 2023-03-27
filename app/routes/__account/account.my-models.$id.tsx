@@ -10,6 +10,7 @@ import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Button from "~/components/ui/Button";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { split, join } from "lodash";
 
 type LoaderData = {
   model: any;
@@ -55,6 +56,9 @@ export const action: ActionFunction = async ({ request, context }) => {
       const status = formData.get("active") as string;
       const link = formData.get("link") as string;
 
+      const tags = formData.get("tags") as string;
+      const tagsScala = tags && tags !== "" ? split(tags, ",") : [];
+
       const params = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
@@ -62,7 +66,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         categoryId: Number(formData.get("categoryId")) as number,
         active: status === "1" ? true : false,
         link: link === "" ? null : link,
-        tags: formData.get("tags") as string,
+        tags: tagsScala,
       };
 
       await db.model.update({
@@ -202,7 +206,12 @@ export default function EditModelPage() {
 
             <div className="flex">
               <div className="w-full mt-3">
-                <Input name="tags" label="Tags" placeholder="Rock, Metal, Marshal ..." defaultValue={model.tags} />
+                <Input
+                  name="tags"
+                  label="Tags"
+                  placeholder="Rock, Metal, Marshal ..."
+                  defaultValue={model.tags ? join(model.tags, ",") : ""}
+                />
               </div>
               <Input name="id" type="hidden" defaultValue={model.id} />
               <Input name="profileId" type="hidden" defaultValue={model.profileId} />
