@@ -62,7 +62,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
             </Link>
           </li>
           <li>
-            <Link to="/change-password" prefetch="intent">
+            <Link to="/account/change-password" prefetch="intent">
               Change Password
             </Link>
           </li>
