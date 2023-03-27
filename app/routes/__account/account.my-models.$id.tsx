@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { useState } from "react";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useActionData, useLoaderData, Form, useNavigate } from "@remix-run/react";
+import { useLoaderData, Form, useNavigate, useActionData } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
@@ -9,16 +9,17 @@ import { getCategories } from "~/services/categories";
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Button from "~/components/ui/Button";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 
 type LoaderData = {
   model: any;
   categories: any;
 };
 
-// type ActionData = {
-//   error?: string;
-//   success?: boolean;
-// };
+type ActionData = {
+  error?: string;
+  success?: boolean;
+};
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);
@@ -41,36 +42,50 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   return json<LoaderData>({ model, categories });
 };
 
-// export const action: ActionFunction = async ({ request, context, params }) => {
-//   const { session, supabase } = await getSession(request);
-//   const formData = await request.formData();
+export const action: ActionFunction = async ({ request, context }) => {
+  const { session } = await getSession(request);
+  const formData = await request.formData();
 
-//   const { error } = await supabase
-//     .from("models")
-//     .update({
-//       title: formData.get("title") as string,
-//       description: formData.get("description") as string,
-//       amp_name: formData.get("ampName") as string,
-//     })
-//     .eq("profile_id", session?.user.id)
-//     .eq("id", params.id)
-//     .select();
+  const modelId = formData.get("id") as string;
+  const profileId = formData.get("profileId") as string;
+  const user = session?.user;
 
-//   if (error) {
-//     return json<ActionData>({ error: "Error updating model" }, { status: 500 });
-//   }
+  if (user?.id === profileId) {
+    try {
+      const status = formData.get("active") as string;
+      const link = formData.get("link") as string;
 
-//   return json<ActionData>({ success: true });
-// };
+      const params = {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        ampName: formData.get("ampName") as string,
+        categoryId: Number(formData.get("categoryId")) as number,
+        active: status === "1" ? true : false,
+        link: link === "" ? null : link,
+        tags: formData.get("tags") as string,
+      };
+
+      await db.model.update({
+        where: {
+          id: modelId,
+        },
+        data: params,
+      });
+    } catch (error) {
+      return json<ActionData>({ error: "Error updating model. Please try again." }, { status: 500 });
+    }
+  }
+  return json<ActionData>({ success: true });
+};
 
 export default function EditModelPage() {
   const data = useLoaderData<LoaderData>();
   const { model, categories } = data;
+
+  const actionData = useActionData<ActionData>();
   const navigate = useNavigate();
 
   const [formValidity, setFormValidity] = useState(false);
-  console.log(data);
-  //   const actionData = useActionData<ActionData>();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(model.categoryId);
   const [selectedStatus, setSelectedStatus] = useState(model.active);
@@ -81,12 +96,36 @@ export default function EditModelPage() {
 
   return (
     <div className="w-full">
-      <div className="flex">
+      <div className="flex flex-col">
+        <div className="w-full">
+          <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
+            <ArrowLeftCircleIcon className="inline-block w-5 h-5 -mt-1" />
+            <span className="inline-block ml-2 hover:underline">Go Back</span>
+          </Button>
+        </div>
+
         <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Edit Model</h1>
       </div>
+
+      {actionData?.success ? (
+        <div className="flex justify-center">
+          <div className="w-full max-w-lg">
+            <Alert title="Model updated successfully." variant="success" />
+          </div>
+        </div>
+      ) : null}
+
+      {actionData?.error ? (
+        <div className="flex justify-center">
+          <div className="w-full max-w-lg">
+            <Alert title="There was an error" description={actionData?.error} variant="error" />
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex flex-col mt-5">
         <div className="flex-1">
-          <Form method="post" action="/models/update" onChange={handleFormChange}>
+          <Form method="post" onChange={handleFormChange}>
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-10">
               <div className="w-full lg:w-1/2">
                 <div className="flex flex-col gap-3">
@@ -130,7 +169,7 @@ export default function EditModelPage() {
                     <Select
                       required
                       label="Status"
-                      name="status"
+                      name="active"
                       defaultSelected={selectedStatus === true ? "1" : "2"}
                       showEmptyOption={false}
                       onChange={(e) => setSelectedStatus(e.target.value === "1" ? true : false)}
@@ -152,12 +191,25 @@ export default function EditModelPage() {
 
             <div className="flex">
               <div className="w-full mt-3">
-                <Input name="tags" label="Tags" placeholder="Rock, Metal, Marshal ..." defaultValue={model.tags} />
+                <Input
+                  name="link"
+                  label="Link"
+                  placeholder="Link to Youtube, Soundcloud, etc"
+                  defaultValue={model.link}
+                />
               </div>
             </div>
 
+            <div className="flex">
+              <div className="w-full mt-3">
+                <Input name="tags" label="Tags" placeholder="Rock, Metal, Marshal ..." defaultValue={model.tags} />
+              </div>
+              <Input name="id" type="hidden" defaultValue={model.id} />
+              <Input name="profileId" type="hidden" defaultValue={model.profileId} />
+            </div>
+
             <div className="flex justify-end pt-12">
-              <Button variant="link" className="mr-10" onClick={() => navigate("/account/my-models")}>
+              <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
                 Cancel
               </Button>
 
