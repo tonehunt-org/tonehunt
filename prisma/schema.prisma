@@ -51,7 +51,7 @@ model Model {
   favorites     Favorite[]
   downloads     ModelDownload[]
   private			  Boolean		  @default(false)
-  tags			    String?     @db.VarChar(255)
+  tags			    String[]
   active			  Boolean		  @default(true)
   createdAt 		DateTime    @default(now()) @db.Timestamptz(3)
   updatedAt 		DateTime    @updatedAt @db.Timestamptz(3)
@@ -76,6 +76,16 @@ model ModelDownload {
   model			  Model		  @relation(fields: [modelId], references: [id])
   profileId   String?		
   profile		  Profile?	@relation(fields: [profileId], references: [id])
+  createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
+  deleted     Boolean   @default(false)
+}
+
+model Tag {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  group       String?   @db.VarChar(255)
+  active			Boolean		@default(true)
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
   deleted     Boolean   @default(false)
