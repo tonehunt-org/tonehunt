@@ -19,6 +19,7 @@ export const getModels = async (params: getModelsType) => {
       where: {
         private: false,
         active: true,
+        deleted: false,
         ...(params.categoryId && {
           categoryId: params.categoryId,
         }),
@@ -42,6 +43,7 @@ export const getModels = async (params: getModelsType) => {
       where: {
         private: false,
         active: true,
+        deleted: false,
         ...(params.categoryId && {
           categoryId: params.categoryId,
         }),
@@ -74,6 +76,7 @@ export const getModels = async (params: getModelsType) => {
             },
             where: {
               profileId: params.user.id,
+              deleted: false,
             },
           },
         }),
