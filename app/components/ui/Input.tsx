@@ -24,7 +24,7 @@ export default function Input({ label, multiline, className, ...props }: InputPr
       id={id}
       {...props}
       style={{ borderRadius: "27px", ...props.style }}
-      className={`${inputClassNames} ${className}`}
+      className={`${inputClassNames} ${className} ${props.disabled ? "text-tonehunt-gray-light" : null}`}
     />
   );
 
