@@ -1,19 +1,25 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form, useNavigate, useActionData } from "@remix-run/react";
+import { useLoaderData, Form, useNavigate, useActionData, useSubmit } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
 import { getCategories } from "~/services/categories";
+import { getTags } from "~/services/tags";
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Button from "~/components/ui/Button";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { split, join, map } from "lodash";
+import MultiSelect from "~/components/ui/MultiSelect";
+import type { MultiSelectOption } from "~/components/ui/MultiSelect";
 
 type LoaderData = {
   model: any;
   categories: any;
+  tags: any;
 };
 
 type ActionData = {
@@ -38,8 +44,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   }
 
   const categories = await getCategories();
+  const tags = await getTags();
 
-  return json<LoaderData>({ model, categories });
+  return json<LoaderData>({ model, categories, tags });
 };
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -55,6 +62,9 @@ export const action: ActionFunction = async ({ request, context }) => {
       const status = formData.get("active") as string;
       const link = formData.get("link") as string;
 
+      const tags = formData.get("tags") as string;
+      const tagsScala = tags && tags !== "" ? split(tags, ",") : [];
+
       const params = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
@@ -62,7 +72,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         categoryId: Number(formData.get("categoryId")) as number,
         active: status === "1" ? true : false,
         link: link === "" ? null : link,
-        tags: formData.get("tags") as string,
+        tags: tagsScala,
       };
 
       await db.model.update({
@@ -80,18 +90,43 @@ export const action: ActionFunction = async ({ request, context }) => {
 
 export default function EditModelPage() {
   const data = useLoaderData<LoaderData>();
-  const { model, categories } = data;
+  const submit = useSubmit();
+  const { model, categories, tags } = data;
 
   const actionData = useActionData<ActionData>();
   const navigate = useNavigate();
 
-  const [formValidity, setFormValidity] = useState(false);
+  const [formErrorMsg, setFormErrorMsg] = useState<string>();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(model.categoryId);
   const [selectedStatus, setSelectedStatus] = useState(model.active);
 
-  const handleFormChange = (e: any) => {
-    setFormValidity(e.currentTarget.checkValidity());
+  const tagOptions = map(tags, (tag) => ({ value: tag.name, label: tag.name }));
+  const modelTags = model.tags ? map(model.tags, (tag) => ({ value: tag, label: tag })) : [];
+  const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>(modelTags);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    setFormErrorMsg(undefined);
+    event.preventDefault();
+    const currentForm = event.currentTarget;
+    let formData = new FormData(currentForm);
+
+    const titleValue = formData.get("title");
+    if (!titleValue || titleValue === "") {
+      setFormErrorMsg("Title is required.");
+      return;
+    }
+
+    const ampNameValue = formData.get("ampName");
+    if (!ampNameValue || ampNameValue === "") {
+      setFormErrorMsg("Make and Model is required.");
+      return;
+    }
+
+    const tagsData = map(selectedTags, (tag) => tag.value);
+    formData.set("tags", join(tagsData, ","));
+
+    submit(formData, { method: "post" });
   };
 
   return (
@@ -123,9 +158,18 @@ export default function EditModelPage() {
         </div>
       ) : null}
 
+      {formErrorMsg ? (
+        <div className="flex justify-center">
+          <div className="w-full max-w-lg">
+            <Alert title="There was an error" description={formErrorMsg} variant="error" />
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex flex-col mt-5">
         <div className="flex-1">
-          <Form method="post" onChange={handleFormChange}>
+          {/* <Form method="post" onChange={handleFormChange} onSubmit={handleSubmit}> */}
+          <Form onSubmit={handleSubmit}>
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-10">
               <div className="w-full lg:w-1/2">
                 <div className="flex flex-col gap-3">
@@ -202,7 +246,13 @@ export default function EditModelPage() {
 
             <div className="flex">
               <div className="w-full mt-3">
-                <Input name="tags" label="Tags" placeholder="Rock, Metal, Marshal ..." defaultValue={model.tags} />
+                <MultiSelect
+                  name="tags"
+                  label="Tags"
+                  options={tagOptions}
+                  onChange={(e: any) => setSelectedTags(e)}
+                  defaultValue={selectedTags}
+                />
               </div>
               <Input name="id" type="hidden" defaultValue={model.id} />
               <Input name="profileId" type="hidden" defaultValue={model.profileId} />
@@ -212,10 +262,7 @@ export default function EditModelPage() {
               <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
                 Cancel
               </Button>
-
-              <Button disabled={!formValidity} type="submit" className="">
-                Update Model
-              </Button>
+              <Button type="submit">Update Model</Button>
             </div>
           </Form>
         </div>

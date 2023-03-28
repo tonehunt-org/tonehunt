@@ -1,5 +1,6 @@
 import { db } from "~/utils/db.server";
 import type { User } from "@supabase/supabase-js";
+import { split } from "lodash";
 
 interface getModelsType {
   limit?: number;
@@ -11,9 +12,12 @@ interface getModelsType {
   user?: User | null | undefined;
   search?: string | null | undefined;
   profileId?: string | null | undefined;
+  tags?: string | null | undefined;
 }
 
 export const getModels = async (params: getModelsType) => {
+  const tagsScala = params.tags && params.tags !== "" ? split(params.tags, ",") : null;
+
   const models = await db.$transaction([
     db.model.count({
       where: {
@@ -35,6 +39,11 @@ export const getModels = async (params: getModelsType) => {
           title: {
             contains: params.search,
             mode: "insensitive",
+          },
+        }),
+        ...(tagsScala && {
+          tags: {
+            hasSome: tagsScala,
           },
         }),
       },
@@ -59,6 +68,11 @@ export const getModels = async (params: getModelsType) => {
           title: {
             contains: params.search,
             mode: "insensitive",
+          },
+        }),
+        ...(tagsScala && {
+          tags: {
+            hasSome: tagsScala,
           },
         }),
       },
