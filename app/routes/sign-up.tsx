@@ -68,22 +68,23 @@ export default function SignUpPage() {
   const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex flex-grow">
-        <div
-          className="flex-grow flex items-center justify-center rounded-lg m-3"
-          style={{
-            flexBasis: "50%",
-            background: "radial-gradient(farthest-side at 20% 10%, red, #4000c7)",
-          }}
-        >
-          <div className=" bg-white bg-opacity-30 w-4/5 p-20 rounded-lg">
+    <div className="flex flex-col lg:flex-row h-auto lg:h-screen p-4">
+      {/* LEFT PANEL */}
+      <div
+        className="w-full lg:w-1/2 rounded-lg"
+        style={{
+          background: "radial-gradient(farthest-side at 20% 10%, red, #4000c7)",
+        }}
+      >
+        {/* LOGO AREA */}
+        <div className="flex items-center justify-center align-middle h-full">
+          <div className=" bg-white/30 backdrop-blur-md w-4/5 p-10 m-10 lg:p-20 lg:m-0 rounded-lg">
             <h2 className="">
               <span className="">
                 <Logo className="w-full" />
               </span>{" "}
-              <div className="mt-8 text-6xl font-satoshi-bold text-black ">The tone is in the stack.</div>
-              <div className="text-xl font-satoshi-regular mt-8">
+              <div className="mt-8 text-4xl font-satoshi-bold text-black text-center">The tone is in the stack.</div>
+              <div className="text-lg font-satoshi-regular mt-8 text-center">
                 Find amps, pedals, and packs for
                 <br />
                 <a
@@ -98,43 +99,45 @@ export default function SignUpPage() {
             </h2>
           </div>
         </div>
-        <div
-          className="flex-grow  flex items-center flex-col justify-center relative"
-          style={{ top: "-50px", flexBasis: "50%" }}
-        >
-          <div className="max-w-lg pt-10" style={{ width: "500px" }}>
-            <div className="text-3xl font-satoshi-medium mt-5 text-center">
-              Register for an account to start sharing you stack!
+      </div>
+      {/* RIGHT PANEL */}
+      <div className="w-full lg:w-1/2 items-center flex-col justify-center relative lg:pl-4">
+        <div className="flex items-center justify-center align-middle h-full">
+          <div className="block">
+            <div className="max-w-lg pt-10">
+              <div className="text-3xl font-satoshi-medium mt-5 text-center">
+                Register for an account to start sharing you stack!
+              </div>
             </div>
+
+            {actionData?.error ? (
+              <div className="pt-10 w-full max-w-lg">
+                <Alert title="There was an error" description={actionData?.error} variant="error" />
+              </div>
+            ) : null}
+
+            <Form method="post" className="flex flex-col gap-3 max-w-xl pt-10">
+              <Input name="email" label="Email" type="email" required />
+              <Input name="username" label="Username" required />
+              <Input name="password" type="password" label="Password" required />
+              <div className="flex justify-start items-center gap-5">
+                {/* <Link to="/login">Login</Link> */}
+                <Button type="submit" className="mt-3 w-full" loading={isSubmitting}>
+                  Sign Up
+                </Button>
+              </div>
+              <div className="text-center pt-12 text-tonehunt-gray-lighter">
+                <Link to="/" className="hover:underline">
+                  Already have an account? Login here.
+                </Link>
+              </div>
+              <div className="text-center py-1 text-tonehunt-gray-lighter">
+                <Link to="/" className="hover:underline">
+                  Return to Homepage
+                </Link>
+              </div>
+            </Form>
           </div>
-
-          {actionData?.error ? (
-            <div className="pt-10 w-full max-w-lg">
-              <Alert title="There was an error" description={actionData?.error} variant="error" />
-            </div>
-          ) : null}
-
-          <Form method="post" className="flex flex-col gap-3 max-w-xl pt-10" style={{ width: "500px" }}>
-            <Input name="email" label="Email" type="email" required />
-            <Input name="username" label="Username" required />
-            <Input name="password" type="password" label="Password" required />
-            <div className="flex justify-start items-center gap-5">
-              {/* <Link to="/login">Login</Link> */}
-              <Button type="submit" className="mt-3 w-full" loading={isSubmitting}>
-                Sign Up
-              </Button>
-            </div>
-            <div className="text-center pt-12 text-tonehunt-gray-lighter">
-              <Link to="/" className="hover:underline">
-                Already have an account? Login here.
-              </Link>
-            </div>
-            <div className="text-center py-1 text-tonehunt-gray-lighter">
-              <Link to="/" className="hover:underline">
-                Return to Homepage
-              </Link>
-            </div>
-          </Form>
         </div>
       </div>
     </div>
