@@ -30,7 +30,7 @@ const Sidebar = ({ user, username }: SidebarProps) => {
           </div>
           <div className="flex-1 border-b border-gray-600 pb-3 mb-3">
             <div className="flex flex-row items-center">
-              <Link to="#" prefetch="intent" className="hover:underline">
+              <Link to="/account/my-favorites" prefetch="intent" className="hover:underline">
                 <StarIcon className="inline w-5 h-5 mr-2" />
                 <span className="font-satoshi-regular text-sm">My favorites</span>
               </Link>
