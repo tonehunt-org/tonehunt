@@ -19,7 +19,7 @@ const Header = ({ user, profile }: HeaderType) => {
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
 
   return (
-    <>
+    <header>
       <div className="flex items-center bg-black p-4 lg:p-0">
         <div className="flex-1 lg:flex-grow lg:pl-4">
           <Link to="/" prefetch="intent">
@@ -29,16 +29,18 @@ const Header = ({ user, profile }: HeaderType) => {
             <Logo className="w-40 lg:w-52" />
           </Link>
         </div>
-        <div className="hidden lg:block flex-none">
+
+        <div className="hidden lg:block flex-grow">
           <div className="flex justify-center align-middle content-center">
-            <div className="block w-80">
+            <div className="block w-full">
               <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
             </div>
           </div>
         </div>
+
         <div className="flex-1 lg:flex-grow pl-5 pr-1 lg:pr-4 ">
           <div className="flex justify-end align-middle content-center">
-            <div className="hidden xl:inline-block lg:mr-4">
+            <div className="hidden xl:hidden lg:mr-4">
               <div className="inline">
                 <Button
                   variant="secondary"
@@ -60,6 +62,7 @@ const Header = ({ user, profile }: HeaderType) => {
                 </Button>
               </div>
             </div>
+
             <div>
               <UserActions user={user} username={profile?.username ?? undefined} />
             </div>
@@ -82,7 +85,7 @@ const Header = ({ user, profile }: HeaderType) => {
       <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
         <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
       </div>
-    </>
+    </header>
   );
 };
 

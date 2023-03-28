@@ -1,5 +1,4 @@
 import * as timeago from "timeago.js";
-import iconFullrigPack from "~/assets/categories_icons/icon-fullrig-pack.svg";
 import FavoriteButton from "~/components/FavoriteButton";
 import DownloadButton from "~/components/DownloadButton";
 import ShareButton from "~/components/ShareButton";
@@ -10,7 +9,7 @@ import { NotFound } from "./$username";
 import type { Category, Favorite, Model, ModelDownload, Profile } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { getCategoryProfile } from "~/services/categories";
 
 type LoaderData = {
@@ -118,7 +117,7 @@ export default function ModelDetailPage() {
           <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
 
           <ul className="pb-[44px] flex gap-1">
-            {data.model.tags?.split(",").map((tag) => {
+            {data.model.tags?.split?.(",").map((tag) => {
               return (
                 <li key={tag}>
                   <Link

@@ -1,14 +1,12 @@
 import Button from "~/components/ui/Button";
 import * as timeago from "timeago.js";
 import { StarIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import iconCab from "~/assets/categories_icons/icon-cab.svg";
-import iconFullrigPack from "~/assets/categories_icons/icon-fullrig-pack.svg";
-import iconPedal from "~/assets/categories_icons/icon-pedal.svg";
-import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
+import FavoriteButton from "./FavoriteButton";
+import DownloadButton from "./DownloadButton";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -74,19 +72,15 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
           <div className="flex items-center h-full">
             <div className="flex-1">
               <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className={`ml-2 ${model.favorites?.length > 0 ? "bg-tonehunt-yellow" : null}`}
+                <FavoriteButton
+                  count={model._count.favorites}
                   onClick={() =>
                     onFavoriteClick
                       ? onFavoriteClick(model.id, model.favorites?.length > 0 ? model.favorites[0].id : null)
                       : null
                   }
-                >
-                  <StarIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">{model._count.favorites}</span>
-                </Button>
+                />
+
                 <ButtonLink
                   className="ml-2"
                   variant="button"
