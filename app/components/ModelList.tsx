@@ -40,7 +40,8 @@ const ModelsListComponent = ({
   user = null,
 }: ModelListType) => {
   const pageCount = Math.ceil(total / limit);
-  const paginationButtonLinkStyle = "px-3 py-1 border border-gray-600 rounded-lg relative";
+  const paginationButtonLinkStyle =
+    "px-3 py-1 border border-gray-600 rounded-lg relative w-[40px] h-[40px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
@@ -101,7 +102,6 @@ const ModelsListComponent = ({
           <div className="flex-grow">
             <div className="flex justify-end">
               <Select
-                className="w-36"
                 options={filterOptions}
                 onChange={setSelectedFilter || undefined}
                 defaultSelected={selectedFilter ?? ""}
@@ -120,29 +120,35 @@ const ModelsListComponent = ({
           : null}
       </div>
       {/* PAGINATION AREA */}
-      <div className="flex mt-5">
-        <div className="flex-1">
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={<ChevronRightIcon className="w-4 h-4 absolute inline left-1.5 top-1/2 -translate-y-1/2" />}
-            onPageChange={(event) => handlePageClick(event.selected)}
-            pageRangeDisplayed={5}
-            pageCount={pageCount}
-            previousLabel={<ChevronLeftIcon className="w-4 h-4 absolute inline right-1.5 top-1/2 -translate-y-1/2" />}
-            renderOnZeroPageCount={() => {}}
-            forcePage={currentPage}
-            containerClassName="flex flex-row justify-end"
-            pageClassName="mx-1"
-            pageLinkClassName={paginationButtonLinkStyle}
-            previousClassName="mr-1"
-            previousLinkClassName={paginationButtonLinkStyle}
-            activeClassName="text-black bg-white rounded-lg"
-            nextClassName="ml-1"
-            nextLinkClassName={paginationButtonLinkStyle}
-            disabledClassName="text-gray-600"
-          />
+      {pageCount > 1 ? (
+        <div className="flex mt-5">
+          <div className="flex-1">
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel={
+                <ChevronRightIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+              }
+              onPageChange={(event) => handlePageClick(event.selected)}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel={
+                <ChevronLeftIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+              }
+              renderOnZeroPageCount={() => {}}
+              forcePage={currentPage}
+              containerClassName="flex flex-row justify-end"
+              pageClassName="mx-1"
+              pageLinkClassName={paginationButtonLinkStyle}
+              previousClassName="mr-1"
+              previousLinkClassName={paginationButtonLinkStyle}
+              nextClassName="ml-1"
+              nextLinkClassName={paginationButtonLinkStyle}
+              disabledClassName="text-gray-600"
+              activeClassName="font-satoshi-bold text-white"
+            />
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 };

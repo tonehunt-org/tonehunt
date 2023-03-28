@@ -32,13 +32,13 @@ export default function Select({
   const id = useId();
 
   const select = (
-    <div className="relative">
+    <div className="relative mb-3">
       <ChevronUpDownIcon className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2" />
 
       <select
         name={name}
         className={`${inputClassNames} ${className} appearance-none relative`}
-        style={{ borderRadius: "27px" }}
+        style={{ borderRadius: "27px", marginBottom: 0 }}
         required={required}
         value={defaultSelected ?? undefined}
         onChange={onChange ?? undefined}
