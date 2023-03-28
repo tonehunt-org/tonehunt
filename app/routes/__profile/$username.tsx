@@ -92,7 +92,7 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   if (data.profile === null) {
-    return <UserNotFound>User not found</UserNotFound>;
+    return <NotFound>User not found</NotFound>;
   }
 
   const { user, profile, modelList } = data;
