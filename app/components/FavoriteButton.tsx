@@ -1,4 +1,5 @@
 import { StarIcon } from "@heroicons/react/24/outline";
+import type { LinkProps } from "@remix-run/react";
 import Button from "~/components/ui/Button";
 
 type FavoriteButtonProps = {
@@ -8,7 +9,7 @@ type FavoriteButtonProps = {
   className?: string;
 };
 
-export default function FavoriteButton({ favorited, count, onClick, className }: FavoriteButtonProps) {
+export default function FavoriteButton({ favorited, count, onClick, className, ...linkProps }: FavoriteButtonProps) {
   return (
     <Button
       type="button"

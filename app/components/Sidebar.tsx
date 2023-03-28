@@ -84,8 +84,9 @@ const Sidebar = ({ user, username }: SidebarProps) => {
         <div className="flex">
           <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
         </div>
+
         <div className="flex flex-col">
-          <div className="flex-1 border-b border-gray-600 pb-3 mb-3">
+          <div className="flex-1  pb-3 mb-3">
             <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
               <div className="flex flex-row items-center">
                 <div className="inline w-14 h-14 mr-2 bg-tonehunt-purple rounded-xl overflow-hidden flex-none">
@@ -100,7 +101,7 @@ const Sidebar = ({ user, username }: SidebarProps) => {
               </div>
             </a>
           </div>
-          <div className="flex-1 border-b border-gray-600 pb-3 mb-3">
+          <div className="flex-1  pb-3 mb-3">
             <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
               <div className="flex flex-row items-center">
                 <div className="inline w-14 h-14 mr-2 bg-tonehunt-orange rounded-xl overflow-hidden flex-none">
@@ -115,7 +116,7 @@ const Sidebar = ({ user, username }: SidebarProps) => {
               </div>
             </a>
           </div>
-          <div className="flex-1 border-b border-gray-600 pb-3 mb-3">
+          <div className="flex-1  pb-3 mb-3">
             <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin" target="_new">
               <div className="flex flex-row items-center">
                 <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
@@ -131,7 +132,7 @@ const Sidebar = ({ user, username }: SidebarProps) => {
   };
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4 sticky top-0">
       {user?.id ? (
         <div className="w-full text-white rounded-xl p-4 mb-8 border border-gray-600">
           <UserBlock />
