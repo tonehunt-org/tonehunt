@@ -27,6 +27,49 @@ const MultiSelect = ({ options = [], className, label, name, required, defaultVa
       onChange={onChange ?? undefined}
       required={required}
       defaultValue={defaultValue ?? undefined}
+      styles={{
+        control: (baseStyles, state) => ({
+          ...baseStyles,
+          borderRadius: "27px",
+          paddingTop: "0.5rem",
+          paddingBottom: "0.5rem",
+          backgroundColor: "transparent",
+          border: "0.5px solid #4b5563",
+          paddingLeft: "0.3rem",
+        }),
+        option: (baseStyles, state) => ({
+          ...baseStyles,
+          backgroundColor: state.isFocused ? "#1455b8" : "#21252a",
+          borderRadius: "8px",
+        }),
+        menu: (baseStyles, state) => ({
+          ...baseStyles,
+          backgroundColor: "#21252a",
+          borderRadius: "10px",
+          padding: "5px",
+        }),
+        multiValue: (baseStyles, state) => ({
+          ...baseStyles,
+          backgroundColor: "#fff",
+          border: "0.5px solid #4b5563",
+          borderRadius: "27px",
+          padding: "1px 5px",
+        }),
+        multiValueLabel: (baseStyles, state) => ({
+          ...baseStyles,
+          color: "#000",
+        }),
+        multiValueRemove: (baseStyles, state) => ({
+          ...baseStyles,
+          backgroundColor: "transparent",
+          borderRadius: "27px",
+          color: "black",
+          ":hover": {
+            backgroundColor: "#fff",
+            color: "black",
+          },
+        }),
+      }}
     />
   );
 
