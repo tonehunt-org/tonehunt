@@ -140,11 +140,11 @@ export default function ModelDetailPage() {
           <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
 
           <ul className="pb-[44px] flex gap-1">
-            {data.model.tags?.split?.(",").map((tag) => {
+            {data.model.tags?.map((tag) => {
               return (
                 <li key={tag}>
                   <Link
-                    to="/"
+                    to={`/?tags=${tag}`}
                     prefetch="intent"
                     className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
                   >

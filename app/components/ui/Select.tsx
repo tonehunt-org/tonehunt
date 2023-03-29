@@ -2,6 +2,7 @@ import type { ChangeEvent } from "react";
 import { useId } from "react";
 import { inputClassNames } from "./Input";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { twMerge } from "tailwind-merge";
 
 export type SelectOption = {
   value: string;
@@ -37,7 +38,7 @@ export default function Select({
 
       <select
         name={name}
-        className={`${inputClassNames} ${className} appearance-none relative`}
+        className={twMerge("appearance-none relative", inputClassNames, className, "pr-9")}
         style={{ borderRadius: "27px", marginBottom: 0 }}
         required={required}
         value={defaultSelected ?? undefined}
