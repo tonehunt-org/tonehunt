@@ -7,7 +7,7 @@ type InputProps = InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> & 
 };
 
 export const inputClassNames =
-  "border px-5 py-4 mb-3 text-sm block w-full p-2.5 bg-transparent border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500";
+  "border px-5 py-4 mb-3 text-sm block w-full bg-transparent border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500";
 
 export default function Input({ label, multiline, className, ...props }: InputProps) {
   const id = useId();

@@ -74,13 +74,6 @@ const ModelsListComponent = ({
               >
                 POPULAR
               </Button>
-              {/* <Button
-                type="button"
-                variant="secondary"
-                className="hidden md:block font-satoshi-bold text-tonehunt-gray-disable mr-8 text-xs border-0 hover:text-white"
-              >
-                COLLECTIONS ONLY
-              </Button> */}
             </div>
           </div>
         ) : null}
