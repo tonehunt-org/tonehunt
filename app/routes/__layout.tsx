@@ -4,14 +4,16 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import type { Category } from "@prisma/client";
+import type { Category, Tag } from "@prisma/client";
 import type { Profile } from "@prisma/client";
 import DefaultLayout from "~/layouts/DefaultLayout";
+import { getSampleTags } from "~/services/tags";
 
 type LoaderData = {
   user?: User | null | undefined;
   profile?: Profile | null | undefined;
   categories: Category[];
+  tags: Tag[];
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
@@ -22,10 +24,14 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
   const [profile, categories] = await Promise.all([profileReq, categoriesReq]);
 
+  // FOR NOW WE'LL BE USING THIS TAGS UNTIL WE HAVE ENOUGH DATA
+  const tags = getSampleTags();
+
   return json<LoaderData>({
     user: session?.user,
     categories,
     profile,
+    tags,
   });
 };
 
@@ -33,7 +39,7 @@ export default function Layout() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <DefaultLayout user={data.user} profile={data.profile} categories={data.categories}>
+    <DefaultLayout user={data.user} profile={data.profile} categories={data.categories} tags={data.tags}>
       <Outlet />
     </DefaultLayout>
   );
