@@ -1,17 +1,20 @@
 import { StarIcon, UserCircleIcon, UserIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import { map } from "lodash";
+import { map, sampleSize } from "lodash";
 import imgArticle1 from "~/assets/articles/article_1.jpg";
 import imgArticle2 from "~/assets/articles/article_2.jpg";
 import imgArticle3 from "~/assets/articles/article_3.jpg";
+import type { Tag } from "@prisma/client";
+import ButtonLink from "./ui/ButtonLink";
 
 type SidebarProps = {
   user?: User | null | undefined;
   username?: string | null | undefined;
+  tags: Tag[];
 };
 
-const Sidebar = ({ user, username }: SidebarProps) => {
+const Sidebar = ({ user, username, tags }: SidebarProps) => {
   const UserBlock = () => {
     return (
       <div className="w-full">
@@ -50,28 +53,16 @@ const Sidebar = ({ user, username }: SidebarProps) => {
   };
 
   const TagsBlock = () => {
-    const tagList = [
-      "rock",
-      "metal",
-      "vintage",
-      "marshall",
-      "mesa",
-      "evh",
-      "high gain",
-      "distortion",
-      "fender",
-      "clean",
-    ];
     return (
       <div className="w-full">
         <div className="flex">
           <h1 className="font-satoshi-bold text-xl mb-4">Popular tags</h1>
         </div>
         <div className="flex flex-row flex-wrap">
-          {map(tagList, (tag) => (
-            <div key={tag} className="px-3 py-1 mr-2 mb-2 border border-gray-600 rounded-full">
-              #{tag}
-            </div>
+          {map(tags, (tag) => (
+            <ButtonLink key={tag.id} variant="button" className="px-2 py-1 mr-2 mb-2 text-xs" to={`/?tags=${tag.name}`}>
+              #{tag.name}
+            </ButtonLink>
           ))}
         </div>
       </div>
