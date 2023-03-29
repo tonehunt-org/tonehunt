@@ -36,7 +36,7 @@ export default function FavoriteButton({
         className={twMerge(
           "flex items-center",
           className,
-          favorited ? "bg-tonehunt-yellow text-black hover:bg-tonehunt-yellow hover:text-black " : ""
+          favorited ? "text-tonehunt-yellow hover:text-tonehunt-yellow " : ""
         )}
         loading={favoriteFetcher.state === "submitting" || favoriteFetcher.state === "loading"}
         disabled={!!disabledReason}

@@ -49,12 +49,6 @@ export default function ChangePasswordPage() {
   return (
     <div className="w-full">
       <div className="flex flex-col">
-        <div className="w-full">
-          <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-            <ArrowLeftCircleIcon className="inline-block w-5 h-5 -mt-1" />
-            <span className="inline-block ml-2 hover:underline">Go Back</span>
-          </Button>
-        </div>
         <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Change Password</h1>
       </div>
       {actionData?.success ? (
@@ -86,11 +80,7 @@ export default function ChangePasswordPage() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-12">
-              <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-                Cancel
-              </Button>
-
+            <div className="flex justify-end pt-5">
               <Button disabled={!formValidity} type="submit" className="">
                 Change Password
               </Button>

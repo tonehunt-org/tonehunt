@@ -3,7 +3,7 @@ import Button from "./ui/Button";
 import type { ModalProps } from "./ui/Modal";
 import Modal from "./ui/Modal";
 import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { useFetcher, useNavigate, useNavigation } from "@remix-run/react";
+import { Form, useFetcher, useNavigate, useNavigation } from "@remix-run/react";
 import Input from "./ui/Input";
 import type { Category } from "@prisma/client";
 import Select from "./ui/Select";
@@ -120,7 +120,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
             onDragExit={() => setDrag(false)}
             onDragLeave={() => setDrag(false)}
           >
-            <form
+            <Form
               ref={formRef}
               action="/models/new"
               method="post"
@@ -148,7 +148,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
 
               <ArrowUpTrayIcon className="h-24 w-24 mb-5 pointer-events-none" />
               <span className="pointer-events-none">Drop your files here or click to begin uploading</span>
-            </form>
+            </Form>
           </div>
         ) : null}
 
