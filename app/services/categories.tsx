@@ -39,42 +39,42 @@ export const getCategories = async () => {
 
 export const getCategoryProfile = (catSlug: string) => {
   switch (catSlug) {
-    case "amps":
+    case "amp":
       return {
         icon: iconCab,
         color: "text-tonehunt-green",
       };
-    case "amps-collection":
+    case "amp-collection":
       return {
         icon: iconCabCollection,
         color: "text-tonehunt-green",
       };
-    case "fullrigs":
+    case "full-rig":
       return {
         icon: iconFullrig,
         color: "text-tonehunt-pink",
       };
-    case "fullrigs-collection":
+    case "full-rig-collection":
       return {
         icon: iconFullrigCollection,
         color: "text-tonehunt-pink",
       };
-    case "pedals":
+    case "pedal":
       return {
         icon: iconPedal,
         color: "text-tonehunt-yellow",
       };
-    case "pedals-collection":
+    case "pedal-collection":
       return {
         icon: iconPedalCollection,
         color: "text-tonehunt-yellow",
       };
-    case "irs":
+    case "ir":
       return {
         icon: iconIr,
         color: "text-tonehunt-orange",
       };
-    case "irs-collection":
+    case "ir-collection":
       return {
         icon: iconIrCollection,
         color: "text-tonehunt-orange",
