@@ -95,10 +95,8 @@ export default function UserProfilePage() {
 
   const { user, profile, modelList } = data;
 
-  let textForBG = "";
-  for (let x = 0; x < 30; x++) {
-    textForBG += `${profile?.username} `;
-  }
+  const arrayLength = Math.floor(5000 / (profile.username.length * 10));
+  const textForBG = [...new Array(arrayLength)].map(() => profile.username);
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);

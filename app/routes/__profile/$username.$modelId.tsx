@@ -72,7 +72,8 @@ export default function ModelDetailPage() {
   const data = useLoaderData<LoaderData>();
   const shareButtonRef = useRef(null);
 
-  const textForBG = [...new Array(30)].map(() => data.model.title);
+  const arrayLength = Math.floor(5000 / (data.model.title.length * 10));
+  const textForBG = [...new Array(arrayLength)].map(() => data.model.title);
 
   return (
     <section className="w-full">
