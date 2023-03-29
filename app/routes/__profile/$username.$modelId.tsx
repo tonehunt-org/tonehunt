@@ -93,7 +93,11 @@ export default function ModelDetailPage() {
           <h3 className="font-satoshi-bold text-[47px] pb-8">{data.model.title}</h3>
 
           <div className="flex gap-[12px] justify-center pb-16">
-            <DownloadButton count={data.model.downloads.length} onClick={() => {}} />
+            <DownloadButton
+              count={data.model.downloads.length}
+              onClick={() => {}}
+              className="bg-tonehunt-gray-darker"
+            />
 
             <FavoriteButton
               count={data.model.favorites.length}

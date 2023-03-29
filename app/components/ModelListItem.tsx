@@ -35,7 +35,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
           <div className="flex flex-row align-middle">
             <div className="flex-none items-center">
               <div className="w-14 h-14 inline-block mr-4 rounded-xl">
-                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title="cab" />
+                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
               </div>
             </div>
             <div className="flex-grow">
@@ -49,11 +49,9 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 </Link>
 
                 <div className="flex-1 -mt-1">
-                  {model.category.slug === "packs" ? (
-                    <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
-                      Curated Pack
-                    </span>
-                  ) : null}
+                  <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
+                    {model.category.title}
+                  </span>
 
                   <Link to={`/${model.profile.username}`} prefetch="intent">
                     <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
