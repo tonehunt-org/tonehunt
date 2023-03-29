@@ -13,6 +13,7 @@ import { getFavorites } from "~/services/favorites";
 import { map } from "lodash";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
+import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 
 export type LoaderData = {
   user: User | null | undefined;
@@ -23,9 +24,6 @@ export type LoaderData = {
   };
   profile: ProfileWithFavorites | null;
 };
-
-// THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 8;
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);

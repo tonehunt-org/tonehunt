@@ -33,7 +33,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       },
     });
 
-    return json<ActionData>({ model });
+    return redirect(`/${profile.username}/${model.id}`);
   } catch (e: any) {
     console.error("ERROR:", e);
     return json<ActionData>({ error: e.message }, { status: 500 });

@@ -9,6 +9,7 @@ import { getModels } from "~/services/models";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
+import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 
 type LoaderData = {
   models: any;
@@ -17,9 +18,6 @@ type LoaderData = {
   page: number;
   search: string | null;
 };
-
-// THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 8;
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { session } = await getSession(request);

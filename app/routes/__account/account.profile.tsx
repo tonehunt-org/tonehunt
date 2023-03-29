@@ -80,19 +80,12 @@ export default function ProfileInformationPage() {
   return (
     <div className="w-full">
       <div className="flex flex-col">
-        <div className="w-full">
-          <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-            <ArrowLeftCircleIcon className="inline-block w-5 h-5 -mt-1" />
-            <span className="inline-block ml-2 hover:underline">Go Back</span>
-          </Button>
-        </div>
-
         <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Edit Profile</h1>
       </div>
 
       {actionData?.success ? (
         <div className="flex justify-center">
-          <div className="w-full max-w-lg">
+          <div className="w-full ">
             <Alert title="Profile updated successfully." variant="success" />
           </div>
         </div>
@@ -135,11 +128,7 @@ export default function ProfileInformationPage() {
               <Input name="id" type="hidden" defaultValue={profile.id} />
             </div>
 
-            <div className="flex justify-end pt-12">
-              <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-                Cancel
-              </Button>
-
+            <div className="flex justify-end pt-5">
               <Button disabled={!formValidity} type="submit" className="">
                 Update Profile
               </Button>

@@ -5,7 +5,7 @@ type AlertProps = {
 };
 
 export default function Alert({ title, description, variant }: AlertProps) {
-  const successClasses = `bg-red-100 border-t-4 border-teal-500 rounded-b text-teal-900`;
+  const successClasses = `bg-green-100 border-t-4 border-teal-500 rounded-b text-teal-900`;
   const successIconClasses = "text-teal-500";
   const errorClasses = `bg-red-100 border-red-500 text-red-900`;
   const errorIconClasses = "text-red-500";

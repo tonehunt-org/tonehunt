@@ -13,6 +13,7 @@ import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
+import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 
 export type LoaderData = {
   user?: User | null | undefined;
@@ -23,9 +24,6 @@ export type LoaderData = {
     page: number;
   };
 };
-
-// THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 8;
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);

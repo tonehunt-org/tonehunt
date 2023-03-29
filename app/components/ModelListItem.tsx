@@ -73,14 +73,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
           <div className="flex items-center h-full">
             <div className="flex-1">
               <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
-                {/* <FavoriteButton
-                  count={model._count.favorites}
-                  onClick={() =>
-                    onFavoriteClick
-                      ? onFavoriteClick(model.id, model.favorites?.length > 0 ? model.favorites[0].id : null)
-                      : null
-                  }
-                /> */}
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
