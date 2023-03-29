@@ -18,6 +18,19 @@ interface getModelsType {
 export const getModels = async (params: getModelsType) => {
   const tagsScala = params.tags && params.tags !== "" ? split(params.tags, ",") : null;
 
+  const sortParam = params.sortBy ?? "createdAt";
+  const sortDirection = params.sortDirection ?? "desc";
+
+  const orderByPopular = {
+    favorites: { _count: sortDirection },
+  };
+
+  const orderByParam = {
+    [sortParam]: sortDirection,
+  };
+
+  const sort = sortParam === "popular" ? orderByPopular : orderByParam;
+
   const models = await db.$transaction([
     db.model.count({
       where: {
@@ -115,11 +128,7 @@ export const getModels = async (params: getModelsType) => {
           },
         },
       },
-      orderBy: [
-        {
-          [params.sortBy ?? "createdAt"]: params.sortDirection ?? "desc",
-        },
-      ],
+      orderBy: sort,
       skip: params.next ?? 0,
       take: params.limit ?? 10,
     }),

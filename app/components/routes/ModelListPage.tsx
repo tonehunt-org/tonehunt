@@ -31,7 +31,7 @@ export type LoaderData = {
 
 const sortByOptions = [
   { slug: "newest", field: "createdAt" },
-  { slug: "popular", field: "createdAt" }, // WE NEED TO ADD A COLUMN FOR THIS
+  { slug: "popular", field: "popular" },
   { slug: "name", field: "title" },
 ];
 
