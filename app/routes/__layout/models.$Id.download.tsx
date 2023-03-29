@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       },
     });
 
-    const filename = model?.filename ?? "";
+    const filename = model?.modelPath ?? "";
 
     const { data } = await supabase.storage.from("models").download(filename);
 
@@ -35,6 +35,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     return new Response(data, {
       status: 200,
       headers: {
+        "Content-Disposition": `attachment; filename=${model?.title}.zip`,
         "Content-Type": data.type as string,
       },
     });
