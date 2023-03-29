@@ -13,6 +13,7 @@ import { useRef } from "react";
 import { getCategoryProfile } from "~/services/categories";
 import { getSession } from "~/auth.server";
 import { getProfile } from "~/services/profile";
+import type { User } from "@supabase/supabase-js";
 
 type LoaderData = {
   model: Model & {
@@ -22,6 +23,7 @@ type LoaderData = {
     downloads: { id: ModelDownload["id"] }[];
   };
   favorite: Favorite | null;
+  user?: User;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -63,7 +65,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("", { status: 404 });
   }
 
-  return json<LoaderData>({ model, favorite });
+  return json<LoaderData>({ model, favorite, user: session?.user });
 };
 
 export default function ModelDetailPage() {
@@ -97,6 +99,7 @@ export default function ModelDetailPage() {
               className="bg-tonehunt-gray-darker"
               favorited={!!data.favorite && data.favorite?.deleted !== true}
               modelId={data.model.id}
+              disabledReason={data.user ? undefined : "You must be logged in"}
             />
 
             <ShareButton

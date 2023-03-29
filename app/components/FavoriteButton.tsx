@@ -12,6 +12,7 @@ type FavoriteButtonProps = ButtonProps & {
   count: number;
   className?: string;
   modelId: string;
+  disabledReason?: string;
 };
 
 export default function FavoriteButton({
@@ -20,6 +21,7 @@ export default function FavoriteButton({
   count,
   onClick,
   className,
+  disabledReason,
   ...buttonProps
 }: FavoriteButtonProps) {
   const favoriteFetcher = useFetcher();
@@ -37,6 +39,8 @@ export default function FavoriteButton({
           favorited ? "bg-tonehunt-yellow text-black hover:bg-tonehunt-yellow hover:text-black " : ""
         )}
         loading={favoriteFetcher.state === "submitting" || favoriteFetcher.state === "loading"}
+        disabled={!!disabledReason}
+        title={disabledReason}
       >
         {favorited ? <StarIconSolid className={starIconClasses} /> : <StarIcon className={starIconClasses} />}
         <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>

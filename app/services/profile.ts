@@ -23,6 +23,10 @@ export type ProfileWithFavorites = Prisma.ProfileGetPayload<{
   };
 }>;
 export const getProfileWithFavorites = (session: Session | null) => {
+  if (!session) {
+    return Promise.resolve(null);
+  }
+
   return db.profile.findFirst({
     where: { id: session?.user.id },
     include: {

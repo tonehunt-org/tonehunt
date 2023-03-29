@@ -39,10 +39,11 @@ const sortByOptions = [
 ];
 
 // THE AMOUNT OF MODELS PER PAGE
-const MODELS_LIMIT = 8;
+const MODELS_LIMIT = 20;
 
 export const modelListLoader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
+
   const user = session?.user;
   const url = new URL(request.url);
 

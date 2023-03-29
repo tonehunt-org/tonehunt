@@ -11,6 +11,7 @@ const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
     category: true,
     profile: true,
+    favorites: true,
   },
 });
 
@@ -23,6 +24,7 @@ interface ModelListItemType {
 
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
+  console.log("---------profile", profile);
 
   return (
     <div
@@ -53,7 +55,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                     </span>
                   ) : null}
 
-                  <Link to={`/${model.profile.username}`}>
+                  <Link to={`/${model.profile.username}`} prefetch="intent">
                     <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>
@@ -80,9 +82,10 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   }
                 /> */}
                 <FavoriteButton
-                  count={model.favorites.length}
+                  count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
                   modelId={model.id}
+                  disabledReason={profile ? undefined : "You must be logged in"}
                 />
 
                 <ButtonLink
@@ -93,7 +96,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   download={model.filename}
                 >
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">{model._count.downloads}</span>
+                  <span className="inline-block text-sm font-satoshi-light">{model._count?.downloads}</span>
                 </ButtonLink>
               </div>
             </div>
