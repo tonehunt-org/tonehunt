@@ -12,6 +12,8 @@ import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
+import type { ProfileWithFavorites } from "~/services/profile";
+import { getProfileWithFavorites } from "~/services/profile";
 
 export type LoaderData = {
   user?: User | null;
@@ -27,6 +29,7 @@ export type LoaderData = {
     tags: string | null;
   };
   modelDetail?: {};
+  profile: ProfileWithFavorites | null;
 };
 
 const sortByOptions = [
@@ -42,6 +45,8 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
   const user = session?.user;
   const url = new URL(request.url);
+
+  const profile = await getProfileWithFavorites(session);
 
   // GET PAGE
   let page = Number(url.searchParams.get("page")) ?? 1;
@@ -96,6 +101,7 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
       sortDirection,
       tags: tagsParam,
     },
+    profile,
   });
 };
 
@@ -213,6 +219,7 @@ export default function ModelListPage() {
               selectedSortBy={modelList.sortBy}
               onSortChange={onSortChange}
               user={data.user}
+              profile={data.profile}
             />
           ) : null}
         </div>

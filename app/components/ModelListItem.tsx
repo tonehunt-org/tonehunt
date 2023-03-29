@@ -1,12 +1,11 @@
-import Button from "~/components/ui/Button";
 import * as timeago from "timeago.js";
-import { StarIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
-import DownloadButton from "./DownloadButton";
+import type { ProfileWithFavorites } from "~/services/profile";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -19,10 +18,10 @@ type ModelWithCategoryAndProfile = Prisma.ModelGetPayload<typeof modelWithCatego
 
 interface ModelListItemType {
   model: ModelWithCategoryAndProfile;
-  onFavoriteClick?: (arg1: string, arg2: string | null) => void | undefined;
+  profile: ProfileWithFavorites | null;
 }
 
-const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
+const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
 
   return (
@@ -72,13 +71,18 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
           <div className="flex items-center h-full">
             <div className="flex-1">
               <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
-                <FavoriteButton
+                {/* <FavoriteButton
                   count={model._count.favorites}
                   onClick={() =>
                     onFavoriteClick
                       ? onFavoriteClick(model.id, model.favorites?.length > 0 ? model.favorites[0].id : null)
                       : null
                   }
+                /> */}
+                <FavoriteButton
+                  count={model.favorites.length}
+                  favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
+                  modelId={model.id}
                 />
 
                 <ButtonLink

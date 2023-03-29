@@ -11,6 +11,8 @@ import { db } from "~/utils/db.server";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import { getCategoryProfile } from "~/services/categories";
+import { getSession } from "~/auth.server";
+import { getProfile } from "~/services/profile";
 
 type LoaderData = {
   model: Model & {
@@ -19,10 +21,12 @@ type LoaderData = {
     favorites: { id: Favorite["id"] }[];
     downloads: { id: ModelDownload["id"] }[];
   };
+  favorite: Favorite | null;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const model = await db.model.findFirst({
+  const { session } = await getSession(request);
+  const modelReq = db.model.findFirst({
     where: {
       id: params.modelId as string,
     },
@@ -42,11 +46,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     },
   });
 
+  const profileReq = session ? getProfile(session) : Promise.resolve(null);
+
+  const [model, profile] = await Promise.all([modelReq, profileReq]);
+
+  const favorite = profile
+    ? await db.favorite.findFirst({
+        where: {
+          modelId: params.modelId,
+          profileId: profile.id,
+        },
+      })
+    : null;
+
   if (!model) {
     throw new Response("", { status: 404 });
   }
 
-  return json<LoaderData>({ model });
+  return json<LoaderData>({ model, favorite });
 };
 
 export default function ModelDetailPage() {
@@ -74,11 +91,14 @@ export default function ModelDetailPage() {
 
           <div className="flex gap-[12px] justify-center pb-16">
             <DownloadButton count={data.model.downloads.length} onClick={() => {}} />
+
             <FavoriteButton
               count={data.model.favorites.length}
-              onClick={() => {}}
               className="bg-tonehunt-gray-darker"
+              favorited={!!data.favorite && data.favorite?.deleted !== true}
+              modelId={data.model.id}
             />
+
             <ShareButton
               ref={shareButtonRef}
               onClick={async () => {
