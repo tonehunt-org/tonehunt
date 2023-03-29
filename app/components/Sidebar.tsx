@@ -1,7 +1,7 @@
 import { StarIcon, UserCircleIcon, UserIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import { map, sampleSize } from "lodash";
+import { map } from "lodash";
 import imgArticle1 from "~/assets/articles/article_1.jpg";
 import imgArticle2 from "~/assets/articles/article_2.jpg";
 import imgArticle3 from "~/assets/articles/article_3.jpg";
