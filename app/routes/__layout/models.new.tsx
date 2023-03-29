@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         description: formData.get("description") as string,
         ampName: formData.get("ampName") as string,
         modelPath: formData.get("modelPath") as string,
-        filename: formData.get("filename") as string,
+        filename: formData.get("filename") as string | null,
         profileId: profile.id,
         categoryId: formData.get("categoryId") ? +(formData.get("categoryId") as string) : 0,
         tags: formData.get("tags") as string,

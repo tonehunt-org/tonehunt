@@ -10,6 +10,9 @@ import Select from "./ui/Select";
 import Loading from "./ui/Loading";
 import type { ActionData as UploadFileActionData } from "~/routes/__layout/models.upload";
 import type { ActionData as ModelCreateActionData } from "~/routes/__layout/models.new";
+import { twMerge } from "tailwind-merge";
+import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
+import { toJSON } from "~/utils/form";
 
 type CreateModalProps = {
   open: ModalProps["open"];
@@ -27,6 +30,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
   const detailsFetcher = useFetcher<ModelCreateActionData>();
   const navigation = useNavigation();
   const navigate = useNavigate();
+  const [fileCount, setFileCount] = useState<number>();
 
   const isFileUploading = fileUploadFetcher.state === "submitting";
 
@@ -42,14 +46,34 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
     }
   }, [detailsFetcher.data?.model, detailsFetcher.type]);
 
-  const handleFormSubmit = (e: any) => {
+  const handleFormSubmit = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (formRef.current) {
       const formData = new FormData(formRef.current);
+      const { files } = toJSON<{ files: File[] }>(formData);
 
-      fileUploadFetcher.submit(formData, {
+      setFileCount(files.length);
+
+      // Zip up files
+      const zipFileWriter = new BlobWriter();
+      const zipWriter = new ZipWriter(zipFileWriter);
+
+      await Promise.all(
+        files.map((file) => {
+          const blobReader = new BlobReader(file);
+          return zipWriter.add(file.name, blobReader);
+        })
+      );
+
+      const zippedFile = await zipWriter.close();
+
+      // Create data to send to server
+      const zippedFormData = new FormData();
+      zippedFormData.set("file", zippedFile);
+
+      fileUploadFetcher.submit(zippedFormData, {
         method: "post",
         action: "/models/upload",
         encType: "multipart/form-data",
@@ -87,9 +111,11 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
 
         {!showFields ? (
           <div
-            className={`border-2 border-white rounded-lg px-32 py-16 border-dashed overflow-hidden relative ${
-              drag ? "opacity-100" : "opacity-30"
-            } hover:opacity-80`}
+            className={twMerge(
+              "border-2 border-white rounded-lg px-32 py-16 border-dashed overflow-hidden relative",
+              drag ? "opacity-100" : "opacity-30",
+              "hover:opacity-80"
+            )}
             onDragEnter={() => setDrag(true)}
             onDragExit={() => setDrag(false)}
             onDragLeave={() => setDrag(false)}
@@ -104,8 +130,10 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
               <input
                 ref={dropRef}
                 type="file"
-                name="file"
+                name="files"
+                multiple
                 onChange={handleFormSubmit}
+                accept=".nam"
                 style={{
                   width: "400%",
                   height: "100%",
@@ -130,13 +158,15 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
               {isFileUploading ? (
                 <span className="flex items-center gap-3">
                   <Loading />
-                  File uploading ...
+                  File(s) uploading ...
                 </span>
               ) : (
-                <span className="flex items-center gap-3">
-                  <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                  Uploaded <strong>{fileUploadFetcher.data?.name}</strong>
-                </span>
+                <>
+                  <span className="flex items-center gap-3">
+                    <CheckCircleIcon className="w-6 h-6 text-green-500" />
+                    <strong> {fileCount === 1 ? "File" : "Files"} Uploaded!</strong>
+                  </span>
+                </>
               )}
             </div>
 
@@ -169,8 +199,9 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
                 </div>
               </div>
 
-              <input type="hidden" name="modelPath" value={fileUploadFetcher.data?.filepath} />
-              <input type="hidden" name="filename" value={fileUploadFetcher.data?.name} />
+              {fileUploadFetcher.data?.path ? (
+                <input type="hidden" name="modelPath" value={fileUploadFetcher.data?.path} />
+              ) : null}
 
               <div className="pt-12 flex justify-end">
                 {!isCreatingModel ? (

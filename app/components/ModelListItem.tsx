@@ -24,7 +24,6 @@ interface ModelListItemType {
 
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
-  console.log("---------profile", profile);
 
   return (
     <div
@@ -48,10 +47,11 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 >
                   <span className="font-satoshi-bold text-xl">{model.title}</span>
                 </Link>
+
                 <div className="flex-1 -mt-1">
                   {model.category.slug === "packs" ? (
                     <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
-                      models collection
+                      Curated Pack
                     </span>
                   ) : null}
 

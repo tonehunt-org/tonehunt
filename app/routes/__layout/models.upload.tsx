@@ -3,8 +3,8 @@ import { json, redirect, unstable_createMemoryUploadHandler, unstable_parseMulti
 import { getSession } from "~/auth.server";
 
 export type ActionData = {
-  filepath: string;
-  name: string;
+  error?: string;
+  path?: string;
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -17,27 +17,19 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: 1000000 });
 
-    const formData = await unstable_parseMultipartFormData(
-      request,
-      uploadHandler // <-- we'll look at this deeper next
-    );
+    const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
     const file = formData.get("file") as File;
+    const fileName = `${Math.random().toString()}.zip`;
 
-    const { data, error } = await supabase.storage
-      .from("models")
-      .upload(`${Math.random() /* tmp */}_${file.name}`, file, {
-        cacheControl: "3600000000000",
-        upsert: false,
-      });
+    const { data } = await supabase.storage.from("models").upload(fileName, file, {
+      cacheControl: "3600000000000",
+      upsert: false,
+    });
 
-    if (!data?.path || error) {
-      throw new Error("Could not upload model file");
-    }
-
-    return json<ActionData>({ filepath: data.path, name: file.name });
+    return json<ActionData>({ path: data?.path });
   } catch (e: any) {
     console.error("ERROR:", e);
-    return json({ error: e.message }, { status: 500 });
+    return json<ActionData>({ error: e.message }, { status: 500 });
   }
 };
