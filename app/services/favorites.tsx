@@ -1,3 +1,4 @@
+import type { Profile } from "@prisma/client";
 import { db } from "~/utils/db.server";
 
 interface getFavoritesType {
@@ -75,4 +76,28 @@ export const getFavorites = async (params: getFavoritesType) => {
     total: favorites[0] ?? 0,
     data: favorites[1],
   };
+};
+
+export const createModelFavorite = async (profile: Profile, modelId: string) => {
+  const currentFav = await db.favorite.findFirst({
+    where: {
+      modelId,
+      profileId: profile.id,
+    },
+  });
+
+  if (currentFav) {
+    return await db.favorite.delete({
+      where: {
+        id: currentFav.id,
+      },
+    });
+  } else {
+    return await db.favorite.create({
+      data: {
+        modelId,
+        profileId: profile.id,
+      },
+    });
+  }
 };

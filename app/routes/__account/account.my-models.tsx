@@ -62,7 +62,6 @@ const MyModelsPage = () => {
 
   const onDeleteClick = (modelId: string, profileId: string) => {
     if (window.confirm("Do you really want to delete this model?")) {
-      console.log("remove:", modelId);
       let formData = new FormData();
       formData.append("modelId", modelId);
       formData.append("profileId", profileId);

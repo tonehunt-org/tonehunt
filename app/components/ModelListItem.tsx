@@ -1,17 +1,17 @@
-import Button from "~/components/ui/Button";
 import * as timeago from "timeago.js";
-import { StarIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
-import DownloadButton from "./DownloadButton";
+import type { ProfileWithFavorites } from "~/services/profile";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
     category: true,
     profile: true,
+    favorites: true,
   },
 });
 
@@ -19,11 +19,12 @@ type ModelWithCategoryAndProfile = Prisma.ModelGetPayload<typeof modelWithCatego
 
 interface ModelListItemType {
   model: ModelWithCategoryAndProfile;
-  onFavoriteClick?: (arg1: string, arg2: string | null) => void | undefined;
+  profile: ProfileWithFavorites | null;
 }
 
-const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
+const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
+  console.log("---------profile", profile);
 
   return (
     <div
@@ -54,7 +55,7 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                     </span>
                   ) : null}
 
-                  <Link to={`/${model.profile.username}`}>
+                  <Link to={`/${model.profile.username}`} prefetch="intent">
                     <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>
@@ -72,13 +73,19 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
           <div className="flex items-center h-full">
             <div className="flex-1">
               <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
-                <FavoriteButton
+                {/* <FavoriteButton
                   count={model._count.favorites}
                   onClick={() =>
                     onFavoriteClick
                       ? onFavoriteClick(model.id, model.favorites?.length > 0 ? model.favorites[0].id : null)
                       : null
                   }
+                /> */}
+                <FavoriteButton
+                  count={model._count?.favorites}
+                  favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
+                  modelId={model.id}
+                  disabledReason={profile ? undefined : "You must be logged in"}
                 />
 
                 <ButtonLink
@@ -89,7 +96,7 @@ const ModelListItem = ({ model, onFavoriteClick }: ModelListItemType) => {
                   download={model.filename}
                 >
                   <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">{model._count.downloads}</span>
+                  <span className="inline-block text-sm font-satoshi-light">{model._count?.downloads}</span>
                 </ButtonLink>
               </div>
             </div>

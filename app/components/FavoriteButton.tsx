@@ -1,26 +1,50 @@
 import { StarIcon } from "@heroicons/react/24/outline";
-import type { LinkProps } from "@remix-run/react";
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
+import { useFetcher } from "@remix-run/react";
+import { twMerge } from "tailwind-merge";
+import type { ButtonProps } from "~/components/ui/Button";
 import Button from "~/components/ui/Button";
 
-type FavoriteButtonProps = {
+const starIconClasses = "w-5 h-5 inline-block mr-[6px]";
+
+type FavoriteButtonProps = ButtonProps & {
   favorited?: boolean;
   count: number;
-  onClick: () => void;
   className?: string;
+  modelId: string;
+  disabledReason?: string;
 };
 
-export default function FavoriteButton({ favorited, count, onClick, className, ...linkProps }: FavoriteButtonProps) {
+export default function FavoriteButton({
+  modelId,
+  favorited,
+  count,
+  onClick,
+  className,
+  disabledReason,
+  ...buttonProps
+}: FavoriteButtonProps) {
+  const favoriteFetcher = useFetcher();
   return (
-    <Button
-      type="button"
-      variant="secondary"
-      className={`flex items-center ${
-        favorited ? "bg-tonehunt-yellow" : null
-      } text-white/60 hover:border-white hover:bg-transparent hover:text-white ${className}`}
-      onClick={() => onClick()}
-    >
-      <StarIcon className="w-5 h-5 inline-block mr-[6px]" />
-      <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>
-    </Button>
+    <favoriteFetcher.Form method="post" action="/favorites/add">
+      <Button
+        type="submit"
+        name="modelId"
+        value={modelId}
+        {...buttonProps}
+        variant="secondary"
+        className={twMerge(
+          "flex items-center",
+          className,
+          favorited ? "bg-tonehunt-yellow text-black hover:bg-tonehunt-yellow hover:text-black " : ""
+        )}
+        loading={favoriteFetcher.state === "submitting" || favoriteFetcher.state === "loading"}
+        disabled={!!disabledReason}
+        title={disabledReason}
+      >
+        {favorited ? <StarIconSolid className={starIconClasses} /> : <StarIcon className={starIconClasses} />}
+        <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>
+      </Button>
+    </favoriteFetcher.Form>
   );
 }

@@ -1,6 +1,10 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { Profile } from "@prisma/client";
+import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 import { Provider } from "jotai";
+import { getSession } from "./auth.server";
+import { getProfile } from "./services/profile";
 
 import styles from "./tailwind.css";
 
@@ -11,6 +15,26 @@ export const meta: MetaFunction = () => ({
   title: "ToneHunt - Find amps, pedals, and packs for Neural Amp Modeler.",
   viewport: "width=device-width,initial-scale=1",
 });
+
+export type RootLoaderData = {
+  profile?: Profile;
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const { session } = await getSession(request);
+
+  if (!session) {
+    return json<RootLoaderData>({});
+  }
+
+  const profile = await getProfile(session);
+
+  if (!profile) {
+    return json<RootLoaderData>({});
+  }
+
+  return json<RootLoaderData>({ profile });
+};
 
 export default function App() {
   return (

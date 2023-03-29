@@ -6,7 +6,7 @@ import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { useSubmit } from "@remix-run/react";
+import type { ProfileWithFavorites } from "~/services/profile";
 
 interface ModelListType {
   data: Model[];
@@ -22,6 +22,7 @@ interface ModelListType {
   selectedSortBy?: string;
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
+  profile: ProfileWithFavorites | null;
 }
 
 const ModelsListComponent = ({
@@ -38,26 +39,13 @@ const ModelsListComponent = ({
   selectedSortBy = "newest",
   onSortChange = undefined,
   user = null,
+  profile,
 }: ModelListType) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle =
     "px-3 py-1 border border-gray-600 rounded-lg relative w-[40px] h-[40px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
-
-  const submit = useSubmit();
-
-  const onFavoriteClick = (modelId: string, favoriteId: string | null) => {
-    if (!user) return;
-
-    let formData = new FormData();
-    formData.append("modelId", modelId);
-    formData.append("profileId", user.id);
-    if (favoriteId) {
-      formData.append("favoriteId", favoriteId);
-    }
-    submit(formData, { method: "post", action: "/favorites/add" });
-  };
 
   return (
     <div>
@@ -116,7 +104,7 @@ const ModelsListComponent = ({
       <div className="flex flex-col">
         {data.length === 0 ? <span>No results</span> : null}
         {data.length > 0
-          ? data.map((model: any) => <ModelListItem key={model.id} {...{ model, onFavoriteClick }} />)
+          ? data.map((model: any) => <ModelListItem key={model.id} profile={profile} model={model} />)
           : null}
       </div>
       {/* PAGINATION AREA */}

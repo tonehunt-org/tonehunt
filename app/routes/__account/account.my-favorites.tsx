@@ -11,6 +11,8 @@ import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import { getFavorites } from "~/services/favorites";
 import { map } from "lodash";
+import type { ProfileWithFavorites } from "~/services/profile";
+import { getProfileWithFavorites } from "~/services/profile";
 
 export type LoaderData = {
   user: User | null | undefined;
@@ -19,6 +21,7 @@ export type LoaderData = {
     total: number;
     page: number;
   };
+  profile: ProfileWithFavorites | null;
 };
 
 // THE AMOUNT OF MODELS PER PAGE
@@ -29,16 +32,12 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const user = session?.user;
   const url = new URL(request.url);
 
+  const profile = await getProfileWithFavorites(session);
+
   // GET PAGE
   let page = Number(url.searchParams.get("page")) ?? 1;
   if (!page || page === 0) page = 1;
   const offset = (page - 1) * MODELS_LIMIT;
-
-  const profile = await db.profile.findUnique({
-    where: {
-      id: user?.id,
-    },
-  });
 
   // GET MODELS
   const favorites = profile
@@ -57,6 +56,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       total: favorites.total,
       page: page - 1,
     },
+    profile,
   });
 };
 
@@ -97,6 +97,7 @@ export default function MyFavoritesPage() {
               showMenu={false}
               showFilters={false}
               user={user}
+              profile={data.profile}
             />
           ) : null}
         </div>
