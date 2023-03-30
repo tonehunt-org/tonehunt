@@ -6,6 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Category, Profile, Tag } from "@prisma/client";
 import type { PropsWithChildren } from "react";
 import CreateModal from "~/components/CreateModal";
+import { getSampleTags } from "~/services/tags";
 
 interface DefaultLayoutType {
   user?: User | null | undefined;
@@ -40,7 +41,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
 
       {/* FIXED DESKTOP SIDEBAR */}
       <div className="hidden xl:block absolute top-20 right-0 w-72 min-h-full mb-20">
-        <Sidebar user={user} username={profile?.username} tags={tags} />
+        <Sidebar user={user} username={profile?.username} tags={getSampleTags()} />
       </div>
 
       <Footer />

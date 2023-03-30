@@ -2,6 +2,7 @@ import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import { getSession } from "~/auth.server";
+import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { supabase } = await getSession(request);
@@ -17,10 +18,17 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     return new Response("", { status: 500 });
   }
 
-  return json({
-    model: dbResponse.data,
-    appUrl: context.SUPABASE_URL,
-  });
+  return json(
+    {
+      model: dbResponse.data,
+      appUrl: context.SUPABASE_URL,
+    },
+    {
+      headers: {
+        ...DEFAULT_CACHE_HEADER,
+      },
+    }
+  );
 };
 
 export default function ModelPage() {
