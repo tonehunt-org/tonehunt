@@ -143,23 +143,27 @@ export default function ModelDetailPage() {
           <h4 className="pb-2">{data.model.ampName}</h4>
           <p className="text-[22px] opacity-70 pb-[40px]">{data.model.description}</p>
 
-          <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
+          {data.model.tags.length > 0 ? (
+            <div>
+              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
 
-          <ul className="pb-[44px] flex gap-1">
-            {data.model.tags?.map((tag) => {
-              return (
-                <li key={tag}>
-                  <Link
-                    to={`/?tags=${tag}`}
-                    prefetch="intent"
-                    className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
-                  >
-                    #{tag}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+              <ul className="pb-[44px] flex gap-1">
+                {data.model.tags?.map((tag) => {
+                  return (
+                    <li key={tag}>
+                      <Link
+                        to={`/?tags=${tag}`}
+                        prefetch="intent"
+                        className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
+                      >
+                        #{tag}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
 
           <span className="opacity-60 text-sm leading-[19px]">Uploaded {timeago.format(data.model.createdAt)}</span>
         </div>
