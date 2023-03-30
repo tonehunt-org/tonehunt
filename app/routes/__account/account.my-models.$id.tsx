@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form, useNavigate, useActionData, useSubmit } from "@remix-run/react";
+import { useLoaderData, Form, useNavigate, useActionData, useSubmit, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
@@ -11,7 +11,6 @@ import { getTags } from "~/services/tags";
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Button from "~/components/ui/Button";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 import { split, join, map } from "lodash";
 import MultiSelect from "~/components/ui/MultiSelect";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";
@@ -43,8 +42,10 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     return redirect("/");
   }
 
-  const categories = await getCategories();
-  const tags = await getTags();
+  const categoriesReq = getCategories();
+  const tagsReq = getTags();
+
+  const [categories, tags] = await Promise.all([categoriesReq, tagsReq]);
 
   return json<LoaderData>({ model, categories, tags });
 };
@@ -92,6 +93,7 @@ export default function EditModelPage() {
   const data = useLoaderData<LoaderData>();
   const submit = useSubmit();
   const { model, categories, tags } = data;
+  const navigation = useNavigation();
 
   const actionData = useActionData<ActionData>();
   const navigate = useNavigate();
@@ -252,10 +254,9 @@ export default function EditModelPage() {
             </div>
 
             <div className="flex justify-end pt-12">
-              <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-                Cancel
+              <Button type="submit" loading={navigation.state === "submitting"}>
+                Update Model
               </Button>
-              <Button type="submit">Update Model</Button>
             </div>
           </Form>
         </div>

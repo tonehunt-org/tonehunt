@@ -39,13 +39,15 @@ const MultiSelect = ({ options = [], className, label, name, required, defaultVa
         }),
         option: (baseStyles, state) => ({
           ...baseStyles,
-          backgroundColor: state.isFocused ? "#1455b8" : "#21252a",
+          backgroundColor: state.isFocused ? "#4000C7" : "rgb(24,24,27)",
           borderRadius: "8px",
+          cursor: "pointer",
         }),
         menu: (baseStyles, state) => ({
           ...baseStyles,
-          backgroundColor: "#21252a",
+          backgroundColor: "rgb(24,24,27)",
           borderRadius: "10px",
+          border: "2px solid #fff",
           padding: "5px",
         }),
         multiValue: (baseStyles, state) => ({
@@ -58,6 +60,11 @@ const MultiSelect = ({ options = [], className, label, name, required, defaultVa
         multiValueLabel: (baseStyles, state) => ({
           ...baseStyles,
           color: "#000",
+          display: "inline-flex",
+          alignItems: "center",
+          lineHeight: 1.5,
+          fontSize: "15px",
+          fontFamily: "Satoshi-Medium",
         }),
         multiValueRemove: (baseStyles, state) => ({
           ...baseStyles,
