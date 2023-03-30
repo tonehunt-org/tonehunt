@@ -41,9 +41,9 @@
 body,
 html {
   font-size: 16px;
-  font-family: "Satoshi-Regular";
+  font-family: "Satoshi-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
-
 #loading-dots #dot1 {
   animation: load 1s infinite;
 }
