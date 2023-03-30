@@ -44,7 +44,7 @@ model Model {
   modelPath		  String?		  @db.VarChar(255)
   filename		  String?		  @db.VarChar(255)
   icon			    String?		  @db.VarChar(255)
-  profileId 		String		
+  profileId 		String
   profile			  Profile		  @relation(fields: [profileId], references: [id])
   categoryId    Int
   category			Category	  @relation(fields: [categoryId], references: [id])
@@ -63,7 +63,7 @@ model Favorite {
   id    		  Int       @id @default(autoincrement())
   modelId		  String
   model			  Model		  @relation(fields: [modelId], references: [id])
-  profileId   String		
+  profileId   String
   profile		  Profile		@relation(fields: [profileId], references: [id])
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
@@ -74,7 +74,7 @@ model ModelDownload {
   id          Int       @id @default(autoincrement())
   modelId		  String
   model			  Model		  @relation(fields: [modelId], references: [id])
-  profileId   String?		
+  profileId   String?
   profile		  Profile?	@relation(fields: [profileId], references: [id])
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
@@ -89,4 +89,12 @@ model Tag {
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
   deleted     Boolean   @default(false)
+}
+
+model Counts {
+  name        String @id @db.VarChar(255)
+  count       Int
+
+  @@index(fields: [name])
+  @@unique([name])
 }
