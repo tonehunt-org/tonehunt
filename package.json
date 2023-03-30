@@ -2,7 +2,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build": "npm run generateTypes && remix build",
     "dev": "npx prisma generate && remix dev",
     "typecheck": "tsc",
     "generateTypes": "npx prisma generate"
