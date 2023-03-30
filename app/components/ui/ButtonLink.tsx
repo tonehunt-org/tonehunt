@@ -30,6 +30,7 @@ export default function ButtonLink({
         size === "small" ? smallClasses : "",
         className
       )}
+      prefetch="intent"
       {...props}
     >
       {children}
