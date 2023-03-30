@@ -6,6 +6,7 @@ import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithFavorites } from "~/services/profile";
+import DownloadButton from "./DownloadButton";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -70,24 +71,14 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
         <div className="flex-1 lg:flex-none lg:pl-4">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0">
+              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0 gap-2">
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
                   modelId={model.id}
                   disabledReason={profile ? undefined : "You must be logged in"}
                 />
-
-                <ButtonLink
-                  className="ml-2"
-                  variant="button"
-                  to={`/models/${model.id}/download`}
-                  reloadDocument
-                  download={model.filename}
-                >
-                  <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-1" />
-                  <span className="inline-block text-sm font-satoshi-light">{model._count?.downloads}</span>
-                </ButtonLink>
+                <DownloadButton count={model._count?.downloads} filename={model.filename} modelId={model.id} />
               </div>
             </div>
           </div>

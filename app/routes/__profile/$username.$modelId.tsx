@@ -95,8 +95,9 @@ export default function ModelDetailPage() {
           <div className="flex gap-[12px] justify-center pb-16">
             <DownloadButton
               count={data.model.downloads.length}
-              onClick={() => {}}
               className="bg-tonehunt-gray-darker"
+              filename={data.model.filename}
+              modelId={data.model.id}
             />
 
             <FavoriteButton
