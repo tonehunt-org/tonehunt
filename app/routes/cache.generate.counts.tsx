@@ -6,24 +6,28 @@ export const loader: LoaderFunction = async ({ request }) => {
   const ampCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 1 }, { categoryId: 5 }],
+      active: true,
     },
   });
 
   const pedalCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 3 }, { categoryId: 7 }],
+      active: true,
     },
   });
 
   const outboardCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 9 }, { categoryId: 10 }],
+      active: true,
     },
   });
 
   const fullRigCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 2 }, { categoryId: 6 }],
+      active: true,
     },
   });
 
