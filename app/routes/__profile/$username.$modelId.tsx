@@ -14,6 +14,7 @@ import { getCategoryProfile } from "~/services/categories";
 import { getSession } from "~/auth.server";
 import { getProfile } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
+import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 
 type LoaderData = {
   model: Model & {
@@ -65,7 +66,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("", { status: 404 });
   }
 
-  return json<LoaderData>({ model, favorite, user: session?.user });
+  return json<LoaderData>({ model, favorite, user: session?.user }, { headers: { ...DEFAULT_CACHE_HEADER } });
 };
 
 export default function ModelDetailPage() {

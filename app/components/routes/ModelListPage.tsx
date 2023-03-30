@@ -14,6 +14,7 @@ import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
+import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 
 export type LoaderData = {
   user?: User | null;
@@ -89,21 +90,28 @@ export const modelListLoader: LoaderFunction = async ({ request }) => {
     tags: tagsParam,
   });
 
-  return json<LoaderData>({
-    user,
-    username: usernameParam,
-    modelList: {
-      models: models.data,
-      total: models.total,
-      page: page - 1,
-      filter,
-      categories,
-      sortBy: selectedSortBy?.slug ?? "newest",
-      sortDirection,
-      tags: tagsParam,
+  return json<LoaderData>(
+    {
+      user,
+      username: usernameParam,
+      modelList: {
+        models: models.data,
+        total: models.total,
+        page: page - 1,
+        filter,
+        categories,
+        sortBy: selectedSortBy?.slug ?? "newest",
+        sortDirection,
+        tags: tagsParam,
+      },
+      profile,
     },
-    profile,
-  });
+    {
+      headers: {
+        ...DEFAULT_CACHE_HEADER,
+      },
+    }
+  );
 };
 
 export default function ModelListPage() {

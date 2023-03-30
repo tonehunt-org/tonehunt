@@ -14,6 +14,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 
 export type LoaderData = {
   user?: User | null | undefined;
@@ -51,15 +52,22 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         total: 0,
       };
 
-  return json<LoaderData>({
-    user,
-    profile,
-    modelList: {
-      models: models.data,
-      total: models.total,
-      page: page - 1,
+  return json<LoaderData>(
+    {
+      user,
+      profile,
+      modelList: {
+        models: models.data,
+        total: models.total,
+        page: page - 1,
+      },
     },
-  });
+    {
+      headers: {
+        ...DEFAULT_CACHE_HEADER,
+      },
+    }
+  );
 };
 
 export const NotFound = ({ children }: PropsWithChildren) => (
