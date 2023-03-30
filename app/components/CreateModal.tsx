@@ -16,6 +16,7 @@ import { toJSON } from "~/utils/form";
 import { asArray } from "~/utils/array";
 import type { MultiSelectOption } from "./ui/MultiSelect";
 import MultiSelect from "./ui/MultiSelect";
+import { last } from "lodash";
 
 type CreateModalProps = {
   open: ModalProps["open"];
@@ -62,6 +63,14 @@ export default function CreateModal({ open, onClose, categories, tags }: CreateM
       const formData = new FormData(formRef.current);
       let { files } = toJSON<{ files: File[] }>(formData);
       files = asArray(files);
+
+      // TODO: this needs to be more robust, but works for now
+      const hasInvalidFiles = files.some((file) => file.type !== "audio/wav" && last(file.name.split(".")) !== "nam");
+
+      if (hasInvalidFiles) {
+        alert("Only NAM models and IR wav files are allowed");
+        return;
+      }
 
       setFileCount(files.length);
 
@@ -154,7 +163,7 @@ export default function CreateModal({ open, onClose, categories, tags }: CreateM
                 name="files"
                 multiple
                 onChange={handleFormSubmit}
-                accept=".nam"
+                accept=".nam, .wav"
                 style={{
                   width: "400%",
                   height: "100%",
