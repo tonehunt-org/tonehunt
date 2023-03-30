@@ -1,120 +1,21 @@
 import { useState } from "react";
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
-import { getSession } from "~/auth.server";
 
 import type { SelectOption } from "~/components/ui/Select";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
-import type { User } from "@supabase/supabase-js";
-import { getModels } from "~/services/models";
-import { getCategories } from "~/services/categories";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
-import { DEFAULT_CACHE_HEADER } from "~/utils/response";
-
-export type LoaderData = {
-  user?: User | null;
-  username: string | null;
-  modelList?: {
-    models: any;
-    total: number;
-    page: number;
-    filter: string;
-    categories: any;
-    sortBy: string;
-    sortDirection: string;
-    tags: string | null;
-  };
-  modelDetail?: {};
-  profile: ProfileWithFavorites | null;
-};
-
-const sortByOptions = [
-  { slug: "newest", field: "createdAt" },
-  { slug: "popular", field: "popular" },
-  { slug: "name", field: "title" },
-];
+import type { Counts } from "@prisma/client";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
 
-export const modelListLoader: LoaderFunction = async ({ request }) => {
-  const { session } = await getSession(request);
-
-  const user = session?.user;
-  const url = new URL(request.url);
-
-  const profile = await getProfileWithFavorites(session);
-
-  // GET PAGE
-  let page = Number(url.searchParams.get("page")) ?? 1;
-  if (!page || page === 0) page = 1;
-  const offset = (page - 1) * MODELS_LIMIT;
-
-  // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
-  const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
-  const sortBy = selectedSortBy?.field ?? "createdAt";
-
-  // GET SORT DIRECTION
-  const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
-  const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
-
-  // GET USERNAME
-  const usernameParam = url.searchParams.get("username") ?? null;
-
-  // GET FILTER
-  const filter = url.searchParams.get("filter") ?? "all";
-
-  // GET TAGS
-  const tagsParam = url.searchParams.get("tags") ?? null;
-
-  // GET CATEGORIES
-  const categories = await getCategories();
-  const selectedCategory = find(categories, ["slug", filter]);
-  const categoryId = selectedCategory?.id ?? null;
-
-  // GET MODELS
-  const models = await getModels({
-    limit: MODELS_LIMIT,
-    next: offset,
-    categoryId,
-    sortBy,
-    sortDirection,
-    username: usernameParam,
-    user,
-    tags: tagsParam,
-  });
-
-  return json<LoaderData>(
-    {
-      user,
-      username: usernameParam,
-      modelList: {
-        models: models.data,
-        total: models.total,
-        page: page - 1,
-        filter,
-        categories,
-        sortBy: selectedSortBy?.slug ?? "newest",
-        sortDirection,
-        tags: tagsParam,
-      },
-      profile,
-    },
-    {
-      headers: {
-        ...DEFAULT_CACHE_HEADER,
-      },
-    }
-  );
+type ModelListPageProps = {
+  counts: Counts[];
 };
 
-export default function ModelListPage() {
+export default function ModelListPage({ counts }: ModelListPageProps) {
   const data = useLoaderData();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -204,8 +105,32 @@ export default function ModelListPage() {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">
-          Find amps, pedals, and packs for NAM
+        <h1 className="w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20">
+          Explore over{" "}
+          <Link
+            prefetch="intent"
+            to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
+            className="border-tonehunt-green border-b-8 hover:text-tonehunt-green"
+          >
+            {counts.find((count) => count.name === "amps")?.count}
+          </Link>{" "}
+          amps,{" "}
+          <Link
+            prefetch="intent"
+            to="/?page=1&filter=full-rig&sortBy=newest&sortDirection=desc"
+            className="border-tonehunt-purple border-b-8 hover:text-tonehunt-purple"
+          >
+            {counts.find((count) => count.name === "fullrigs")?.count}
+          </Link>{" "}
+          full rigs,{" "}
+          <Link
+            prefetch="intent"
+            to="/?page=1&filter=pedal&sortBy=newest&sortDirection=desc"
+            className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
+          >
+            {counts.find((count) => count.name === "pedals")?.count}
+          </Link>{" "}
+          pedals, and many other NAM models
         </h1>
       </div>
       <div className="flex">
