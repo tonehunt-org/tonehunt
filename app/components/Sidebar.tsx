@@ -59,7 +59,7 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
           <h1 className="font-satoshi-bold text-xl mb-4">Popular tags</h1>
         </div>
         <div className="flex flex-row flex-wrap gap-2 ">
-          {map(tags, (tag) => (
+          {tags.map((tag) => (
             <ButtonLink key={tag.id} variant="button" size="small" to={`/?tags=${tag.name}`}>
               #{tag.name}
             </ButtonLink>

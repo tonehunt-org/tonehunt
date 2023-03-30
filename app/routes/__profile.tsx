@@ -4,36 +4,38 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import type { Category } from "@prisma/client";
-import type { Profile } from "@prisma/client";
+import type { Category, Tag } from "@prisma/client";
 import ProfileLayout from "~/layouts/ProfileLayout";
+import useProfile from "~/hooks/useProfile";
+import { getTags } from "~/services/tags";
 
 type LoaderData = {
   user?: User | null | undefined;
-  profile?: Profile | null | undefined;
   categories: Category[];
+  tags: Tag[];
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { session } = await getSession(request);
 
-  const profileReq = db.profile.findFirst({ where: { id: session?.user.id } });
   const categoriesReq = db.category.findMany({ where: { NOT: { title: "IR" } } }); // Ignoring IRs for now
+  const tagsReq = getTags();
 
-  const [profile, categories] = await Promise.all([profileReq, categoriesReq]);
+  const [categories, tags] = await Promise.all([categoriesReq, tagsReq]);
 
   return json<LoaderData>({
     user: session?.user,
+    tags,
     categories,
-    profile,
   });
 };
 
 export default function Layout() {
   const data = useLoaderData<LoaderData>();
+  const profile = useProfile();
 
   return (
-    <ProfileLayout user={data.user} profile={data.profile} categories={data.categories}>
+    <ProfileLayout user={data.user} profile={profile} categories={data.categories} tags={data.tags}>
       <Outlet />
     </ProfileLayout>
   );

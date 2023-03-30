@@ -45,7 +45,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
 
       <Footer />
 
-      <CreateModal open={createModalOpen} onClose={handelClose} categories={categories} />
+      <CreateModal open={createModalOpen} onClose={handelClose} categories={categories} tags={tags} />
     </div>
   );
 };

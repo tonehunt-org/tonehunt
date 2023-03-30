@@ -3,6 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
 import type { Model } from "@prisma/client";
+import { toJSON } from "~/utils/form";
 
 export type ActionData = {
   model?: Model;
@@ -19,17 +20,18 @@ export const action: ActionFunction = async ({ request, context }) => {
 
   try {
     const formData = await request.formData();
+    const data = toJSON(formData);
 
     const model = await db.model.create({
       data: {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        ampName: formData.get("ampName") as string,
-        modelPath: formData.get("modelPath") as string,
-        filename: formData.get("filename") as string | null,
+        title: data?.title,
+        description: data?.description,
+        ampName: data?.ampName,
+        modelPath: data?.modelPath,
+        filename: data?.filename,
         profileId: profile.id,
-        categoryId: formData.get("categoryId") ? +(formData.get("categoryId") as string) : 0,
-        tags: formData.get("tags") as string,
+        categoryId: data?.categoryId ? +data?.categoryId : 0,
+        tags: data?.tags,
       },
     });
 

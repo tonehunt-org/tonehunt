@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Button from "./ui/Button";
 import type { ModalProps } from "./ui/Modal";
 import Modal from "./ui/Modal";
-import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Form, useFetcher, useNavigate, useNavigation } from "@remix-run/react";
+import { ArrowUpTrayIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Form, useFetcher, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
 import Input from "./ui/Input";
-import type { Category } from "@prisma/client";
+import type { Category, Tag } from "@prisma/client";
 import Select from "./ui/Select";
 import Loading from "./ui/Loading";
 import type { ActionData as UploadFileActionData } from "~/routes/__layout/models.upload";
@@ -14,14 +14,17 @@ import { twMerge } from "tailwind-merge";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { toJSON } from "~/utils/form";
 import { asArray } from "~/utils/array";
+import type { MultiSelectOption } from "./ui/MultiSelect";
+import MultiSelect from "./ui/MultiSelect";
 
 type CreateModalProps = {
   open: ModalProps["open"];
   onClose: () => void;
   categories: Category[];
+  tags: Tag[];
 };
 
-export default function CreateModal({ open, onClose, categories }: CreateModalProps) {
+export default function CreateModal({ open, onClose, categories, tags }: CreateModalProps) {
   const [drag, setDrag] = useState(false);
   const [showFields, setShowFields] = useState(false);
   const [formValidity, setFormValidity] = useState(false);
@@ -32,6 +35,10 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
   const navigation = useNavigation();
   const navigate = useNavigate();
   const [fileCount, setFileCount] = useState<number>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tagOptions = tags.map((tag) => ({ value: tag.name, label: tag.name }));
+  const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
 
   const isFileUploading = fileUploadFetcher.state === "submitting";
 
@@ -108,8 +115,20 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
 
   return (
     <Modal open={open}>
-      <div className="p-24 py-12">
-        <h2 className="text-2xl font-bold mb-12">Create New Model</h2>
+      <div className="p-10 pt-7 relative">
+        <div className="flex item-center">
+          <h2 className="pb-3 text-2xl font-bold mb-5 flex-grow">Upload files</h2>
+          <Button
+            onClick={() => {
+              searchParams.delete("create");
+              setSearchParams(searchParams);
+            }}
+            variant="link"
+            className="opacity-70 hover:opacity-100 font-3xl inline-block w-[24px] h-[24px]"
+          >
+            <XMarkIcon fontSize={24} className="inline-block" />
+          </Button>
+        </div>
 
         {!showFields ? (
           <div
@@ -179,12 +198,12 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
               onChange={handleFormChange}
             >
               <div className="flex gap-10">
-                <div className="flex-grow flex flex-col gap-3">
+                <div className="flex-grow flex flex-col gap-3 basis-1/2">
                   <Input name="title" label="Title" required autoFocus />
                   <Input name="description" label="Description" style={{ height: "168px" }} multiline />
                 </div>
 
-                <div className="flex-grow flex flex-col gap-3">
+                <div className="flex-grow flex flex-col gap-3 basis-1/2">
                   <Input name="ampName" label="Make(s) and Model(s)" required />
                   <Select
                     required
@@ -197,7 +216,16 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
                       };
                     })}
                   />
-                  <Input name="tags" label="Tags" placeholder="Rock, Metal, Marshal ..." />
+                  <MultiSelect
+                    // name="tags"
+                    label="Tags"
+                    options={tagOptions}
+                    onChange={(e: any) => setSelectedTags(e)}
+                    defaultValue={selectedTags}
+                  />
+                  {selectedTags.map((tag) => {
+                    return <input type="hidden" name="tags" value={tag.value} key={tag.value} />;
+                  })}
                 </div>
               </div>
 
