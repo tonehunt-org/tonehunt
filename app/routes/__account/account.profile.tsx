@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form, useNavigate, useActionData } from "@remix-run/react";
+import { useLoaderData, Form, useNavigate, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
@@ -69,7 +69,7 @@ export default function ProfileInformationPage() {
   const { profile, user } = data;
 
   const actionData = useActionData<ActionData>();
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const [formValidity, setFormValidity] = useState(false);
 
@@ -129,7 +129,7 @@ export default function ProfileInformationPage() {
             </div>
 
             <div className="flex justify-end pt-5">
-              <Button disabled={!formValidity} type="submit" className="">
+              <Button disabled={!formValidity} loading={navigation.state === "submitting"} type="submit" className="">
                 Update Profile
               </Button>
             </div>

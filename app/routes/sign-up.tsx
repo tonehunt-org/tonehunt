@@ -83,8 +83,8 @@ export default function SignUpPage() {
               <span className="">
                 <Logo className="w-full" />
               </span>{" "}
-              <div className="mt-8 text-4xl font-satoshi-bold text-black text-center">The tone is in the stack.</div>
-              <div className="text-lg font-satoshi-regular mt-8 text-center">
+              {/* <div className="mt-8 text-4xl font-satoshi-bold text-black text-center">The tone is in the stack.</div> */}
+              <div className="text-xl text-black font-satoshi-bold mt-8 text-center">
                 Find amps, pedals, and packs for
                 <br />
                 <a

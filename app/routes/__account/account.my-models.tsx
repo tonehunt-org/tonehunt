@@ -1,6 +1,6 @@
 import { getSession } from "~/auth.server";
 import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useSubmit } from "@remix-run/react";
+import { Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import type { User } from "@supabase/supabase-js";
 import { db } from "~/utils/db.server";
@@ -9,10 +9,12 @@ import * as timeago from "timeago.js";
 import Button from "~/components/ui/Button";
 import ButtonLink from "~/components/ui/ButtonLink";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import useProfile from "~/hooks/useProfile";
+import type { Model } from "@prisma/client";
 
 type LoaderData = {
   user: User | null | undefined;
-  models: any;
+  models: Model[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -57,8 +59,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 const MyModelsPage = () => {
-  const data = useLoaderData();
+  const data = useLoaderData<LoaderData>();
   const submit = useSubmit();
+  const profile = useProfile();
 
   const onDeleteClick = (modelId: string, profileId: string) => {
     if (window.confirm("Do you really want to delete this model?")) {
@@ -74,7 +77,13 @@ const MyModelsPage = () => {
       <div key={model.id} className="flex-1 bg-tonehunt-gray-medium p-3 mb-5 rounded-xl">
         <div className="flex flex-col lg:flex-row">
           <div className="w-full lg:w-3/4">
-            <span className="block w-full font-satoshi-bold text-2xl mb-1">{model.title}</span>
+            <Link
+              to={`/${profile?.username}/${model.id}`}
+              prefetch="intent"
+              className="block w-full font-satoshi-bold text-2xl mb-1 hover:underline"
+            >
+              {model.title}
+            </Link>
             <span className="block w-full font-satoshi-light text-sm mb-1">
               <span className="font-satoshi-bold">Category</span>: {model.category.title}
             </span>

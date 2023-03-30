@@ -132,6 +132,7 @@ export default function ModelDetailPage() {
 
           <Link
             to={`/${data.model.profile.username}`}
+            prefetch="intent"
             className="block hover:bg-tonehunt-gray-light text-base text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl"
           >
             Profile

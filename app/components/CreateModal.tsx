@@ -13,6 +13,7 @@ import type { ActionData as ModelCreateActionData } from "~/routes/__layout/mode
 import { twMerge } from "tailwind-merge";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { toJSON } from "~/utils/form";
+import { asArray } from "~/utils/array";
 
 type CreateModalProps = {
   open: ModalProps["open"];
@@ -52,7 +53,8 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
 
     if (formRef.current) {
       const formData = new FormData(formRef.current);
-      const { files } = toJSON<{ files: File[] }>(formData);
+      let { files } = toJSON<{ files: File[] }>(formData);
+      files = asArray(files);
 
       setFileCount(files.length);
 
@@ -158,7 +160,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
               {isFileUploading ? (
                 <span className="flex items-center gap-3">
                   <Loading />
-                  File(s) uploading ...
+                  {fileCount === 1 ? "File" : "Files"} uploading ...
                 </span>
               ) : (
                 <>
