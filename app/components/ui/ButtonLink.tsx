@@ -10,7 +10,7 @@ type ButtonLinkProps = LinkProps & {
   variant?: "link" | "button";
 };
 
-const classes = `focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center dark:focus:ring-blue-800`;
+const classes = `focus:ring-4 focus:outline-none font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center focus:ring-blue-800`;
 const activeClasses = "bg-white text-gray-900 hover:bg-white";
 
 export default function ButtonLink({

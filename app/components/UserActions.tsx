@@ -1,5 +1,5 @@
 import { Popover } from "@headlessui/react";
-import { Form, Link, useLocation, useSearchParams } from "@remix-run/react";
+import { Form, Link, useFetcher, useLocation, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
@@ -15,6 +15,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
   const location = useLocation();
   const [action, setAction] = useState<"login" | "sign-up">("login");
   const [searchParams, setSearchParams] = useSearchParams();
+  const loginFetcher = useFetcher();
 
   const onUploadModalClick = () => {
     searchParams.set("create", "");
@@ -22,10 +23,14 @@ export default function UserActions({ user, username }: UserActionsProps) {
   };
 
   const loginForm = (
-    <Form method="post" action={`/login?redirectTo=${location.pathname}`} className="flex flex-col gap-3">
+    <loginFetcher.Form method="post" action={`/login?redirectTo=${location.pathname}`} className="flex flex-col gap-3">
       <Input name="email" label="Email" type="email" required />
       <Input name="password" label="Password" type="password" required />
-      <Button type="submit" className="mt-3">
+      <Button
+        type="submit"
+        className="mt-3"
+        loading={loginFetcher.state === "submitting" || loginFetcher.state === "loading"}
+      >
         Log in
       </Button>
       <div className="text-center flex items-center justify-center">
@@ -33,7 +38,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
           Sign Up
         </Link>
       </div>
-    </Form>
+    </loginFetcher.Form>
   );
 
   return user ? (

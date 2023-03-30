@@ -14,7 +14,7 @@ type TableProps<T> = {
 export default function Table<T>({ data, columns }: TableProps<T>) {
   return (
     <table className="min-w-full text-left text-sm font-light border-spacing-y-2 border-separate">
-      <thead className="border-b font-medium dark:border-neutral-500">
+      <thead className="border-b font-medium border-neutral-500">
         <tr>
           {columns.map((column) => {
             return (

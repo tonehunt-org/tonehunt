@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Button from "./ui/Button";
 import type { ModalProps } from "./ui/Modal";
 import Modal from "./ui/Modal";
-import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Form, useFetcher, useNavigate, useNavigation } from "@remix-run/react";
+import { ArrowUpTrayIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Form, useFetcher, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
 import Input from "./ui/Input";
 import type { Category } from "@prisma/client";
 import Select from "./ui/Select";
@@ -32,6 +32,7 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
   const navigation = useNavigation();
   const navigate = useNavigate();
   const [fileCount, setFileCount] = useState<number>();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const isFileUploading = fileUploadFetcher.state === "submitting";
 
@@ -108,8 +109,20 @@ export default function CreateModal({ open, onClose, categories }: CreateModalPr
 
   return (
     <Modal open={open}>
-      <div className="p-24 py-12">
-        <h2 className="text-2xl font-bold mb-12">Create New Model</h2>
+      <div className="p-10 pt-7 relative">
+        <div className="flex item-center">
+          <h2 className="pb-3 text-2xl font-bold mb-5 flex-grow">Upload files</h2>
+          <Button
+            onClick={() => {
+              searchParams.delete("create");
+              setSearchParams(searchParams);
+            }}
+            variant="link"
+            className="opacity-70 hover:opacity-100 font-3xl inline-block w-[24px] h-[24px]"
+          >
+            <XMarkIcon fontSize={24} className="inline-block" />
+          </Button>
+        </div>
 
         {!showFields ? (
           <div

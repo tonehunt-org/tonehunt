@@ -43,7 +43,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-[#141414] text-slate-900 dark:text-white min-h-screen">
+      <body className="bg-[#141414] text-white min-h-screen">
         <Provider>
           <div className="absolute w-full top-0 left-0">
             <Outlet />
