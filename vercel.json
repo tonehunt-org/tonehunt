@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/cache/generate/counts",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
