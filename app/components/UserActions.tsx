@@ -34,7 +34,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
         Log in
       </Button>
       <div className="text-center flex items-center justify-center">
-        <Link to="/sign-up" onClick={() => setAction("sign-up")}>
+        <Link to="/sign-up" prefetch="intent" onClick={() => setAction("sign-up")}>
           Sign Up
         </Link>
       </div>

@@ -17,11 +17,10 @@ export const action: ActionFunction = async ({ request, context }) => {
   const formData = await request.formData();
   const response = new Response();
 
-  const supabase = createServerClient(
-    context.SUPABASE_URL as string,
-    context.SUPABASE_ANON_KEY as string,
-    { request, response }
-  );
+  const supabase = createServerClient(context.SUPABASE_URL as string, context.SUPABASE_ANON_KEY as string, {
+    request,
+    response,
+  });
 
   if (formData.get("sign-up")) {
     const { data, error } = await supabase.auth.signUp({
@@ -85,7 +84,9 @@ export default function LoginPage() {
       </Form>
 
       <div>or</div>
-      <Link to={`/login/signup`}>Sign Up</Link>
+      <Link to={`/login/signup`} prefetch="intent">
+        Sign Up
+      </Link>
     </>
   );
 
@@ -128,7 +129,9 @@ export default function LoginPage() {
           Sign Up
         </button>
         <div>or</div>
-        <Link to={`/login`}>Login</Link>
+        <Link to={`/login`} prefetch="intent">
+          Login
+        </Link>
       </Form>
     </>
   );

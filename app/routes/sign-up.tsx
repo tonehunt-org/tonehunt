@@ -132,7 +132,7 @@ export default function SignUpPage() {
                 </Link>
               </div>
               <div className="text-center py-1 text-tonehunt-gray-lighter">
-                <Link to="/" className="hover:underline">
+                <Link to="/" className="hover:underline" prefetch="intent">
                   Return to Homepage
                 </Link>
               </div>
