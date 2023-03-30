@@ -132,13 +132,6 @@ export default function EditModelPage() {
   return (
     <div className="w-full">
       <div className="flex flex-col">
-        <div className="w-full">
-          <Button variant="link" className="mr-10" onClick={() => navigate(-1)}>
-            <ArrowLeftCircleIcon className="inline-block w-5 h-5 -mt-1" />
-            <span className="inline-block ml-2 hover:underline">Go Back</span>
-          </Button>
-        </div>
-
         <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Edit Model</h1>
       </div>
 

@@ -43,3 +43,29 @@ html {
   font-size: 16px;
   font-family: "Satoshi-Regular";
 }
+
+#loading-dots #dot1 {
+  animation: load 1s infinite;
+}
+
+#loading-dots #dot2 {
+  animation: load 1s infinite;
+  animation-delay: 0.2s;
+}
+
+#loading-dots #dot3 {
+  animation: load 1s infinite;
+  animation-delay: 0.4s;
+}
+
+@keyframes load {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

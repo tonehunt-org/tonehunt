@@ -4,20 +4,15 @@ type LoadingProps = {
 
 export default function Loading({ size = "24" }: LoadingProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
-      <g fill="none" fillRule="evenodd">
-        <g transform="translate(1 1)" strokeWidth="2">
-          <circle strokeOpacity=".5" cx="18" cy="18" r="18" />
-          <path d="M36 18c0-9.94-8.06-18-18-18">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 18 18"
-              to="360 18 18"
-              dur="1s"
-              repeatCount="indefinite"
-            />
-          </path>
+    <svg id="loading-dots" height={size} viewBox="0 0 132 58" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <title>dots</title>
+      <desc>Created with Sketch.</desc>
+      <defs></defs>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="loading-dots" fill="#A3A3A3">
+          <circle id="dot1" cx="25" cy="30" r="13"></circle>
+          <circle id="dot2" cx="65" cy="30" r="13"></circle>
+          <circle id="dot3" cx="105" cy="30" r="13"></circle>
         </g>
       </g>
     </svg>

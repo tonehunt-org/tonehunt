@@ -19,7 +19,7 @@ export const secondaryClassNames = twMerge(
   base,
   "hover:border-white hover:bg-transparent hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300  focus:ring-blue-800 border border-white/10"
 );
-export const disabledClassNames = twMerge(base, "cursor-not-allowed");
+export const disabledClassNames = twMerge(base, "cursor-not-allowed opacity-80 text-white/50");
 export const linkClassNames = "p-0 border-0";
 
 // eslint-disable-next-line react/display-name
