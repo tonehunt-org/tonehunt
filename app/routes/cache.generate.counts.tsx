@@ -1,11 +1,13 @@
 import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { db } from "~/utils/db.server";
+import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const ampCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 1 }, { categoryId: 5 }],
+      deleted: false,
+      private: false,
       active: true,
     },
   });
@@ -13,6 +15,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const pedalCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 3 }, { categoryId: 7 }],
+      deleted: false,
+      private: false,
       active: true,
     },
   });
@@ -20,6 +24,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const outboardCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 9 }, { categoryId: 10 }],
+      deleted: false,
+      private: false,
       active: true,
     },
   });
@@ -27,6 +33,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const fullRigCountReq = db.model.count({
     where: {
       OR: [{ categoryId: 2 }, { categoryId: 6 }],
+      deleted: false,
+      private: false,
       active: true,
     },
   });
