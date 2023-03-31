@@ -12,7 +12,7 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   {
     rel: "shortcut icon",
-    href: "/favicon@3x",
+    href: "/favicon@3x.png",
   },
 ];
 
