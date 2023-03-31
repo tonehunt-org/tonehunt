@@ -1,7 +1,5 @@
 import * as timeago from "timeago.js";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
-import ButtonLink from "./ui/ButtonLink";
 import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
