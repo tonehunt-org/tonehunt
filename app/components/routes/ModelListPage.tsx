@@ -9,6 +9,7 @@ import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { Counts } from "@prisma/client";
 import { getCategoryProfile } from "~/services/categories";
+import { twMerge } from "tailwind-merge";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
@@ -166,13 +167,17 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
   );
 }
 
-const ModelListTitle = ({ children }: PropsWithChildren) => {
-  return <h1 className="w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20">{children}</h1>;
+const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
+  return (
+    <h1 className={twMerge("w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20", className)}>
+      {children}
+    </h1>
+  );
 };
 
-const ModelListCountTitle = ({ counts }: { counts: Counts[] }) => {
+export const ModelListCountTitle = ({ counts, className }: { className?: string; counts: Counts[] }) => {
   return (
-    <ModelListTitle>
+    <ModelListTitle className={className}>
       Explore over{" "}
       <Link
         prefetch="intent"

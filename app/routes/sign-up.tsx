@@ -1,17 +1,29 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
 import Logo from "~/components/Logo";
 import { db } from "~/utils/db.server";
 import Alert from "~/components/ui/Alert";
 import { Link } from "@remix-run/react";
+import type { Counts } from "@prisma/client";
+import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 
 type ActionData = {
   error?: string;
+};
+
+type LoaderData = {
+  counts: Counts[];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const counts = await db.counts.findMany();
+
+  return json<LoaderData>({ counts });
 };
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -64,6 +76,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 export default function SignUpPage() {
   const navigation = useNavigation();
   const actionData = useActionData<ActionData>();
+  const data = useLoaderData<LoaderData>();
 
   const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
 
@@ -78,35 +91,24 @@ export default function SignUpPage() {
       >
         {/* LOGO AREA */}
         <div className="flex items-center justify-center align-middle h-full">
-          <div className=" bg-white/30 backdrop-blur-md w-4/5 p-10 m-10 lg:p-20 lg:m-0 rounded-lg">
+          <div className=" bg-black/30 backdrop-blur-md w-4/5 p-10 m-10 lg:p-20 lg:m-0 rounded-lg">
             <h2 className="">
-              <span className="">
+              <div className="mb-24">
                 <Logo className="w-full" />
-              </span>{" "}
-              {/* <div className="mt-8 text-4xl font-satoshi-bold text-black text-center">The tone is in the stack.</div> */}
-              <div className="text-xl text-black font-satoshi-bold mt-8 text-center">
-                Find amps, pedals, and packs for
-                <br />
-                <a
-                  href="https://github.com/sdatkinson/neural-amp-modeler"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline"
-                >
-                  Neural Amp Modeler.
-                </a>
               </div>
+              <ModelListCountTitle className="lg:text-4xl font-satoshi-regular lg:leading-[1.4]" counts={data.counts} />
             </h2>
           </div>
         </div>
       </div>
+
       {/* RIGHT PANEL */}
       <div className="w-full lg:w-1/2 items-center flex-col justify-center relative lg:pl-4">
         <div className="flex items-center justify-center align-middle h-full">
           <div className="block">
             <div className="max-w-lg pt-10">
               <div className="text-3xl font-satoshi-medium mt-5 text-center">
-                Register for an account to start sharing you stack!
+                Register for an account to start sharing you models!
               </div>
             </div>
 
