@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { db } from "~/utils/db.server";
+import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const ampCountReq = db.model.count({
