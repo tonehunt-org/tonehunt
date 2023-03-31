@@ -8,7 +8,13 @@ import { getProfile } from "./services/profile";
 
 import styles from "./tailwind.css";
 
-export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: styles },
+  {
+    rel: "shortcut icon",
+    href: "/favicon@3x",
+  },
+];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
