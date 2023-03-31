@@ -10,6 +10,9 @@ import { getModels } from "~/services/models";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import useProfile from "~/hooks/useProfile";
+import type { ProfileWithFavorites } from "~/services/profile";
+import { getProfileWithFavorites } from "~/services/profile";
 
 type LoaderData = {
   models: any;
@@ -17,6 +20,7 @@ type LoaderData = {
   total: number;
   page: number;
   search: string | null;
+  profileWithFavs: ProfileWithFavorites;
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
@@ -33,13 +37,15 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const searchParam = url.searchParams.get("search") ?? null;
 
   // GET MODELS
-  const models =
+  const modelsReq =
     searchParam && searchParam !== ""
-      ? await getModels({ limit: MODELS_LIMIT, next: offset, search: searchParam, user })
-      : {
+      ? getModels({ limit: MODELS_LIMIT, next: offset, search: searchParam, user })
+      : Promise.resolve({
           data: [],
           total: 0,
-        };
+        });
+
+  const [models, profileWithFavs] = await Promise.all([modelsReq, getProfileWithFavorites(session)]);
 
   return json<LoaderData>({
     models: models.data,
@@ -47,6 +53,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     user,
     page: page - 1,
     search: searchParam,
+    profileWithFavs,
   });
 };
 
@@ -70,9 +77,7 @@ export default function SearchResults() {
         <h1 className="text-3xl lg:text-4xl font-satoshi-bold mb-3">Search results for:</h1>
         <h3 className="text-3xl font-satoshi-light pb-3">{data.search}</h3>
       </div>
-      {/* <div className="flex border-b border-gray-600 mb-10">
-        <h3 className="text-3xl font-satoshi-light pb-3">{data.search}</h3>
-      </div> */}
+
       <div className="flex">
         <div className="w-full">
           {loading ? (
@@ -90,6 +95,7 @@ export default function SearchResults() {
               showMenu={false}
               showFilters={false}
               user={data.user}
+              profile={data.profileWithFavs}
             />
           ) : null}
         </div>

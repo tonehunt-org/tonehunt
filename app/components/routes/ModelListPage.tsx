@@ -1,5 +1,6 @@
+import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { find, map } from "lodash";
 import { stringify as qs_stringify } from "qs";
 
@@ -7,6 +8,7 @@ import type { SelectOption } from "~/components/ui/Select";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { Counts } from "@prisma/client";
+import { getCategoryProfile } from "~/services/categories";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
@@ -18,6 +20,7 @@ type ModelListPageProps = {
 export default function ModelListPage({ counts }: ModelListPageProps) {
   const data = useLoaderData();
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams] = useSearchParams();
 
   const modelList = data.modelList;
 
@@ -100,39 +103,40 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
     const query = qs_stringify(params);
     window.location.href = `/?${query}`;
   };
+  const renderTitle = () => {
+    // TODO: Need to acount for filters on tags, and other comibindations
+
+    if (searchParams.get("tags")) {
+      return <ModelListTitle>#{searchParams.get("tags")}</ModelListTitle>;
+    }
+
+    const filter = searchParams.get("filter");
+    if (filter && filter !== "all") {
+      const category = modelList.categories.find((c) => c.slug === filter);
+
+      if (!category) {
+        return <></>;
+      }
+
+      const categoryProfile = getCategoryProfile(filter);
+
+      return (
+        <ModelListTitle>
+          <div className="flex items-center gap-5">
+            <img className="w-14 h-14" src={categoryProfile.icon} alt={filter} />
+            {category.title}s
+          </div>
+        </ModelListTitle>
+      );
+    }
+
+    return <ModelListCountTitle counts={counts} />;
+  };
 
   // WE ARE MAKING MODEL LIST THE DEFAULT FOR NOW
   return (
     <div className="w-full">
-      <div className="flex">
-        <h1 className="w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20">
-          Explore over{" "}
-          <Link
-            prefetch="intent"
-            to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
-            className="border-tonehunt-green border-b-8 hover:text-tonehunt-green"
-          >
-            {counts.find((count) => count.name === "amps")?.count}
-          </Link>{" "}
-          amps,{" "}
-          <Link
-            prefetch="intent"
-            to="/?page=1&filter=full-rig&sortBy=newest&sortDirection=desc"
-            className="border-tonehunt-purple border-b-8 hover:text-tonehunt-purple"
-          >
-            {counts.find((count) => count.name === "fullrigs")?.count}
-          </Link>{" "}
-          full rigs,{" "}
-          <Link
-            prefetch="intent"
-            to="/?page=1&filter=pedal&sortBy=newest&sortDirection=desc"
-            className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
-          >
-            {counts.find((count) => count.name === "pedals")?.count}
-          </Link>{" "}
-          pedals, and many other NAM models
-        </h1>
-      </div>
+      {renderTitle()}
       <div className="flex">
         <div className="w-full">
           {loading ? (
@@ -161,3 +165,39 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
     </div>
   );
 }
+
+const ModelListTitle = ({ children }: PropsWithChildren) => {
+  return <h1 className="w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20">{children}</h1>;
+};
+
+const ModelListCountTitle = ({ counts }: { counts: Counts[] }) => {
+  return (
+    <ModelListTitle>
+      Explore over{" "}
+      <Link
+        prefetch="intent"
+        to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
+        className="border-tonehunt-green border-b-8 hover:text-tonehunt-green"
+      >
+        {counts.find((count) => count.name === "amps")?.count}
+      </Link>{" "}
+      amps,{" "}
+      <Link
+        prefetch="intent"
+        to="/?page=1&filter=full-rig&sortBy=newest&sortDirection=desc"
+        className="border-tonehunt-purple border-b-8 hover:text-tonehunt-purple"
+      >
+        {counts.find((count) => count.name === "fullrigs")?.count}
+      </Link>{" "}
+      full rigs,{" "}
+      <Link
+        prefetch="intent"
+        to="/?page=1&filter=pedal&sortBy=newest&sortDirection=desc"
+        className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
+      >
+        {counts.find((count) => count.name === "pedals")?.count}
+      </Link>{" "}
+      pedals, and many other NAM models
+    </ModelListTitle>
+  );
+};

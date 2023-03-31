@@ -15,6 +15,7 @@ import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
+import { getProfileWithFavorites } from "~/services/profile";
 
 export type LoaderData = {
   user?: User | null | undefined;
@@ -36,13 +37,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   if (!page || page === 0) page = 1;
   const offset = (page - 1) * MODELS_LIMIT;
 
-  const profile = params.username
-    ? await db.profile.findUnique({
-        where: {
-          username: params.username,
-        },
-      })
-    : null;
+  const profile = params.username ? await getProfileWithFavorites(session) : null;
 
   // GET MODELS
   const models = profile
@@ -173,6 +168,7 @@ export default function UserProfilePage() {
                     showMenu={false}
                     showFilters={false}
                     user={user}
+                    profile={data.profile}
                   />
                 ) : null}
               </div>
