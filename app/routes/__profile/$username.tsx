@@ -15,11 +15,13 @@ import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
+import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
 
 export type LoaderData = {
   user?: User | null | undefined;
   profile?: Profile | null | undefined;
+  profileWithFavorites: ProfileWithFavorites | null;
   modelList: {
     models: any;
     total: number;
@@ -37,7 +39,15 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   if (!page || page === 0) page = 1;
   const offset = (page - 1) * MODELS_LIMIT;
 
-  const profile = params.username ? await getProfileWithFavorites(session) : null;
+  const profileReq = params.username
+    ? await db.profile.findUnique({
+        where: {
+          username: params.username,
+        },
+      })
+    : Promise.resolve(null);
+
+  const [profileWithFavorites, profile] = await Promise.all([getProfileWithFavorites(session), profileReq]);
 
   // GET MODELS
   const models = profile
@@ -51,6 +61,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     {
       user,
       profile,
+      profileWithFavorites,
       modelList: {
         models: models.data,
         total: models.total,
@@ -168,7 +179,7 @@ export default function UserProfilePage() {
                     showMenu={false}
                     showFilters={false}
                     user={user}
-                    profile={data.profile}
+                    profile={data.profileWithFavorites}
                   />
                 ) : null}
               </div>
