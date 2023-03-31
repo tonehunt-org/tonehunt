@@ -7,6 +7,8 @@ export type ActionData = {
   path?: string;
 };
 
+const MAX_UPLOAD_SIZE = 50000000;
+
 export const action: ActionFunction = async ({ request }) => {
   const { session, supabase } = await getSession(request);
 
@@ -15,7 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   try {
-    const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: 1000000 });
+    const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: MAX_UPLOAD_SIZE });
 
     const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
