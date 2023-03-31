@@ -29,19 +29,41 @@ export default function CreateModal({ open, onClose, categories, tags }: CreateM
   const [drag, setDrag] = useState(false);
   const [showFields, setShowFields] = useState(false);
   const [formValidity, setFormValidity] = useState(false);
-  const dropRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [fileCount, setFileCount] = useState<number>();
+  const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
+
   const fileUploadFetcher = useFetcher<UploadFileActionData>();
   const detailsFetcher = useFetcher<ModelCreateActionData>();
   const navigation = useNavigation();
   const navigate = useNavigate();
-  const [fileCount, setFileCount] = useState<number>();
+
   const [searchParams, setSearchParams] = useSearchParams();
+  const dropRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const tagOptions = tags.map((tag) => ({ value: tag.name, label: tag.name }));
-  const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
 
   const isFileUploading = fileUploadFetcher.state === "submitting";
+
+  // Handle upload error
+  useEffect(() => {
+    if (fileUploadFetcher.data?.error) {
+      alert("There was an error uploading your files. Please try again.");
+      setShowFields(false);
+    }
+  }, [fileUploadFetcher.data?.error]);
+
+  // Reset field visibility when modal opens/closes
+  useEffect(() => {
+    if (open) {
+      setShowFields(false);
+    }
+  }, [open]);
+
+  // Make sure drag UI gets reset when fields toggle
+  useEffect(() => {
+    setDrag(false);
+  }, [showFields]);
 
   const isCreatingModel = detailsFetcher.state === "submitting" || navigation.state === "loading";
 
@@ -49,6 +71,7 @@ export default function CreateModal({ open, onClose, categories, tags }: CreateM
     setFormValidity(e.currentTarget.checkValidity());
   };
 
+  // All done creating modal
   useEffect(() => {
     if (detailsFetcher.type === "done" && detailsFetcher.data?.model) {
       navigate(`/models/${detailsFetcher.data?.model.id}`);
@@ -65,7 +88,7 @@ export default function CreateModal({ open, onClose, categories, tags }: CreateM
       files = asArray(files);
 
       // TODO: this needs to be more robust, but works for now
-      const hasInvalidFiles = files.some((file) => file.type !== "audio/wav" && last(file.name.split(".")) !== "nam");
+      const hasInvalidFiles = files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
 
       if (hasInvalidFiles) {
         alert("Only NAM models and IR wav files are allowed");
