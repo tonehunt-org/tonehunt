@@ -71,7 +71,7 @@ model Favorite {
 }
 
 model ModelDownload {
-  id          Int       @id @default(autoincrement())
+  id          String       @id
   modelId		  String
   model			  Model		  @relation(fields: [modelId], references: [id])
   profileId   String?
@@ -79,6 +79,9 @@ model ModelDownload {
   createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
   deleted     Boolean   @default(false)
+
+  @@index(fields: [id])
+  @@unique([id])
 }
 
 model Tag {

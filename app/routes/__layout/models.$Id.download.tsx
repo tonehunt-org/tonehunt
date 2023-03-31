@@ -25,12 +25,27 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       return new Response("", { status: 500 });
     }
 
-    await db.modelDownload.create({
-      data: {
-        modelId: modelId,
-        ...(user?.id && { profileId: user.id }),
-      },
-    });
+    // Only count downloads for logged in users
+    if (user?.id) {
+      // Unique id per user per model
+      const downloadId = `${modelId}:${user?.id}`;
+
+      // Only count a download once for a given model for a given user
+      await db.modelDownload.upsert({
+        where: {
+          id: downloadId,
+        },
+        create: {
+          id: downloadId,
+          modelId: modelId,
+          ...(user?.id && { profileId: user.id }),
+        },
+        update: {
+          modelId: modelId,
+          ...(user?.id && { profileId: user.id }),
+        },
+      });
+    }
 
     return new Response(data, {
       status: 200,
