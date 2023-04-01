@@ -176,9 +176,13 @@ const ModelListTitle = ({ children, className }: PropsWithChildren & { className
 };
 
 export const ModelListCountTitle = ({ counts, className }: { className?: string; counts: Counts[] }) => {
+  const total = counts.reduce((total, count) => {
+    return total + count.count;
+  }, 0);
+
   return (
     <ModelListTitle className={className}>
-      Explore over{" "}
+      Explore over {total} models and model packs, including{" "}
       <Link
         prefetch="intent"
         to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
@@ -186,15 +190,7 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
       >
         {counts.find((count) => count.name === "amps")?.count}
       </Link>{" "}
-      amps,{" "}
-      <Link
-        prefetch="intent"
-        to="/?page=1&filter=full-rig&sortBy=newest&sortDirection=desc"
-        className="border-tonehunt-purple border-b-8 hover:text-tonehunt-purple"
-      >
-        {counts.find((count) => count.name === "fullrigs")?.count}
-      </Link>{" "}
-      full rigs,{" "}
+      amps, and{" "}
       <Link
         prefetch="intent"
         to="/?page=1&filter=pedal&sortBy=newest&sortDirection=desc"
@@ -202,7 +198,7 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
       >
         {counts.find((count) => count.name === "pedals")?.count}
       </Link>{" "}
-      pedals, and many other NAM models
+      pedals.
     </ModelListTitle>
   );
 };
