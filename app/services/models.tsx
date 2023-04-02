@@ -21,9 +21,7 @@ export const getModels = async (params: getModelsType) => {
   const sortParam = params.sortBy ?? "createdAt";
   const sortDirection = params.sortDirection ?? "desc";
 
-  const orderByPopular = {
-    favorites: { _count: sortDirection },
-  };
+  const orderByPopular = [{ favorites: { _count: sortDirection } }, { downloads: { _count: sortDirection } }];
 
   const orderByParam = {
     [sortParam]: sortDirection,
