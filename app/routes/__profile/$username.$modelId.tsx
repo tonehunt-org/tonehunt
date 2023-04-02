@@ -91,7 +91,7 @@ export default function ModelDetailPage() {
           <h4 className="mb-0 pb-[12] leading-[19px] text-[14px] font-satoshi-bold uppercase text-tonehunt-green">
             {data.model.category.title}
           </h4>
-          <h3 className="font-satoshi-bold text-[47px] pb-8 max-w-[9900px] m-auto">{data.model.title}</h3>
+          <h3 className="font-satoshi-bold text-[47px] pb-8 max-w-[990px] m-auto">{data.model.title}</h3>
 
           <div className="flex gap-[12px] justify-center pb-16">
             <DownloadButton
@@ -143,7 +143,7 @@ export default function ModelDetailPage() {
 
         <div className="flex-grow">
           <h4 className="pb-2">{data.model.ampName}</h4>
-          <p className="text-[22px] opacity-70 pb-[40px]">{data.model.description}</p>
+          <p className="text-[22px] opacity-70 pb-[40px] whitespace-pre-line">{data.model.description}</p>
 
           {data.model.tags.length > 0 ? (
             <div>
