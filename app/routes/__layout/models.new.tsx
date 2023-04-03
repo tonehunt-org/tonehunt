@@ -69,6 +69,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         profileId: profile.id,
         categoryId: data?.categoryId ? +data?.categoryId : 0,
         tags: data?.tags,
+        filecount: +data?.filecount,
       },
     });
 
@@ -286,6 +287,8 @@ export default function ModelsNewPage() {
             {fileUploadFetcher.data?.path ? (
               <input type="hidden" name="modelPath" value={fileUploadFetcher.data?.path} />
             ) : null}
+
+            {fileCount !== undefined ? <input type="hidden" name="filecount" value={fileCount} /> : null}
 
             <div className="pt-12 flex justify-end">
               <Button disabled={!formValidity} loading={isCreatingModel} type="submit" className="">
