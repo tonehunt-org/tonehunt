@@ -182,7 +182,7 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
 
   return (
     <ModelListTitle className={className}>
-      Explore over {total} models and model packs, including{" "}
+      Explore over {total} models, including{" "}
       <Link
         prefetch="intent"
         to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
