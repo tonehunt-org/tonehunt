@@ -1,12 +1,11 @@
 import { useState } from "react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useNavigate } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 
 type ActionData = {
   error?: string;
@@ -38,7 +37,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 
 export default function ChangePasswordPage() {
   const actionData = useActionData<ActionData>();
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const [formValidity, setFormValidity] = useState(false);
 
@@ -81,7 +80,7 @@ export default function ChangePasswordPage() {
             </div>
 
             <div className="flex justify-end pt-5">
-              <Button disabled={!formValidity} type="submit" className="">
+              <Button disabled={!formValidity} type="submit" className="" loading={navigation.state === "submitting"}>
                 Change Password
               </Button>
             </div>
