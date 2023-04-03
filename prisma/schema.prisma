@@ -43,6 +43,7 @@ model Model {
   ampName		  	String?		  @db.VarChar(255)
   modelPath		  String?		  @db.VarChar(255)
   filename		  String?		  @db.VarChar(255)
+  filecount     Int?
   icon			    String?		  @db.VarChar(255)
   profileId 		String
   profile			  Profile		  @relation(fields: [profileId], references: [id])
