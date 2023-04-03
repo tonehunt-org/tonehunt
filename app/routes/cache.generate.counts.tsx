@@ -3,7 +3,10 @@ import { db } from "~/utils/db.server";
 import { json } from "@remix-run/node";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const ampCountReq = db.model.count({
+  const ampCountReq = db.model.aggregate({
+    _sum: {
+      filecount: true,
+    },
     where: {
       OR: [{ categoryId: 1 }, { categoryId: 5 }],
       deleted: false,
@@ -12,7 +15,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   });
 
-  const pedalCountReq = db.model.count({
+  const pedalCountReq = db.model.aggregate({
+    _sum: {
+      filecount: true,
+    },
     where: {
       OR: [{ categoryId: 3 }, { categoryId: 7 }],
       deleted: false,
@@ -21,7 +27,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   });
 
-  const outboardCountReq = db.model.count({
+  const outboardCountReq = db.model.aggregate({
+    _sum: {
+      filecount: true,
+    },
     where: {
       OR: [{ categoryId: 9 }, { categoryId: 10 }],
       deleted: false,
@@ -30,7 +39,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   });
 
-  const fullRigCountReq = db.model.count({
+  const fullRigCountReq = db.model.aggregate({
+    _sum: {
+      filecount: true,
+    },
     where: {
       OR: [{ categoryId: 2 }, { categoryId: 6 }],
       deleted: false,
@@ -46,22 +58,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     fullRigCountReq,
   ]);
 
-  await db.counts.update({
-    where: {
-      name: "amps",
-    },
-    data: {
-      count: ampCount ?? 0,
-    },
-  });
-
   await db.$transaction([
     db.counts.update({
       where: {
         name: "amps",
       },
       data: {
-        count: ampCount ?? 0,
+        count: ampCount._sum.filecount ?? 0,
       },
     }),
     db.counts.update({
@@ -69,7 +72,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         name: "pedals",
       },
       data: {
-        count: pedalCount ?? 0,
+        count: pedalCount._sum.filecount ?? 0,
       },
     }),
     db.counts.update({
@@ -77,7 +80,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         name: "fullrigs",
       },
       data: {
-        count: fullRigCount ?? 0,
+        count: fullRigCount._sum.filecount ?? 0,
       },
     }),
     db.counts.update({
@@ -85,7 +88,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         name: "outboards",
       },
       data: {
-        count: outboardCount ?? 0,
+        count: outboardCount._sum.filecount ?? 0,
       },
     }),
   ]);
