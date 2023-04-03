@@ -35,7 +35,7 @@ export default function Layout() {
   const profile = useProfile();
 
   return (
-    <ProfileLayout user={data.user} profile={profile} categories={data.categories} tags={data.tags}>
+    <ProfileLayout user={data.user} profile={profile}>
       <Outlet />
     </ProfileLayout>
   );

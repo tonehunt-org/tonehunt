@@ -5,6 +5,7 @@ import UserActions from "~/components/UserActions";
 import Searchbar from "./Searchbar";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
+import ButtonLink from "./ui/ButtonLink";
 
 interface HeaderType {
   user?: User | undefined | null;
@@ -68,15 +69,9 @@ const Header = ({ user, profile }: HeaderType) => {
             </div>
             {user ? (
               <div className="hidden lg:block">
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    searchParams.set("create", "");
-                    setSearchParams(searchParams);
-                  }}
-                >
+                <ButtonLink variant="button-primary" to="/models/new">
                   Upload model
-                </Button>
+                </ButtonLink>
               </div>
             ) : null}
           </div>
