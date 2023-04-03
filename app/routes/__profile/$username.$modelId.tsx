@@ -127,18 +127,20 @@ export default function ModelDetailPage() {
         </div>
       </header>
 
-      <div className="pt-16 flex gap-[40px] max-w-[990px] m-auto px-4">
-        <div className="border border-white/20 rounded-2xl p-4 text-center w-[270px]">
-          <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
-          <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
+      <div className="pt-16 md:flex gap-[40px] max-w-[990px] m-auto px-4">
+        <div className="w-[270px] flex-none mb-5 lg:mb-0">
+          <div className="border border-white/20 rounded-2xl p-4 text-center">
+            <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
+            <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
 
-          <Link
-            to={`/${data.model.profile.username}`}
-            prefetch="intent"
-            className="block hover:bg-tonehunt-gray-light text-base text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl"
-          >
-            Profile
-          </Link>
+            <Link
+              to={`/${data.model.profile.username}`}
+              prefetch="intent"
+              className="block hover:bg-tonehunt-gray-light text-base text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl"
+            >
+              Profile
+            </Link>
+          </div>
         </div>
 
         <div className="flex-grow">
