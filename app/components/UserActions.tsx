@@ -57,11 +57,6 @@ export default function UserActions({ user, username }: UserActionsProps) {
             </Button>
           </li>
           <li>
-            <Link to="/account/my-models" prefetch="intent">
-              My Models
-            </Link>
-          </li>
-          <li>
             <Link to="/account/profile" prefetch="intent">
               Edit Profile
             </Link>

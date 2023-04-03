@@ -1,13 +1,13 @@
 import { useState } from "react";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form, useNavigate, useActionData, useNavigation } from "@remix-run/react";
+import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
 import Input from "~/components/ui/Input";
 import Button from "~/components/ui/Button";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 type LoaderData = {
   profile: any;
@@ -102,6 +102,29 @@ export default function ProfileInformationPage() {
       <div className="flex flex-col mt-5">
         <div className="flex-1">
           <Form method="post" onChange={handleFormChange}>
+            {/* TODO: bring back when user avatar upload is ready */}
+            {/* <div className="mb-10 w-40 h-40 overflow-hidden relative mx-auto rounded-full">
+              <UserIcon className="w-40 h-40 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
+              <input
+                // ref={dropRef}
+                type="file"
+                name="files"
+                multiple
+                // onChange={handleFormSubmit}
+                accept=".nam, .wav"
+                className="opacity-0 hover:opacity-100 border-0 bg-black/50 font-satoshi-bold text-sm uppercase text-white after"
+                style={{
+                  width: "400%",
+                  height: "100%",
+                  marginLeft: "-300%",
+                  border: "none",
+                  cursor: "pointer",
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                }}
+              />
+            </div> */}
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-10">
               <div className="w-full">
                 <div className="flex flex-col gap-3">
@@ -123,11 +146,9 @@ export default function ProfileInformationPage() {
                 </div>
               </div>
             </div>
-
             <div className="flex">
               <Input name="id" type="hidden" defaultValue={profile.id} />
             </div>
-
             <div className="flex justify-end pt-5">
               <Button disabled={!formValidity} loading={navigation.state === "submitting"} type="submit" className="">
                 Update Profile
