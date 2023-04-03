@@ -21,6 +21,18 @@ interface ModelListItemType {
   profile: ProfileWithFavorites | null;
 }
 
+const modelName = (title: string, pluralTitle: string, count: number | null) => {
+  if (!count) {
+    return title;
+  }
+
+  if (count === 1) {
+    return `1 ${title}`;
+  }
+
+  return `${count} ${pluralTitle}`;
+};
+
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
 
@@ -49,7 +61,11 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
 
                 <div className="flex-1 -mt-1">
                   <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
-                    {model.category.title}
+                    {modelName(
+                      model.category.title,
+                      model.category.pluralTitle ?? model.category.title,
+                      model.filecount
+                    )}
                   </span>
 
                   <Link to={`/${model.profile.username}`} prefetch="intent">

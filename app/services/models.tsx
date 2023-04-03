@@ -112,6 +112,7 @@ export const getModels = async (params: getModelsType) => {
         createdAt: true,
         updatedAt: true,
         filename: true,
+        filecount: true,
         profile: {
           select: {
             id: true,
@@ -123,6 +124,7 @@ export const getModels = async (params: getModelsType) => {
             id: true,
             title: true,
             slug: true,
+            pluralTitle: true,
           },
         },
       },
