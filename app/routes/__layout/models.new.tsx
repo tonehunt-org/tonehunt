@@ -2,11 +2,11 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import type { Category, Model, Tag } from "@prisma/client";
+import type { Category, Model } from "@prisma/client";
 import { toJSON } from "~/utils/form";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/ui/Button";
-import { ArrowUpTrayIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Form, useFetcher, useLoaderData, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
@@ -92,7 +92,6 @@ export default function ModelsNewPage() {
   const navigation = useNavigation();
   const navigate = useNavigate();
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const dropRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
