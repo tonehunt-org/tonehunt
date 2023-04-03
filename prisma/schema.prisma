@@ -26,6 +26,7 @@ model Profile {
 model Category {
   id    			Int     	@id @default(autoincrement())
   title			  String  	@db.VarChar(255)
+  pluralTitle String?    @db.VarChar(255)
   slug        String    @db.VarChar(255)
   icon			  String?		@db.VarChar(255)
   order       Int       @unique

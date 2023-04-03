@@ -26,6 +26,7 @@ export const getCategories = async () => {
       id: true,
       title: true,
       slug: true,
+      pluralTitle: true,
     },
     orderBy: [
       {
