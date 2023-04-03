@@ -1,4 +1,15 @@
 {
+  "headers": [
+    {
+      "source": "/fonts/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600000"
+        }
+      ]
+    }
+  ],
   "crons": [
     {
       "path": "/cache/generate/counts",
