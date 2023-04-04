@@ -27,7 +27,7 @@ export const getModels = async (params: getModelsType) => {
     [sortParam]: sortDirection,
   };
 
-  const sort = sortParam === "popular" ? orderByPopular : orderByParam;
+  const sort = sortParam === "popular" || params.search ? orderByPopular : orderByParam;
 
   const models = await db.$transaction([
     db.model.count({
@@ -76,10 +76,14 @@ export const getModels = async (params: getModelsType) => {
           profileId: params.profileId,
         }),
         ...(params.search && {
-          title: {
-            contains: params.search,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              title: {
+                search: params.search,
+              },
+            },
+            { description: { search: params.search } },
+          ],
         }),
         ...(tagsScala && {
           tags: {
