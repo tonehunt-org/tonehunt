@@ -46,8 +46,10 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row align-middle">
             <div className="flex-none items-center">
-              <div className="w-14 h-14 inline-block mr-4 rounded-xl">
-                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
+              <div className="flex h-full items-start lg:items-center">
+                <div className="w-14 h-14 inline-block mr-4 rounded-xl">
+                  <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
+                </div>
               </div>
             </div>
             <div className="flex-grow">
