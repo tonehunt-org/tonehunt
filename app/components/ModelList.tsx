@@ -117,7 +117,7 @@ const ModelsListComponent = ({
               }
               renderOnZeroPageCount={() => {}}
               forcePage={currentPage}
-              containerClassName="flex flex-row justify-end"
+              containerClassName="flex flex-row justify-center lg:justify-end flex-wrap"
               pageClassName="mx-1"
               pageLinkClassName={paginationButtonLinkStyle}
               previousClassName="mr-1"
