@@ -5,6 +5,7 @@ import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithFavorites } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
+import { map } from "lodash";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -76,6 +77,13 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   <span className="inline-block mr-4 text-sm font-satoshi-light text-tonehunt-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
+                </div>
+                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter">
+                  {map(model.tags, (tag) => (
+                    <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
+                      <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
