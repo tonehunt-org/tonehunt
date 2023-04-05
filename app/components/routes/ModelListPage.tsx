@@ -169,7 +169,12 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
 
 const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
   return (
-    <h1 className={twMerge("w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-20", className)}>
+    <h1
+      className={twMerge(
+        "w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-10 lg:mb-20",
+        className
+      )}
+    >
       {children}
     </h1>
   );
