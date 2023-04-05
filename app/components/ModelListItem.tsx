@@ -60,7 +60,15 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   <span className="font-satoshi-bold text-xl">{model.title}</span>
                 </Link>
 
-                <div className="flex-1 -mt-1">
+                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter mt-1">
+                  {map(model.tags, (tag) => (
+                    <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
+                      <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="flex-1">
                   <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
                     {modelName(
                       model.category.title,
@@ -77,13 +85,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   <span className="inline-block mr-4 text-sm font-satoshi-light text-tonehunt-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
-                </div>
-                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter">
-                  {map(model.tags, (tag) => (
-                    <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
-                      <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
-                    </Link>
-                  ))}
                 </div>
               </div>
             </div>
