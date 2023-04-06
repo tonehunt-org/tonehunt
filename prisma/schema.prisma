@@ -104,3 +104,13 @@ model Counts {
   @@index(fields: [name])
   @@unique([name])
 }
+
+model License {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  description	String?		@db.Text
+  active			Boolean		@default(true)
+  createdAt 	DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt 	DateTime  @updatedAt @db.Timestamptz(3)
+  deleted     Boolean   @default(false)
+}
