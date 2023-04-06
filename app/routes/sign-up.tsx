@@ -1,6 +1,5 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import Button from "~/components/ui/Button";
@@ -14,6 +13,7 @@ import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 
 type ActionData = {
   error?: string;
+  success?: boolean;
 };
 
 type LoaderData = {
@@ -26,17 +26,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({ counts });
 };
 
+const USERNAME_REGEX = /^\w(?:\w|[.-](?=\w)){3,31}$/;
+
 export const action: ActionFunction = async ({ request, context }) => {
   const { supabase, response } = await getSession(request);
   const formData = await request.formData();
-  const url = new URL(request.url);
 
-  const usernameParam = formData.get("username") as string;
+  const username = formData.get("username") as string | null;
+
+  if (!username || !USERNAME_REGEX.test(username)) {
+    return json<ActionData>({ error: "Invalid username" });
+  }
 
   try {
     const usernameFlag = await db.profile.findUnique({
       where: {
-        username: usernameParam,
+        username: username,
       },
     });
 
@@ -49,7 +54,8 @@ export const action: ActionFunction = async ({ request, context }) => {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       options: {
-        emailRedirectTo: "http://localhost:3000/confirm-email",
+        // TODO: move domain to ENV
+        emailRedirectTo: `${location.origin}/login?confirmation`,
       },
     });
 
@@ -61,24 +67,20 @@ export const action: ActionFunction = async ({ request, context }) => {
       where: {
         id: data.user?.id,
       },
-      data: {
-        username: usernameParam,
-      },
+      data: { username },
     });
   } catch (error) {
     const errorGeneralMessage = "Unexpected error. Please try again.";
     return json<ActionData>({ error: errorGeneralMessage }, { status: 500 });
   }
 
-  return redirect(url.searchParams.get("redirectTo") ?? "/", { headers: response.headers });
+  return json<ActionData>({ success: true }, { headers: response.headers });
 };
 
 export default function SignUpPage() {
-  const navigation = useNavigation();
   const actionData = useActionData<ActionData>();
   const data = useLoaderData<LoaderData>();
-
-  const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
+  const navigation = useNavigation();
 
   return (
     <div className="flex flex-col lg:flex-row h-auto lg:h-screen p-4">
@@ -106,11 +108,13 @@ export default function SignUpPage() {
       <div className="w-full lg:w-1/2 items-center flex-col justify-center relative lg:pl-4">
         <div className="flex items-center justify-center align-middle h-full">
           <div className="block">
-            <div className="max-w-lg pt-10">
-              <div className="text-3xl font-satoshi-medium mt-5 text-center">
-                Register for an account to start sharing you models!
+            {!actionData?.success ? (
+              <div className="max-w-lg pt-10">
+                <div className="text-3xl font-satoshi-medium mt-5 ">
+                  Register for an account to start sharing your models!
+                </div>
               </div>
-            </div>
+            ) : null}
 
             {actionData?.error ? (
               <div className="pt-10 w-full max-w-lg">
@@ -118,27 +122,46 @@ export default function SignUpPage() {
               </div>
             ) : null}
 
-            <Form method="post" className="flex flex-col gap-3 max-w-xl pt-10">
-              <Input name="email" label="Email" type="email" required />
-              <Input name="username" label="Username" required />
-              <Input name="password" type="password" label="Password" required />
-              <div className="flex justify-start items-center gap-5">
-                {/* <Link to="/login">Login</Link> */}
-                <Button type="submit" className="mt-3 w-full" loading={isSubmitting}>
-                  Sign Up
-                </Button>
-              </div>
-              <div className="text-center pt-12 text-tonehunt-gray-lighter">
-                <Link to="/" className="hover:underline">
-                  Already have an account? Login here.
-                </Link>
-              </div>
-              <div className="text-center py-1 text-tonehunt-gray-lighter">
-                <Link to="/" className="hover:underline" prefetch="intent">
-                  Return to Homepage
-                </Link>
-              </div>
-            </Form>
+            {actionData?.success ? (
+              <>
+                <div className="text-lg">Thanks for signing up! Check your email for an to confirm your account.</div>
+              </>
+            ) : (
+              <Form method="post" className="flex flex-col gap-3 max-w-xl pt-10">
+                <Input
+                  name="username"
+                  autoComplete="username"
+                  label="Username"
+                  type="text"
+                  required
+                  pattern="^\w(?:\w|[.-](?=\w)){3,31}$"
+                  invalidMessage="A valid username is required"
+                />
+
+                <Input
+                  name="email"
+                  autoComplete="email"
+                  label="Email"
+                  type="email"
+                  required
+                  invalidMessage="A valid email is required"
+                />
+
+                <Input name="password" autoComplete="password" type="password" label="Password" required />
+
+                <div className="pt-5">
+                  <Button type="submit" className="w-full" loading={navigation.state === "submitting"}>
+                    Sign Up
+                  </Button>
+
+                  <div className="flex-grow pt-10 text-center">
+                    <Link to="/login" className="hover:underline pl-3" prefetch="intent">
+                      Already have an account? Login here.
+                    </Link>
+                  </div>
+                </div>
+              </Form>
+            )}
           </div>
         </div>
       </div>
