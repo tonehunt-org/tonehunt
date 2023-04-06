@@ -2,6 +2,7 @@ type AlertProps = {
   title: string;
   description?: string;
   variant?: "success" | "error";
+  className?: string;
 };
 
 export default function Alert({ title, description, variant }: AlertProps) {
