@@ -22,7 +22,7 @@ interface ModelListItemType {
 }
 
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
-  const categoryProfile = getCategoryProfile(model.category.slug);
+  const categoryProfile = getCategoryProfile(model.category.slug, model.filecount ?? undefined);
 
   return (
     <div

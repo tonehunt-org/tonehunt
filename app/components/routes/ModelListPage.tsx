@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
-import { find, map } from "lodash";
+import { find } from "lodash";
 import { stringify as qs_stringify } from "qs";
 
 import type { SelectOption } from "~/components/ui/Select";
@@ -10,6 +10,7 @@ import Loading from "~/components/ui/Loading";
 import type { Counts } from "@prisma/client";
 import { getCategoryProfile } from "~/services/categories";
 import { twMerge } from "tailwind-merge";
+import { sortCategories } from "~/utils/categories";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
@@ -25,14 +26,14 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
 
   const modelList = data.modelList;
 
-  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...modelList.categories];
+  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...sortCategories(modelList.categories)];
   const findFilter = find(filterOptions, ["slug", modelList.filter]);
 
   const defaultFilter = findFilter
     ? { value: String(findFilter.id), description: findFilter.title }
     : { value: "0", description: "All" };
 
-  const selectOptions: SelectOption[] = map(filterOptions, (option) => ({
+  const selectOptions: SelectOption[] = filterOptions.map((option) => ({
     value: String(option.id),
     description: option.title,
   }));
@@ -119,14 +120,9 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
         return <></>;
       }
 
-      const categoryProfile = getCategoryProfile(filter);
-
       return (
         <ModelListTitle>
-          <div className="flex items-center gap-5">
-            <img className="w-14 h-14" src={categoryProfile.icon} alt={filter} />
-            {category.title}s
-          </div>
+          <div className="flex items-center gap-5">{category.title}s</div>
         </ModelListTitle>
       );
     }
