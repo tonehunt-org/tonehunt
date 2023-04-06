@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useNavigate, useNavigation } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import Button from "~/components/ui/Button";
