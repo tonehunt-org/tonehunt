@@ -79,10 +79,10 @@ export const getModels = async (params: getModelsType) => {
           OR: [
             {
               title: {
-                search: params.search,
+                search: params.search?.replace(" ", " & "),
               },
             },
-            { description: { search: params.search } },
+            { description: { search: params.search.replace(" ", " | ") } },
           ],
         }),
         ...(tagsScala && {
