@@ -5,6 +5,7 @@ import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithFavorites } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
+import { map } from "lodash";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -45,8 +46,10 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row align-middle">
             <div className="flex-none items-center">
-              <div className="w-14 h-14 inline-block mr-4 rounded-xl">
-                <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
+              <div className="flex h-full items-start lg:items-center">
+                <div className="w-14 h-14 inline-block mr-4 rounded-xl">
+                  <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
+                </div>
               </div>
             </div>
             <div className="flex-grow">
@@ -56,10 +59,20 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   to={`/${model.profile.username}/${model.id}`}
                   className="flex-1 hover:underline"
                 >
-                  <span className="font-satoshi-bold text-xl">{model.title}</span>
+                  <span className="font-satoshi-bold text-xl lg:block lg:max-w-[400px] lg:truncate" title={model.title}>
+                    {model.title}
+                  </span>
                 </Link>
 
-                <div className="flex-1 -mt-1">
+                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter mt-1 lg:block lg:max-w-[400px] lg:truncate">
+                  {map(model.tags, (tag) => (
+                    <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
+                      <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="flex-1">
                   <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
                     {modelName(
                       model.category.title,
