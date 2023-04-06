@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
@@ -21,6 +21,11 @@ export const action: ActionFunction = async ({ request, context }) => {
   }
 
   const newPassword = formData.get("new-password") as string | null;
+  const confirmPassowrd = formData.get("confirm-password") as string | null;
+
+  if (newPassword !== confirmPassowrd) {
+    return json<ActionData>({ error: "Passwords do not match" });
+  }
 
   if (!newPassword) {
     return json<ActionData>({ error: "Missing new password" });
@@ -38,7 +43,6 @@ export const action: ActionFunction = async ({ request, context }) => {
 export default function ChangePasswordPage() {
   const actionData = useActionData<ActionData>();
   const navigation = useNavigation();
-
   const [formValidity, setFormValidity] = useState(false);
 
   const handleFormChange = (e: any) => {
@@ -52,7 +56,7 @@ export default function ChangePasswordPage() {
       </div>
       {actionData?.success ? (
         <div className="flex justify-center">
-          <div className="w-full max-w-lg">
+          <div className="w-full">
             <Alert title="Password changed successfully." variant="success" />
           </div>
         </div>
@@ -60,7 +64,7 @@ export default function ChangePasswordPage() {
 
       {actionData?.error ? (
         <div className="flex justify-center">
-          <div className="w-full max-w-lg">
+          <div className="w-full">
             <Alert title="There was an error" description={actionData?.error} variant="error" />
           </div>
         </div>
@@ -73,7 +77,15 @@ export default function ChangePasswordPage() {
               <div className="w-full">
                 <div className="flex flex-col gap-3">
                   <div>
-                    <Input label="New Password" type="password" name="new-password" required />
+                    <Input label="New Password" autoComplete="password" type="password" name="new-password" required />
+
+                    <Input
+                      label="Confirm Password"
+                      autoComplete="password"
+                      type="password"
+                      name="confirm-password"
+                      required
+                    />
                   </div>
                 </div>
               </div>

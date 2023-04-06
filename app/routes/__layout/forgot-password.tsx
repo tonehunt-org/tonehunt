@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useNavigate, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import Button from "~/components/ui/Button";
@@ -11,14 +11,10 @@ type ActionData = {
   success?: boolean;
 };
 
-// TODO: make this work
 export const action: ActionFunction = async ({ request, context }) => {
-  const { supabase, session } = await getSession(request);
+  const { supabase } = await getSession(request);
   const formData = await request.formData();
-
-  if (!session?.user) {
-    return redirect("/");
-  }
+  const url = new URL(request.url);
 
   const email = formData.get("email") as string | null;
 
@@ -26,33 +22,35 @@ export const action: ActionFunction = async ({ request, context }) => {
     return json<ActionData>({ error: "Missing email" });
   }
 
-  // const { error } = await supabase.auth.resetPasswordForEmail(email, {
-  //   redirectTo: 'https://example.com/update-password',
-  // })
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${url.origin}/auth/hash-signin`,
+  });
 
-  // if (error) {
-  //   return json<ActionData>({ error: "Error updating password" });
-  // }
-  // return json<ActionData>({ success: true });
+  if (error) {
+    return json<ActionData>({ error: error.message });
+  }
+
+  return json<ActionData>({ success: true });
 };
 
 export default function ForgotPasswordPage() {
   const actionData = useActionData<ActionData>();
+  const navigation = useNavigation();
 
   return (
     <Form method="post" className="max-w-3xl m-auto flex flex-col gap-3">
-      {actionData?.success ? <Alert title="An email has been sent" /> : null}
+      {actionData?.success ? (
+        <Alert title="An email has been sent with instructions on how to reset your password" variant="success" />
+      ) : null}
+
+      {actionData?.error ? <Alert title={actionData.error} variant="error" /> : null}
+
       <h2 className="text-2xl font-bold pb-5">Forgot Password</h2>
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        placeholder="Enter your acaccount email"
-        required
-      />
-      <div className="pt-3">
-        <Button type="submit">Reset Password</Button>
-      </div>
+      <Input label="Email" type="email" name="email" placeholder="Enter your account email" required />
+
+      <Button type="submit" className="mt-2" loading={navigation.state === "submitting"}>
+        Reset Password
+      </Button>
     </Form>
   );
 }
