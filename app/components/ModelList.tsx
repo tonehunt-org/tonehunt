@@ -7,6 +7,8 @@ import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithFavorites } from "~/services/profile";
+import { Link } from "@remix-run/react";
+import { twMerge } from "tailwind-merge";
 
 interface ModelListType {
   data: Model[];
@@ -43,7 +45,7 @@ const ModelsListComponent = ({
 }: ModelListType) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle =
-    "px-3 py-1 border border-gray-600 rounded-lg relative w-[40px] h-[40px] inline-flex items-center justify-center text-white/60";
+    "px-3 py-1 border border-white/20 hover:border-white/70  rounded-lg relative w-[40px] h-[40px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
@@ -106,18 +108,20 @@ const ModelsListComponent = ({
           <div className="flex-1">
             <ReactPaginate
               breakLabel="..."
+              breakLinkClassName={paginationButtonLinkStyle}
               nextLabel={
                 <ChevronRightIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
               }
               onPageChange={(event) => handlePageClick(event.selected)}
-              pageRangeDisplayed={5}
+              pageRangeDisplayed={2}
               pageCount={pageCount}
+              marginPagesDisplayed={1}
               previousLabel={
                 <ChevronLeftIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
               }
-              renderOnZeroPageCount={() => {}}
+              renderOnZeroPageCount={() => null}
               forcePage={currentPage}
-              containerClassName="flex flex-row justify-center lg:justify-end flex-wrap"
+              containerClassName="flex flex-row justify-center lg:justify-center flex-wrap"
               pageClassName="mx-1"
               pageLinkClassName={paginationButtonLinkStyle}
               previousClassName="mr-1"
@@ -125,7 +129,7 @@ const ModelsListComponent = ({
               nextClassName="ml-1"
               nextLinkClassName={paginationButtonLinkStyle}
               disabledClassName="text-gray-600"
-              activeClassName="font-satoshi-bold text-white"
+              activeLinkClassName="font-satoshi-bold text-white bg-white/80 text-black/80"
             />
           </div>
         </div>
