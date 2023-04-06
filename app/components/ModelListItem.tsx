@@ -21,18 +21,6 @@ interface ModelListItemType {
   profile: ProfileWithFavorites | null;
 }
 
-const modelName = (title: string, pluralTitle: string, count: number | null) => {
-  if (!count) {
-    return title;
-  }
-
-  if (count === 1) {
-    return `1 ${title}`;
-  }
-
-  return `${count} ${pluralTitle}`;
-};
-
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug);
 
@@ -64,14 +52,14 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   </h3>
                 </Link>
 
-                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[400px] flex-wrap items-center gap-2 uppercase font-satoshi-medium my-1.5">
+                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[400px] items-center flex-wrap gap-2 uppercase font-satoshi-medium my-1.5">
                   {model.tags.map((tag) => (
                     <li key={tag}>
                       <Link
                         key={tag}
                         to={`/?tags=${tag}`}
                         prefetch="intent"
-                        className={`text-[#afafaf] bg-[#383838] rounded-full inline-block px-2 py-[3px] leading-tight hover:underline`}
+                        className={`text-[#afafaf] bg-[#383838] rounded-full inline-block px-2 py-[3px] leading-tight hover:underline whitespace-nowrap`}
                       >
                         {`#${tag}`}
                       </Link>
@@ -79,21 +67,19 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   ))}
                 </ul>
 
-                <div className="flex-1">
-                  <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
-                    {modelName(
-                      model.category.title,
-                      model.category.pluralTitle ?? model.category.title,
-                      model.filecount
-                    )}
-                  </span>
+                <div className="flex-1 flex gap-4 items-center">
+                  {model.filecount && model.filecount > 1 ? (
+                    <span className={`font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
+                      {model.filecount} models
+                    </span>
+                  ) : null}
 
                   <Link to={`/${model.profile.username}`} prefetch="intent">
-                    <span className="inline-block mr-4 text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
+                    <span className="text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>
                   </Link>
-                  <span className="inline-block mr-4 text-sm font-satoshi-light text-tonehunt-gray-lighter">
+                  <span className="text-sm font-satoshi-light text-tonehunt-gray-lighter">
                     {timeago.format(new Date(model?.createdAt!))}
                   </span>
                 </div>
