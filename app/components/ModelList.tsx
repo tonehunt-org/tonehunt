@@ -129,7 +129,7 @@ const ModelsListComponent = ({
               nextClassName="ml-1"
               nextLinkClassName={paginationButtonLinkStyle}
               disabledClassName="text-gray-600"
-              activeLinkClassName="font-satoshi-bold text-white bg-white/80 text-black/80"
+              activeLinkClassName="font-satoshi-bold bg-white/10 text-black/80"
             />
           </div>
         </div>
