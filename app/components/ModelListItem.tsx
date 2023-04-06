@@ -5,7 +5,6 @@ import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithFavorites } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
-import { map } from "lodash";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -42,9 +41,9 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
       key={model.id}
       className="transition ease-in-out flex-1 p-3 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to"
     >
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-row">
         <div className="flex-1 lg:flex-grow">
-          <div className="flex flex-row align-middle">
+          <div className="flex flex-row items-start">
             <div className="flex-none items-center">
               <div className="flex h-full items-start lg:items-center">
                 <div className="w-14 h-14 inline-block mr-4 rounded-xl">
@@ -52,25 +51,33 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 </div>
               </div>
             </div>
+
             <div className="flex-grow">
-              <div className="flex flex-col align-middle mt-1">
+              <div className="flex flex-col">
                 <Link
                   prefetch="intent"
                   to={`/${model.profile.username}/${model.id}`}
                   className="flex-1 hover:underline"
                 >
-                  <span className="font-satoshi-bold text-xl lg:block lg:max-w-[400px] lg:truncate" title={model.title}>
+                  <h3 className="font-satoshi-bold text-xl lg:block lg:max-w-[400px] lg:truncate" title={model.title}>
                     {model.title}
-                  </span>
+                  </h3>
                 </Link>
 
-                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter mt-1 lg:block lg:max-w-[400px] lg:truncate">
-                  {map(model.tags, (tag) => (
-                    <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
-                      <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
-                    </Link>
+                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[400px] flex-wrap items-center gap-2 uppercase font-satoshi-medium my-1.5">
+                  {model.tags.map((tag) => (
+                    <li key={tag}>
+                      <Link
+                        key={tag}
+                        to={`/?tags=${tag}`}
+                        prefetch="intent"
+                        className={`text-[#afafaf] bg-[#383838] rounded-full inline-block px-2 py-[3px] leading-tight hover:underline`}
+                      >
+                        {`#${tag}`}
+                      </Link>
+                    </li>
                   ))}
-                </div>
+                </ul>
 
                 <div className="flex-1">
                   <span className={`inline-block mr-4 font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
@@ -95,10 +102,10 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
           </div>
         </div>
 
-        <div className="flex-1 lg:flex-none lg:pl-4">
+        <div className="flex-1 lg:flex-none lg:pl-4 hidden sm:block">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0 gap-2">
+              <div className="flex justify-end mt-2 lg:mt-0 gap-2">
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
