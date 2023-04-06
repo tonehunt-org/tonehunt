@@ -41,7 +41,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
       key={model.id}
       className="transition ease-in-out flex-1 p-3 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to"
     >
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-row">
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row items-start">
             <div className="flex-none items-center">
@@ -64,7 +64,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   </h3>
                 </Link>
 
-                <ul className=" list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter lg:flex lg:max-w-[400px] flex-wrap items-center gap-2 uppercase font-satoshi-medium my-1.5">
+                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[400px] flex-wrap items-center gap-2 uppercase font-satoshi-medium my-1.5">
                   {model.tags.map((tag) => (
                     <li key={tag}>
                       <Link
@@ -102,10 +102,10 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
           </div>
         </div>
 
-        <div className="flex-1 lg:flex-none lg:pl-4">
+        <div className="flex-1 lg:flex-none lg:pl-4 hidden sm:block">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-center lg:justify-end mt-2 lg:mt-0 gap-2">
+              <div className="flex justify-end mt-2 lg:mt-0 gap-2">
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}

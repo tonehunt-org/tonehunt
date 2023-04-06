@@ -127,8 +127,37 @@ export default function ModelDetailPage() {
         </div>
       </header>
 
-      <div className="pt-16 md:flex gap-[40px] max-w-[990px] m-auto px-4">
-        <div className="w-[270px] flex-none mb-5 lg:mb-0">
+      <div className="pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
+        <div className="flex-grow">
+          <h4 className="pb-2">{data.model.ampName}</h4>
+          <p className="text-[22px] opacity-70 pb-[40px] whitespace-pre-line">{data.model.description}</p>
+
+          {data.model.tags.length > 0 ? (
+            <div>
+              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
+
+              <ul className="m-0 p-0 pb-[44px] flex gap-1.5 flex-wrap ">
+                {data.model.tags?.map((tag) => {
+                  return (
+                    <li key={tag}>
+                      <Link
+                        to={`/?tags=${tag}`}
+                        prefetch="intent"
+                        className="px-2 py-1 rounded-lg border border-white/20 inline-block"
+                      >
+                        #{tag}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
+
+          <span className="opacity-60 text-sm leading-[19px]">Uploaded {timeago.format(data.model.createdAt)}</span>
+        </div>
+
+        <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">
           <div className="border border-white/20 rounded-2xl p-4 text-center">
             <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
             <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
@@ -141,35 +170,6 @@ export default function ModelDetailPage() {
               Profile
             </Link>
           </div>
-        </div>
-
-        <div className="flex-grow">
-          <h4 className="pb-2">{data.model.ampName}</h4>
-          <p className="text-[22px] opacity-70 pb-[40px] whitespace-pre-line">{data.model.description}</p>
-
-          {data.model.tags.length > 0 ? (
-            <div>
-              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
-
-              <ul className="pb-[44px] flex gap-1">
-                {data.model.tags?.map((tag) => {
-                  return (
-                    <li key={tag}>
-                      <Link
-                        to={`/?tags=${tag}`}
-                        prefetch="intent"
-                        className="text-base leading-[22px] px-2 py-1 rounded-lg border border-white/20"
-                      >
-                        #{tag}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ) : null}
-
-          <span className="opacity-60 text-sm leading-[19px]">Uploaded {timeago.format(data.model.createdAt)}</span>
         </div>
       </div>
     </section>
