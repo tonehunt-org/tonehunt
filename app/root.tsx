@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Profile } from "@prisma/client";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -54,6 +55,9 @@ export default function App() {
           <div className="absolute w-full top-0 left-0">
             <Outlet />
             <ScrollRestoration />
+
+            <Analytics />
+
             <Scripts />
             <LiveReload />
           </div>
