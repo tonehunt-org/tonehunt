@@ -92,7 +92,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 export default function ModelsNewPage() {
   const data = useLoaderData<LoaderData>();
   const [drag, setDrag] = useState(false);
-  const [showFields, setShowFields] = useState(true);
+  const [showFields, setShowFields] = useState(false);
   const [formValidity, setFormValidity] = useState(false);
   const [fileCount, setFileCount] = useState<number>();
   const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
