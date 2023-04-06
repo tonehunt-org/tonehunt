@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
-import { find, map } from "lodash";
+import { Link, useLoaderData, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
+import { find } from "lodash";
 import { stringify as qs_stringify } from "qs";
 
 import type { SelectOption } from "~/components/ui/Select";
@@ -10,6 +11,7 @@ import Loading from "~/components/ui/Loading";
 import type { Counts } from "@prisma/client";
 import { getCategoryProfile } from "~/services/categories";
 import { twMerge } from "tailwind-merge";
+import { sortCategories } from "~/utils/categories";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
@@ -20,45 +22,39 @@ type ModelListPageProps = {
 
 export default function ModelListPage({ counts }: ModelListPageProps) {
   const data = useLoaderData();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const modelList = data.modelList;
 
-  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...modelList.categories];
+  const filterOptions = [{ id: 0, title: "All", slug: "all" }, ...sortCategories(modelList.categories)];
   const findFilter = find(filterOptions, ["slug", modelList.filter]);
 
   const defaultFilter = findFilter
     ? { value: String(findFilter.id), description: findFilter.title }
     : { value: "0", description: "All" };
 
-  const selectOptions: SelectOption[] = map(filterOptions, (option) => ({
+  const selectOptions: SelectOption[] = filterOptions.map((option) => ({
     value: String(option.id),
     description: option.title,
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
+  const handlePageClick = (selectedPage: number) => {
+    setLoading(true);
+    searchParams.set("page", String(selectedPage));
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (modelList) {
+      setLoading(false);
+    }
+  }, [modelList, searchParams]);
+
   if (!modelList) {
     return <></>;
   }
-
-  const handlePageClick = (selectedPage: number) => {
-    setLoading(true);
-
-    const params: any = {
-      page: selectedPage + 1,
-      filter: modelList.filter,
-      sortBy: modelList.sortBy,
-      sortDirection: modelList.sortDirection,
-    };
-
-    if (data.username) {
-      params.username = data.username;
-    }
-
-    const query = qs_stringify(params);
-    window.location.href = `/?${query}`;
-  };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = event.target.value;
@@ -119,14 +115,9 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
         return <></>;
       }
 
-      const categoryProfile = getCategoryProfile(filter);
-
       return (
         <ModelListTitle>
-          <div className="flex items-center gap-5">
-            <img className="w-14 h-14" src={categoryProfile.icon} alt={filter} />
-            {category.title}s
-          </div>
+          <div className="flex items-center gap-5">{category.title}s</div>
         </ModelListTitle>
       );
     }
@@ -149,7 +140,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
             <ModelsListComponent
               data={modelList.models}
               total={modelList.total}
-              currentPage={modelList.page}
+              currentPage={+(searchParams.get("page") ?? 0)}
               limit={MODELS_LIMIT}
               handlePageClick={handlePageClick}
               filterOptions={selectOptions}

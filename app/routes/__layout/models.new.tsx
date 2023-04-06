@@ -19,6 +19,7 @@ import { asArray } from "~/utils/array";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";
 import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
+import { sortCategories } from "~/utils/categories";
 
 export type ActionData = {
   model?: Model;
@@ -83,7 +84,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 export default function ModelsNewPage() {
   const data = useLoaderData<LoaderData>();
   const [drag, setDrag] = useState(false);
-  const [showFields, setShowFields] = useState(false);
+  const [showFields, setShowFields] = useState(true);
   const [formValidity, setFormValidity] = useState(false);
   const [fileCount, setFileCount] = useState<number>();
   const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
@@ -172,7 +173,7 @@ export default function ModelsNewPage() {
   return (
     <div className=" relative">
       <div className="flex item-center">
-        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Create Model</h1>
+        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Upload Model</h1>
       </div>
 
       {!showFields ? (
@@ -264,7 +265,7 @@ export default function ModelsNewPage() {
                   required
                   label="Category"
                   name="categoryId"
-                  options={data.categories.map((c) => {
+                  options={sortCategories(data.categories).map((c) => {
                     return {
                       value: String(c.id),
                       description: c.title,
@@ -272,7 +273,6 @@ export default function ModelsNewPage() {
                   })}
                 />
                 <MultiSelect
-                  // name="tags"
                   label="Tags"
                   options={tagOptions}
                   onChange={(e: any) => setSelectedTags(e)}

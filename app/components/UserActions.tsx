@@ -31,7 +31,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
         >
           <li className="inline lg:hidden">
             <Button variant="link" onClick={onUploadModalClick}>
-              Upload model
+              Create New
             </Button>
           </li>
           <li>

@@ -38,56 +38,31 @@ export const getCategories = async () => {
   return categories;
 };
 
-export const getCategoryProfile = (catSlug: string) => {
+export const getCategoryProfile = (catSlug: string, count = 1) => {
   switch (catSlug) {
     case "amp":
       return {
-        icon: iconCab,
-        color: "text-tonehunt-green",
-      };
-    case "amp-collection":
-      return {
-        icon: iconCabCollection,
+        icon: count === 1 ? iconCab : iconCabCollection,
         color: "text-tonehunt-green",
       };
     case "full-rig":
       return {
-        icon: iconFullrig,
-        color: "text-tonehunt-pink",
-      };
-    case "full-rig-collection":
-      return {
-        icon: iconFullrigCollection,
+        icon: count === 1 ? iconFullrig : iconFullrigCollection,
         color: "text-tonehunt-pink",
       };
     case "pedal":
       return {
-        icon: iconPedal,
-        color: "text-tonehunt-yellow",
-      };
-    case "pedal-collection":
-      return {
-        icon: iconPedalCollection,
+        icon: count === 1 ? iconPedal : iconPedalCollection,
         color: "text-tonehunt-yellow",
       };
     case "ir":
       return {
-        icon: iconIr,
-        color: "text-tonehunt-orange",
-      };
-    case "ir-collection":
-      return {
-        icon: iconIrCollection,
+        icon: count === 1 ? iconIr : iconIrCollection,
         color: "text-tonehunt-orange",
       };
     case "outboard":
       return {
-        icon: iconOutboard,
-        color: "text-tonehunt-blue-light",
-      };
-    case "outboard-collection":
-      return {
-        icon: iconOutboardCollection,
+        icon: count === 1 ? iconOutboard : iconOutboardCollection,
         color: "text-tonehunt-blue-light",
       };
     default:
