@@ -22,10 +22,19 @@ export default function LoginForm({ redirectTo = "/", hideSignup }: LoginFormPro
         ) : null}
 
         <Input autoComplete="email" name="email" label="Email" type="email" required />
-        <Input autoComplete="password" name="password" label="Password" type="password" required />
+
+        <div>
+          <Input autoComplete="password" name="password" label="Password" type="password" required className="mb-1" />
+          <div className="text-center mb-5">
+            <Link to="/forgot-password" prefetch="intent" className="text-sm hover:underline ">
+              Forgot Password
+            </Link>
+          </div>
+        </div>
+
         <Button
           type="submit"
-          className="mt-3"
+          className="mt-2"
           loading={loginFetcher.state === "submitting" || loginFetcher.state === "loading"}
         >
           Log in
@@ -33,8 +42,9 @@ export default function LoginForm({ redirectTo = "/", hideSignup }: LoginFormPro
       </loginFetcher.Form>
 
       {hideSignup ? null : (
-        <div className="text-center flex items-center justify-center pt-5 pb-5 hover:underline">
-          <Link to="/sign-up" prefetch="intent">
+        <div className="text-center flex items-center justify-center pt-8 pb-5 gap-5">
+          <span className="text-white/70">Don't have an account?</span>
+          <Link to="/sign-up" prefetch="intent" className="hover:underline">
             Sign Up
           </Link>
         </div>

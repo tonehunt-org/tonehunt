@@ -1,5 +1,5 @@
 import type { InputHTMLAttributes } from "react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useState } from "react";
 import { useId } from "react";
 import { twMerge } from "tailwind-merge";

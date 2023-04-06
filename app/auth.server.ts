@@ -14,3 +14,14 @@ export const getSession = async (request: Request) => {
 
   return { session: session?.data.session, response, supabase };
 };
+
+export const setSession = async (request: Request, accessToken: string, refreshToken: string) => {
+  const { supabase, response } = await getSession(request);
+
+  const session = await supabase.auth.setSession({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  });
+
+  return { session, supabase, response };
+};
