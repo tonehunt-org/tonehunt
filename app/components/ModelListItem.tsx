@@ -59,10 +59,12 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   to={`/${model.profile.username}/${model.id}`}
                   className="flex-1 hover:underline"
                 >
-                  <span className="font-satoshi-bold text-xl">{model.title}</span>
+                  <span className="font-satoshi-bold text-xl lg:block lg:max-w-[400px] lg:truncate" title={model.title}>
+                    {model.title}
+                  </span>
                 </Link>
 
-                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter mt-1">
+                <div className="text-xs font-satoshi-light text-tonehunt-gray-lighter mt-1 lg:block lg:max-w-[400px] lg:truncate">
                   {map(model.tags, (tag) => (
                     <Link key={tag} to={`/?tags=${tag}`} prefetch="intent">
                       <span className="inline mr-2 hover:underline mb-1 lg:mb-0">{`#${tag}`}</span>
