@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 
@@ -61,17 +61,21 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 export default function MyFavoritesPage() {
   const data = useLoaderData();
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { user, modelList } = data;
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    const params: any = {
-      page: selectedPage + 1,
-    };
-    const query = qs_stringify(params);
-    window.location.href = `/account/my-favorites?${query}`;
+    searchParams.set("page", String(selectedPage));
+    setSearchParams(searchParams);
   };
+
+  useEffect(() => {
+    if (modelList) {
+      setLoading(false);
+    }
+  }, [modelList, searchParams]);
 
   return (
     <div className="w-full">

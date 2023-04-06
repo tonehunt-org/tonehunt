@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
+import { Link, useLoaderData, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
 import { find } from "lodash";
 import { stringify as qs_stringify } from "qs";
 
@@ -21,8 +22,8 @@ type ModelListPageProps = {
 
 export default function ModelListPage({ counts }: ModelListPageProps) {
   const data = useLoaderData();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const modelList = data.modelList;
 
@@ -39,27 +40,21 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
+  const handlePageClick = (selectedPage: number) => {
+    setLoading(true);
+    searchParams.set("page", String(selectedPage));
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (modelList) {
+      setLoading(false);
+    }
+  }, [modelList, searchParams]);
+
   if (!modelList) {
     return <></>;
   }
-
-  const handlePageClick = (selectedPage: number) => {
-    setLoading(true);
-
-    const params: any = {
-      page: selectedPage + 1,
-      filter: modelList.filter,
-      sortBy: modelList.sortBy,
-      sortDirection: modelList.sortDirection,
-    };
-
-    if (data.username) {
-      params.username = data.username;
-    }
-
-    const query = qs_stringify(params);
-    window.location.href = `/?${query}`;
-  };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = event.target.value;
@@ -145,7 +140,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
             <ModelsListComponent
               data={modelList.models}
               total={modelList.total}
-              currentPage={modelList.page}
+              currentPage={+(searchParams.get("page") ?? 0)}
               limit={MODELS_LIMIT}
               handlePageClick={handlePageClick}
               filterOptions={selectOptions}
