@@ -21,6 +21,7 @@
     "@remix-run/vercel": "^1.14.3",
     "@supabase/auth-helpers-remix": "^0.1.5",
     "@supabase/supabase-js": "^2.10.0",
+    "@vercel/analytics": "^0.1.11",
     "@vercel/node": "^2.6.2",
     "@zip.js/zip.js": "^2.6.83",
     "classnames": "^2.3.2",

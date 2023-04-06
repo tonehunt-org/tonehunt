@@ -13,7 +13,6 @@ type UserActionsProps = {
 
 export default function UserActions({ user, username }: UserActionsProps) {
   const location = useLocation();
-  const [action, setAction] = useState<"login" | "sign-up">("login");
   const [searchParams, setSearchParams] = useSearchParams();
   const loginFetcher = useFetcher();
 
@@ -34,7 +33,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
         Log in
       </Button>
       <div className="text-center flex items-center justify-center">
-        <Link to="/sign-up" prefetch="intent" onClick={() => setAction("sign-up")}>
+        <Link to="/sign-up" prefetch="intent">
           Sign Up
         </Link>
       </div>
