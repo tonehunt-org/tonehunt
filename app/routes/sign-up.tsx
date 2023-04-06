@@ -31,6 +31,7 @@ const USERNAME_REGEX = /^\w(?:\w|[.-](?=\w)){3,31}$/;
 export const action: ActionFunction = async ({ request, context }) => {
   const { supabase, response } = await getSession(request);
   const formData = await request.formData();
+  const url = new URL(request.url);
 
   const username = formData.get("username") as string | null;
 
@@ -54,8 +55,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       options: {
-        // TODO: move domain to ENV
-        emailRedirectTo: `${location.origin}/login?confirmation`,
+        emailRedirectTo: `${url.origin}/login?confirmation`,
       },
     });
 
