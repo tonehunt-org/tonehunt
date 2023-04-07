@@ -70,7 +70,7 @@ const Header = ({ user, profile }: HeaderType) => {
             {user ? (
               <div className="hidden lg:block">
                 <ButtonLink variant="button-primary" to="/models/new">
-                  Create New
+                  New Model
                 </ButtonLink>
               </div>
             ) : null}

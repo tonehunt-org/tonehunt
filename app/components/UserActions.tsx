@@ -1,5 +1,5 @@
 import { Popover } from "@headlessui/react";
-import { Form, Link, useLocation, useSearchParams } from "@remix-run/react";
+import { Form, Link, useLocation } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import Button from "./ui/Button";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
@@ -12,12 +12,6 @@ type UserActionsProps = {
 
 export default function UserActions({ user, username }: UserActionsProps) {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const onUploadModalClick = () => {
-    searchParams.set("create", "");
-    setSearchParams(searchParams);
-  };
 
   return user ? (
     <div className="flex gap-3 items-center px-5 py-3 -ml-5">
@@ -30,9 +24,9 @@ export default function UserActions({ user, username }: UserActionsProps) {
           className="list-none m-0 absolute right-0 mt-2 z-50 bg-zinc-900 border-2 border-white rounded-lg p-5 w-72 shadow-lg flex flex-col gap-3"
         >
           <li className="inline lg:hidden">
-            <Button variant="link" onClick={onUploadModalClick}>
-              Create New
-            </Button>
+            <Link to="/models/new" prefetch="intent">
+              New Model
+            </Link>
           </li>
           <li>
             <Link to="/account/profile" prefetch="intent">
