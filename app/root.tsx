@@ -19,7 +19,7 @@ export const links: LinksFunction = () => [
   { rel: "apple-touch-icon", href: "icons/apple-icon.png" },
 ];
 
-export const meta: MetaFunction = () => ({
+export const meta: MetaFunction = ({ data }) => ({
   charset: "utf-8",
   description: "ToneHunt - Find amps, pedals, and other models for Neural Amp Modeler.",
   viewport: "width=device-width, initial-scale=1, user-scalable=no",
@@ -27,6 +27,8 @@ export const meta: MetaFunction = () => ({
 
   "og:site_name": "ToneHunt",
   "og:type": "article",
+  "og:image": `${data.ENV.ORIGIN}social_banner.jpg`,
+  "og:image:secure_url": `${data.ENV.ORIGIN}social_banner.jpg`,
 
   "msapplication-square310x310logo": "/icons/ms-icon.png",
 });

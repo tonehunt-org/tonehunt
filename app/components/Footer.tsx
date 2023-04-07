@@ -6,7 +6,7 @@ const Footer = () => {
     { id: 1, label: "Home", link: "/" },
     { id: 2, label: "About", link: "/about" },
     { id: 3, label: "Sign Up", link: "/sign-up" },
-    { id: 4, label: "Support", link: "/support" },
+    // { id: 4, label: "Support", link: "/support" },
     { id: 5, label: "Licensing", link: "/support/licensing" },
     { id: 6, label: "Join our Discord", link: "https://discord.gg/anM9ytZTSu" },
   ];
