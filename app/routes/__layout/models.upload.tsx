@@ -7,7 +7,7 @@ export type ActionData = {
   path?: string;
 };
 
-const MAX_UPLOAD_SIZE = 50000000;
+const MAX_UPLOAD_SIZE = 500000000;
 
 export const action: ActionFunction = async ({ request }) => {
   const { session, supabase } = await getSession(request);
