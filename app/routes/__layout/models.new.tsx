@@ -2,7 +2,7 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import type { Category, Model } from "@prisma/client";
+import type { Category, Model, License } from "@prisma/client";
 import { toJSON } from "~/utils/form";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/ui/Button";
@@ -20,6 +20,7 @@ import type { MultiSelectOption } from "~/components/ui/MultiSelect";
 import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
 import { sortCategories } from "~/utils/categories";
+import { Link } from "@remix-run/react";
 
 export type ActionData = {
   model?: Model;
@@ -29,6 +30,7 @@ export type ActionData = {
 export type LoaderData = {
   tags: { id: number; name: string; group: string | null }[];
   categories: Category[];
+  licenses: License[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -40,11 +42,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/login");
   }
 
-  const [tags, categories] = await Promise.all([getTags(), db.category.findMany({ where: { NOT: { title: "IR" } } })]);
+  const [tags, categories, licenses] = await Promise.all([
+    getTags(),
+    db.category.findMany({ where: { NOT: { title: "IR" } } }),
+    db.license.findMany({ where: { active: true }, orderBy: { id: "asc" } }),
+  ]);
 
   return json<LoaderData>({
     tags,
     categories,
+    licenses,
   });
 };
 
@@ -71,6 +78,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         categoryId: data?.categoryId ? +data?.categoryId : 0,
         tags: data?.tags,
         filecount: +data?.filecount,
+        licenseId: data?.licenseId ? data.licenseId : 1,
       },
     });
 
@@ -257,6 +265,18 @@ export default function ModelsNewPage() {
               <div className="flex-grow flex flex-col gap-3 basis-1/2">
                 <Input name="title" label="Title" required autoFocus />
                 <Input name="description" label="Description" style={{ height: "168px" }} multiline />
+                <Select
+                  required
+                  label="License *"
+                  name="licenseId"
+                  showEmptyOption={false}
+                  options={data.licenses.map((l) => {
+                    return {
+                      value: String(l.id),
+                      description: l.name,
+                    };
+                  })}
+                />
               </div>
 
               <div className="flex-grow flex flex-col gap-3 basis-1/2">
@@ -282,6 +302,21 @@ export default function ModelsNewPage() {
                   return <input type="hidden" name="tags" value={tag.value} key={tag.value} />;
                 })}
               </div>
+            </div>
+            <div className="flex flex-col mt-3 font-satoshi-regular text-sm">
+              <p className="block">* Not sure which license to choose?</p>
+              <p className="block ml-2">
+                Click
+                <Link
+                  to="/support/licensing"
+                  target="_new"
+                  className="inline mx-1 hover:underline text-tonehunt-blue-light"
+                >
+                  here
+                </Link>
+                {""}
+                for more information.
+              </p>
             </div>
 
             {fileUploadFetcher.data?.path ? (

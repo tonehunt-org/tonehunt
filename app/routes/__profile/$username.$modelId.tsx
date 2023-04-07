@@ -46,6 +46,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           id: true,
         },
       },
+      license: true,
     },
   });
 
@@ -153,6 +154,16 @@ export default function ModelDetailPage() {
                   );
                 })}
               </ul>
+            </div>
+          ) : null}
+
+          {data.model.license ? (
+            <div className="mb-4">
+              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">License</h5>
+              <p className="font-satoshi-light text-sm text-white/60">
+                <span className="font-satoshi-medium inline mr-1">{data.model.license.name}:</span>
+                {data.model.license.description}
+              </p>
             </div>
           ) : null}
 
