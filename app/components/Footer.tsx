@@ -15,9 +15,9 @@ const Footer = () => {
     <>
       <div className="flex flex-col p-5">
         <div className="flex-1">
-          <div className="flex flex-row align-middle items-center justify-center">
+          <div className="flex flex-row align-middle gap-4 items-center justify-center flex-wrap">
             {map(footerMenuItems, (item) => (
-              <div key={item.id} className="uppercase px-2 text-xs text-neutral-600">
+              <div key={item.id} className="uppercase text-xs text-neutral-600">
                 <Link to={item.link} className="hover:underline">
                   {item.label}
                 </Link>
@@ -25,7 +25,10 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <div className="w-full text-center text-xs p-4 uppercase text-neutral-600">Copyright © 2023 ToneHunt.org</div>
+
+        <div className="w-full text-center text-xs p-4 pt-10 uppercase text-neutral-600">
+          Copyright © 2023 ToneHunt.org
+        </div>
       </div>
     </>
   );
