@@ -27,8 +27,8 @@ export const meta: MetaFunction = ({ data }) => ({
 
   "og:site_name": "ToneHunt",
   "og:type": "article",
-  "og:image": `${data.ENV.ORIGIN}social_banner.jpg`,
-  "og:image:secure_url": `${data.ENV.ORIGIN}social_banner.jpg`,
+  "og:image": `${data.ENV.ORIGIN}/social_banner.jpg`,
+  "og:image:secure_url": `${data.ENV.ORIGIN}/social_banner.jpg`,
 
   "msapplication-square310x310logo": "/icons/ms-icon.png",
 });
