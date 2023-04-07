@@ -76,7 +76,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   const countsReq = await db.counts.findMany();
-
+  console.log("offset", offset);
   // GET MODELS
   const modelsReq = getModels({
     limit: MODELS_LIMIT,

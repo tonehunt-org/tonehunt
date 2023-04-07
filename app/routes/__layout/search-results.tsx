@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
@@ -60,15 +60,12 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 export default function SearchResults() {
   const data = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    const params: any = {
-      page: selectedPage + 1,
-      search: data.search,
-    };
-    const query = qs_stringify(params);
-    window.location.href = `/search-results?${query}`;
+    searchParams.set("page", String(selectedPage + 1));
+    setSearchParams(searchParams);
   };
 
   return (

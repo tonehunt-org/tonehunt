@@ -67,7 +67,7 @@ export default function MyFavoritesPage() {
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    searchParams.set("page", String(selectedPage));
+    searchParams.set("page", String(selectedPage + 1));
     setSearchParams(searchParams);
   };
 
