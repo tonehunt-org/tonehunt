@@ -179,17 +179,13 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
   return (
     <ModelListTitle className={className}>
       Explore over {total} models, including{" "}
-      <Link
-        prefetch="intent"
-        to="/?page=1&filter=amp&sortBy=newest&sortDirection=desc"
-        className="border-tonehunt-green border-b-8 hover:text-tonehunt-green"
-      >
+      <Link prefetch="intent" to="/?filter=amp" className="border-tonehunt-green border-b-8 hover:text-tonehunt-green">
         {counts.find((count) => count.name === "amps")?.count}
       </Link>{" "}
       amps, and{" "}
       <Link
         prefetch="intent"
-        to="/?page=1&filter=pedal&sortBy=newest&sortDirection=desc"
+        to="/?filter=pedal"
         className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
       >
         {counts.find((count) => count.name === "pedals")?.count}

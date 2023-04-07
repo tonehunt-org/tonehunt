@@ -181,7 +181,7 @@ export default function ModelsNewPage() {
   return (
     <div className=" relative">
       <div className="flex item-center">
-        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">Upload Model</h1>
+        <h1 className="w-full text-center text-2xl lg:text-3xl font-satoshi-bold mb-10">New Model</h1>
       </div>
 
       {!showFields ? (
