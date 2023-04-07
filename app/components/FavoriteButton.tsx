@@ -4,6 +4,8 @@ import { useFetcher } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import type { ButtonProps } from "~/components/ui/Button";
 import Button from "~/components/ui/Button";
+import PopperUnstyled, { PopperPlacementType } from "@mui/base/PopperUnstyled";
+import { useState } from "react";
 
 const starIconClasses = "w-5 h-5 inline-block mr-[6px]";
 
@@ -25,8 +27,23 @@ export default function FavoriteButton({
   ...buttonProps
 }: FavoriteButtonProps) {
   const favoriteFetcher = useFetcher();
+  const [anchorEl, setAnchorEl] = useState<HTMLFormElement>();
+
   return (
-    <favoriteFetcher.Form method="post" action="/favorites/add">
+    <favoriteFetcher.Form
+      method="post"
+      action="/favorites/add"
+      onMouseEnter={(e) => {
+        if (disabledReason) {
+          setAnchorEl(e.currentTarget);
+        }
+      }}
+      onMouseLeave={() => {
+        if (disabledReason) {
+          setAnchorEl(undefined);
+        }
+      }}
+    >
       <Button
         type="submit"
         name="modelId"
@@ -40,11 +57,17 @@ export default function FavoriteButton({
         )}
         loading={favoriteFetcher.state === "submitting" || favoriteFetcher.state === "loading"}
         disabled={!!disabledReason}
-        title={disabledReason}
       >
         {favorited ? <StarIconSolid className={starIconClasses} /> : <StarIcon className={starIconClasses} />}
         <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>
       </Button>
+
+      {/* TODO: refactor into component */}
+      <PopperUnstyled open={Boolean(anchorEl)} anchorEl={anchorEl} placement="top">
+        <div className=" bg-tonehunt-gray-darker text-white px-3 py-2 z-50 rounded-full relative top-1 border border-white/10">
+          You must be logged in to favorite a model
+        </div>
+      </PopperUnstyled>
     </favoriteFetcher.Form>
   );
 }

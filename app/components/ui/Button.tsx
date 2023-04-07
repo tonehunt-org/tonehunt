@@ -38,9 +38,28 @@ const Button = forwardRef(
 
     return (
       <button
-        disabled={loading || disabled}
         ref={ref}
         {...props}
+        onMouseDown={(e: any) => {
+          // Need to simulate the disabled prop on a button because we need the other events
+          // to fire for UI puproses
+          if (disabled || loading) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+
+          props.onMouseDown?.(e);
+        }}
+        onClick={(e: any) => {
+          if (disabled || loading) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+
+          props.onClick?.(e);
+        }}
         className={twMerge(
           classNames(),
           loading || disabled ? disabledClassNames : "",
