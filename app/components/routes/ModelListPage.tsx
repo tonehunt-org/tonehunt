@@ -158,7 +158,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
   );
 }
 
-const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
+export const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
   return (
     <h1
       className={twMerge(

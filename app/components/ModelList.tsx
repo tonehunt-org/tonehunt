@@ -1,4 +1,3 @@
-import Button from "~/components/ui/Button";
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
 import Select from "./ui/Select";
@@ -7,8 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithFavorites } from "~/services/profile";
-import { Link, useLocation } from "@remix-run/react";
-import { twMerge } from "tailwind-merge";
+import { useLocation } from "@remix-run/react";
 import ButtonLink from "./ui/ButtonLink";
 
 interface ModelListType {
