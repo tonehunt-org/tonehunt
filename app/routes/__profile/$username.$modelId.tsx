@@ -15,6 +15,7 @@ import { getSession } from "~/auth.server";
 import { getProfile } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
+import ButtonLink from "~/components/ui/ButtonLink";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   const d = data as LoaderData;
@@ -98,6 +99,11 @@ export default function ModelDetailPage() {
 
   const arrayLength = Math.floor(5000 / (data.model.title.length * 10));
   const textForBG = [...new Array(arrayLength)].map(() => data.model.title);
+
+  const reportMail = {
+    subject: `Report model: ${data.model.id} - ${data.model.title}`,
+    body: "I am the owner of this content and I did not give permission for upload. This model breaks the user agreement with regards to algorithmic captures",
+  };
 
   return (
     <section className="w-full">
@@ -193,6 +199,14 @@ export default function ModelDetailPage() {
               </p>
             </div>
           ) : null}
+          <div className="flex justify-start mt-10 mb-5 text-white/60">
+            <ButtonLink
+              to={`mailto:contact@tonehunt.org?subject=${reportMail.subject}&body=${reportMail.body}`}
+              className="text-tiny uppercase px-3 py-2"
+            >
+              Report model
+            </ButtonLink>
+          </div>
         </div>
 
         <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">
