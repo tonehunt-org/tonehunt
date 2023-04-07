@@ -129,7 +129,7 @@ export default function UserProfilePage() {
             {textForBG}
           </div>
           <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
-            <div className="flex flex-col z-30">
+            <div className="flex flex-col z-1">
               <div className="flex-1">
                 <div className="flex justify-center">
                   <UserIcon className="w-40 h-40 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
