@@ -67,7 +67,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   ))}
                 </ul>
 
-                <div className="flex-1 flex gap-4 items-center">
+                <div className="flex-1 flex gap-4 items-center flex-wrap">
                   {model.filecount && model.filecount > 1 ? (
                     <span className={`font-satoshi-bold uppercase text-xs whitespace-nowrap ${categoryProfile.color}`}>
                       {model.filecount} models
