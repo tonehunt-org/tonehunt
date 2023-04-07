@@ -1,7 +1,7 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { find } from "lodash";
+import { find, startCase } from "lodash";
 import { getSession } from "~/auth.server";
 
 import type { User } from "@supabase/supabase-js";
@@ -14,6 +14,28 @@ import ModelListPage, { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import ModelDetailPage from "~/components/routes/ModelDetailPage";
 import type { Counts } from "@prisma/client";
 import { db } from "~/utils/db.server";
+
+export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
+  const d = data as LoaderData;
+  const searchParams = new URLSearchParams(location.search);
+
+  const total = d.counts.reduce((total, count) => {
+    return total + count.count;
+  }, 0);
+
+  const title = searchParams.get("tags")
+    ? `#${searchParams.get("tags")} Models | ToneHunt`
+    : searchParams.get("filter")
+    ? `${startCase(searchParams.get("filter") as string)} Models | ToneHunt`
+    : "All Models | ToneHunt";
+
+  return {
+    title,
+    description: `Explore over ${total} Neural Amp Modeler models, including ${
+      d.counts.find((count) => count.name === "amps")?.count
+    } amps, and ${d.counts.find((count) => count.name === "pedals")?.count} pedals.`,
+  };
+};
 
 export type LoaderData = {
   user?: User | null;

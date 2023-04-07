@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { db } from "~/utils/db.server";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 
 import ModelsListComponent from "~/components/ModelList";
@@ -14,6 +13,13 @@ import { map } from "lodash";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  return {
+    title: `My Favorites | ToneHunt`,
+    description: `A list of my favorite models.`,
+  };
+};
 
 export type LoaderData = {
   user: User | null | undefined;
@@ -28,6 +34,11 @@ export type LoaderData = {
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);
   const user = session?.user;
+
+  if (!session) {
+    return redirect("/login?redirectTo=/account/my-favorites");
+  }
+
   const url = new URL(request.url);
 
   const profile = await getProfileWithFavorites(session);

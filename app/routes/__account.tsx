@@ -15,9 +15,10 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { session, response } = await getSession(request);
   const user = session?.user;
+  const url = new URL(request.url);
 
   if (!user) {
-    return redirect("/", { headers: response.headers });
+    return redirect(`/login?redirectTo=${url.pathname}${url.search}`, { headers: response.headers });
   }
 
   const profile = await db.profile.findFirst({ where: { id: session?.user.id } });

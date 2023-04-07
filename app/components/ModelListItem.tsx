@@ -79,9 +79,13 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.profile.username}
                     </span>
                   </Link>
-                  <span className="text-sm font-satoshi-light text-tonehunt-gray-lighter">
+                  <time
+                    // @ts-ignore
+                    dateTime={model?.createdAt as string}
+                    className="text-sm font-satoshi-light text-tonehunt-gray-lighter"
+                  >
                     {timeago.format(new Date(model?.createdAt!))}
-                  </span>
+                  </time>
                 </div>
               </div>
             </div>

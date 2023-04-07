@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { db } from "~/utils/db.server";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { stringify as qs_stringify } from "qs";
@@ -17,6 +17,15 @@ import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
+
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  const d = data as LoaderData;
+
+  return {
+    title: `${d.profile?.username}'s Profile | ToneHunt`,
+    description: `${d.profile?.username}'s models include ${d.modelList.models[0].title} and ${d.modelList.models[1].title}. ${d.profile?.bio}`,
+  };
+};
 
 export type LoaderData = {
   user?: User | null | undefined;
