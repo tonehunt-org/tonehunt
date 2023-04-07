@@ -12,10 +12,10 @@ import type { Counts } from "@prisma/client";
 import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 
 export const meta: MetaFunction = ({ location }) => ({
-  title: "Sing Up | ToneHunt",
+  title: "Sign Up | ToneHunt",
   description: "Sign Up to ToneHunt and share your models with the world.",
 
-  "og:title": "Sing Up | ToneHunt",
+  "og:title": "Sign Up | ToneHunt",
   // "og:image": `${location.}`
   "og:url": `${location.pathname}${location.search}`,
   // "twitter:card": "summary_large_image", // TODO
