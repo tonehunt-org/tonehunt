@@ -13,8 +13,10 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   {
     rel: "shortcut icon",
-    href: "/favicon@3x.png",
+    href: "/icons/favicon.png",
   },
+  { rel: "icon", sizes: "192x192", href: "/icons/app-icon.png" },
+  { rel: "apple-touch-icon", href: "icons/apple-icon.png" },
 ];
 
 export const meta: MetaFunction = () => ({
@@ -22,6 +24,11 @@ export const meta: MetaFunction = () => ({
   description: "ToneHunt - Find amps, pedals, and other models for Neural Amp Modeler.",
   viewport: "width=device-width, initial-scale=1, user-scalable=no",
   keywords: "ToneHunt, Neural Amp Modeler, NAM, models, guitar, ToneX, guitar tone, plugin",
+
+  "og:site_name": "ToneHunt",
+  "og:type": "article",
+
+  "msapplication-square310x310logo": "/icons/ms-icon.png",
 });
 
 export type RootLoaderData = {

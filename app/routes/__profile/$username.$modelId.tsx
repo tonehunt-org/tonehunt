@@ -19,9 +19,21 @@ import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   const d = data as LoaderData;
 
+  const title = `${d.model.title} | ToneHunt`;
+  const description = `${d.model.title} is a model by ${d.model.profile.username}. ${d.model.description}`;
+
   return {
-    title: `${d.model.title} | ToneHunt`,
-    description: `${d.model.title} is a model by ${d.model.profile.username}. ${d.model.description}`,
+    title,
+    description,
+
+    "og:title": title,
+    // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+    "og:url": `${location.pathname}${location.search}`,
+    // "twitter:card": "summary_large_image", // TODO
+
+    // <!--  Non-Essential, But Recommended -->
+    "og:description": description,
+    "twitter:image:alt": description,
   };
 };
 

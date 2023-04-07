@@ -21,9 +21,21 @@ import { getProfileWithFavorites } from "~/services/profile";
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   const d = data as LoaderData;
 
+  const title = `${d.profile?.username}'s Profile | ToneHunt`;
+  const description = `${d.profile?.username}'s models include ${d.modelList.models[0].title} and ${d.modelList.models[1].title}. ${d.profile?.bio}`;
+
   return {
-    title: `${d.profile?.username}'s Profile | ToneHunt`,
-    description: `${d.profile?.username}'s models include ${d.modelList.models[0].title} and ${d.modelList.models[1].title}. ${d.profile?.bio}`,
+    title,
+    description,
+
+    "og:title": title,
+    // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+    "og:url": `${location.pathname}${location.search}`,
+    // "twitter:card": "summary_large_image", // TODO
+
+    // <!--  Non-Essential, But Recommended -->
+    "og:description": description,
+    "twitter:image:alt": description,
   };
 };
 
