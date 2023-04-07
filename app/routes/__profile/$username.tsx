@@ -4,7 +4,6 @@ import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
 
@@ -22,7 +21,7 @@ export const meta: MetaFunction<LoaderData> = ({ data }) => {
   const d = data as LoaderData;
 
   const title = `${d.profile?.username}'s Profile | ToneHunt`;
-  const description = `${d.profile?.username}'s models include ${d.modelList.models[0].title} and ${d.modelList.models[1].title}. ${d.profile?.bio}`;
+  const description = `${d.profile?.username}'s models include ${d.modelList.models[0]?.title} and ${d.modelList.models[1]?.title}. ${d.profile?.bio}`;
 
   return {
     title,

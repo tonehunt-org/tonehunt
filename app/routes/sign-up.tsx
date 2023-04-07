@@ -16,7 +16,7 @@ export const meta: MetaFunction = ({ location }) => ({
   description: "Sign Up to ToneHunt and share your models with the world.",
 
   "og:title": "Sing Up | ToneHunt",
-  // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+  // "og:image": `${location.}`
   "og:url": `${location.pathname}${location.search}`,
   // "twitter:card": "summary_large_image", // TODO
 
@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       options: {
-        emailRedirectTo: `${url.origin}/login?confirmation`,
+        emailRedirectTo: `${process.env.ORIGIN}/login?confirmation`,
       },
     });
 

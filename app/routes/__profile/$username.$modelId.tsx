@@ -16,22 +16,23 @@ import { getProfile } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 
-export const meta: MetaFunction<LoaderData> = ({ data }) => {
+export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   const d = data as LoaderData;
 
   const title = `${d.model.title} | ToneHunt`;
   const description = `${d.model.title} is a model by ${d.model.profile.username}. ${d.model.description}`;
+
+  const icon = getCategoryProfile(d.model.category.slug, d.model.filecount ?? undefined).icon;
+  const imageUrl = `${parentsData.root.ENV.ORIGIN}${icon}`;
 
   return {
     title,
     description,
 
     "og:title": title,
-    // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+    "og:image": imageUrl,
     "og:url": `${location.pathname}${location.search}`,
-    // "twitter:card": "summary_large_image", // TODO
-
-    // <!--  Non-Essential, But Recommended -->
+    "twitter:card": imageUrl,
     "og:description": description,
     "twitter:image:alt": description,
   };

@@ -2,7 +2,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Profile } from "@prisma/client";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import { Provider } from "jotai";
 import { getSession } from "./auth.server";
 import { getProfile } from "./services/profile";
@@ -33,25 +33,36 @@ export const meta: MetaFunction = () => ({
 
 export type RootLoaderData = {
   profile?: Profile;
+  ENV: {
+    ORIGIN: string;
+  };
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
+  const ENV = {
+    ORIGIN: process.env.ORIGIN as string,
+  };
+
   if (!session) {
-    return json<RootLoaderData>({});
+    return json<RootLoaderData>({ ENV });
   }
 
   const profile = await getProfile(session);
 
   if (!profile) {
-    return json<RootLoaderData>({});
+    return json<RootLoaderData>({ ENV });
   }
 
-  return json<RootLoaderData>({ profile });
+  return json<RootLoaderData>({
+    profile,
+    ENV,
+  });
 };
 
 export default function App() {
+  const data = useLoaderData<RootLoaderData>();
   return (
     <html lang="en">
       <head>
@@ -65,6 +76,12 @@ export default function App() {
             <ScrollRestoration />
 
             <Analytics />
+
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+              }}
+            />
 
             <Scripts />
             <LiveReload />
