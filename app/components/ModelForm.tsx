@@ -27,7 +27,7 @@ export default function ModelForm({ model, action }: ModelFormProps) {
 
       <div>
         <Button type="submit" className="mt-3 mr-3">
-          {model ? "Save Model" : "Create New"}
+          {model ? "Save Model" : "New Model"}
         </Button>
         <Button variant="secondary" onClick={() => navigate(-1)}>
           Cancel
