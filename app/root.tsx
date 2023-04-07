@@ -2,7 +2,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Profile } from "@prisma/client";
 import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import { Provider } from "jotai";
 import { getSession } from "./auth.server";
 import { getProfile } from "./services/profile";
@@ -13,8 +13,10 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   {
     rel: "shortcut icon",
-    href: "/favicon@3x.png",
+    href: "/icons/favicon.png",
   },
+  { rel: "icon", sizes: "192x192", href: "/icons/app-icon.png" },
+  { rel: "apple-touch-icon", href: "icons/apple-icon.png" },
 ];
 
 export const meta: MetaFunction = () => ({
@@ -22,29 +24,45 @@ export const meta: MetaFunction = () => ({
   description: "ToneHunt - Find amps, pedals, and other models for Neural Amp Modeler.",
   viewport: "width=device-width, initial-scale=1, user-scalable=no",
   keywords: "ToneHunt, Neural Amp Modeler, NAM, models, guitar, ToneX, guitar tone, plugin",
+
+  "og:site_name": "ToneHunt",
+  "og:type": "article",
+
+  "msapplication-square310x310logo": "/icons/ms-icon.png",
 });
 
 export type RootLoaderData = {
   profile?: Profile;
+  ENV: {
+    ORIGIN: string;
+  };
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
+  const ENV = {
+    ORIGIN: process.env.ORIGIN as string,
+  };
+
   if (!session) {
-    return json<RootLoaderData>({});
+    return json<RootLoaderData>({ ENV });
   }
 
   const profile = await getProfile(session);
 
   if (!profile) {
-    return json<RootLoaderData>({});
+    return json<RootLoaderData>({ ENV });
   }
 
-  return json<RootLoaderData>({ profile });
+  return json<RootLoaderData>({
+    profile,
+    ENV,
+  });
 };
 
 export default function App() {
+  const data = useLoaderData<RootLoaderData>();
   return (
     <html lang="en">
       <head>
@@ -58,6 +76,12 @@ export default function App() {
             <ScrollRestoration />
 
             <Analytics />
+
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+              }}
+            />
 
             <Scripts />
             <LiveReload />

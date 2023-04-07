@@ -15,9 +15,21 @@ import { getProfileWithFavorites } from "~/services/profile";
 export const meta: MetaFunction = ({ data }) => {
   const d = data as LoaderData;
 
+  const title = `"${d.search}" Search Results | ToneHunt`;
+  const description = `List of "${d.search}" models for Neural Amp Modeler.`;
+
   return {
-    title: `"${d.search}" Search Results | ToneHunt`,
-    description: `List of "${d.search}" models for Neural Amp Modeler.`,
+    title,
+    description,
+
+    "og:title": title,
+    // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+    "og:url": `${location.pathname}${location.search}`,
+    // "twitter:card": "summary_large_image", // TODO
+
+    // <!--  Non-Essential, But Recommended -->
+    "og:description": description,
+    "twitter:image:alt": description,
   };
 };
 

@@ -9,6 +9,15 @@ import Alert from "~/components/ui/Alert";
 export const meta: MetaFunction = () => ({
   title: "Login | ToneHunt",
   description: "Login to ToneHunt and start uploading your models!",
+
+  "og:title": "Login | ToneHunt",
+  // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+  "og:url": `${location.pathname}${location.search}`,
+  // "twitter:card": "summary_large_image", // TODO
+
+  // <!--  Non-Essential, But Recommended -->
+  "og:description": "Login to ToneHunt and start uploading your models!",
+  "twitter:image:alt": "Login to ToneHunt and start uploading your models!",
 });
 
 export type LoginActionData = {

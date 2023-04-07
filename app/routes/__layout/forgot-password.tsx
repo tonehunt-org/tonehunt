@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request, context }) => {
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${url.origin}/auth/hash-signin`,
+    redirectTo: `${process.env.ORIGIN}/auth/hash-signin`,
   });
 
   if (error) {

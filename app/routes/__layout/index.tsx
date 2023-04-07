@@ -29,11 +29,22 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
     ? `${startCase(searchParams.get("filter") as string)} Models | ToneHunt`
     : "All Models | ToneHunt";
 
+  const description = `Explore over ${total} Neural Amp Modeler models, including ${
+    d.counts.find((count) => count.name === "amps")?.count
+  } amps, and ${d.counts.find((count) => count.name === "pedals")?.count} pedals.`;
+
   return {
     title,
-    description: `Explore over ${total} Neural Amp Modeler models, including ${
-      d.counts.find((count) => count.name === "amps")?.count
-    } amps, and ${d.counts.find((count) => count.name === "pedals")?.count} pedals.`,
+    description,
+
+    "og:title": title,
+    // "og:image": "http://euro-travel-example.com/thumbnail.jpg", // TODO
+    "og:url": `${location.pathname}${location.search}`,
+    // "twitter:card": "summary_large_image", // TODO
+
+    // <!--  Non-Essential, But Recommended -->
+    "og:description": description,
+    "twitter:image:alt": description,
   };
 };
 

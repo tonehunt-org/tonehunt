@@ -11,9 +11,18 @@ import { Link } from "@remix-run/react";
 import type { Counts } from "@prisma/client";
 import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 
-export const meta: MetaFunction = () => ({
+export const meta: MetaFunction = ({ location }) => ({
   title: "Sing Up | ToneHunt",
   description: "Sign Up to ToneHunt and share your models with the world.",
+
+  "og:title": "Sing Up | ToneHunt",
+  // "og:image": `${location.}`
+  "og:url": `${location.pathname}${location.search}`,
+  // "twitter:card": "summary_large_image", // TODO
+
+  // <!--  Non-Essential, But Recommended -->
+  "og:description": "Sign Up to ToneHunt and share your models with the world.",
+  "twitter:image:alt": "Sign Up to ToneHunt and share your models with the world.",
 });
 
 type ActionData = {
@@ -60,7 +69,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       options: {
-        emailRedirectTo: `${url.origin}/login?confirmation`,
+        emailRedirectTo: `${process.env.ORIGIN}/login?confirmation`,
       },
     });
 
