@@ -125,7 +125,7 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
                 <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
                   <img className="object-cover w-14 h-14" src={imgDiscord} alt="discord" title="Join our Discord" />
                 </div>
-                <span className="font-satoshi-bold text-sm hover:underline">Join our Discord</span>
+                <span className="font-satoshi-bold text-sm hover:underline">Join the ToneHunt Discord</span>
               </div>
             </a>
           </div>
