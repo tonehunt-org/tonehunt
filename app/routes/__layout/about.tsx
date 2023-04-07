@@ -35,7 +35,7 @@ export default function AboutPage() {
         Tonehunt is dedicated to simplifying the process of finding models{" "}
         <a
           href="https://github.com/sdatkinson/neural-amp-modeler"
-          className="underline"
+          className="hover:underline text-tonehunt-blue-light font-satoshi-bold"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -89,7 +89,7 @@ export default function AboutPage() {
         Since ToneHunt is and open initiative, you can find all the technology used to build the platform in our{" "}
         <a
           href="https://github.com/scottcorgan/tonehunt"
-          className="underline"
+          className="hover:underline text-tonehunt-blue-light font-satoshi-bold"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -101,7 +101,12 @@ export default function AboutPage() {
       <p>
         If you're interested in following along with all things ToneHunt, or even to collaborate with us as we continue
         to build and make it better, you can{" "}
-        <a href="https://discord.gg/anM9ytZTSu" target="_blank" rel="noopener noreferrer" className="underline">
+        <a
+          href="https://discord.gg/anM9ytZTSu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline text-tonehunt-blue-light font-satoshi-bold"
+        >
           join the Discord server
         </a>
         .
