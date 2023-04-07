@@ -48,9 +48,11 @@ export default function ForgotPasswordPage() {
       <h2 className="text-2xl font-bold pb-5">Forgot Password</h2>
       <Input label="Email" type="email" name="email" placeholder="Enter your account email" required />
 
-      <Button type="submit" className="mt-2" loading={navigation.state === "submitting"}>
-        Reset Password
-      </Button>
+      <div className="text-right">
+        <Button type="submit" className="mt-2" loading={navigation.state === "submitting"}>
+          Reset Password
+        </Button>
+      </div>
     </Form>
   );
 }

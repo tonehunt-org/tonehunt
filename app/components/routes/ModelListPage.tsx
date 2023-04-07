@@ -42,7 +42,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
-    searchParams.set("page", String(selectedPage));
+    searchParams.set("page", String(selectedPage + 1));
     setSearchParams(searchParams);
   };
 
@@ -140,7 +140,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
             <ModelsListComponent
               data={modelList.models}
               total={modelList.total}
-              currentPage={+(searchParams.get("page") ?? 0)}
+              currentPage={modelList.page}
               limit={MODELS_LIMIT}
               handlePageClick={handlePageClick}
               filterOptions={selectOptions}

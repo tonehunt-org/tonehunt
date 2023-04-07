@@ -3,7 +3,7 @@ import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
@@ -103,6 +103,14 @@ export default function UserProfilePage() {
   const data = useLoaderData();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handlePageClick = (selectedPage: number) => {
+    setLoading(true);
+    searchParams.set("page", String(selectedPage + 1));
+    setSearchParams(searchParams);
+  };
+
   if (data.profile === null) {
     return <NotFound>User not found</NotFound>;
   }
@@ -112,15 +120,6 @@ export default function UserProfilePage() {
   const arrayLength = Math.floor(5000 / (profile.username.length * 10));
   const textForBG = [...new Array(arrayLength)].map(() => profile.username);
 
-  const handlePageClick = (selectedPage: number) => {
-    setLoading(true);
-    const params: any = {
-      page: selectedPage + 1,
-    };
-    const query = qs_stringify(params);
-    window.location.href = `/profile/${profile.username}?${query}`;
-  };
-
   return (
     <div className="w-full">
       <div className="flex flex-col">
@@ -129,7 +128,7 @@ export default function UserProfilePage() {
             {textForBG}
           </div>
           <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
-            <div className="flex flex-col z-30">
+            <div className="flex flex-col z-1">
               <div className="flex-1">
                 <div className="flex justify-center">
                   <UserIcon className="w-40 h-40 p-6 rounded-full bg-tonehunt-gray-light mb-5" />

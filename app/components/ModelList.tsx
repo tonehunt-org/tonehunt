@@ -45,7 +45,7 @@ const ModelsListComponent = ({
 }: ModelListType) => {
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle =
-    "px-3 py-1 border border-white/20 hover:border-white/70  rounded-lg relative w-[40px] h-[40px] inline-flex items-center justify-center text-white/60";
+    "px-2 py-0.5 border border-white/20 hover:border-white/70  rounded-lg relative w-[36px] h-[36px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
@@ -112,8 +112,10 @@ const ModelsListComponent = ({
               nextLabel={
                 <ChevronRightIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
               }
-              onPageChange={(event) => handlePageClick(event.selected)}
-              pageRangeDisplayed={2}
+              onPageChange={(event) => {
+                handlePageClick(event.selected);
+              }}
+              pageRangeDisplayed={3}
               pageCount={pageCount}
               marginPagesDisplayed={1}
               previousLabel={
@@ -128,7 +130,7 @@ const ModelsListComponent = ({
               previousLinkClassName={paginationButtonLinkStyle}
               nextClassName="ml-1"
               nextLinkClassName={paginationButtonLinkStyle}
-              disabledClassName="text-gray-600"
+              disabledLinkClassName="text-white/30 border-white/30 hover:border-white/30 cursor-not-allowed"
               activeLinkClassName="font-satoshi-bold bg-white/10 text-black/80"
             />
           </div>
