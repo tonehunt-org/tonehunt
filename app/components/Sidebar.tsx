@@ -1,10 +1,10 @@
 import { StarIcon, UserCircleIcon, UserIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import { map } from "lodash";
 import imgArticle1 from "~/assets/articles/article_1.jpg";
 import imgArticle2 from "~/assets/articles/article_2.jpg";
 import imgArticle3 from "~/assets/articles/article_3.jpg";
+import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import type { Tag } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 
@@ -88,7 +88,7 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
                     title="How to capture your own rig"
                   />
                 </div>
-                <span className="font-satoshi-bold text-sm">How to capture your own rig</span>
+                <span className="font-satoshi-bold text-sm hover:underline">How to capture your own rig</span>
               </div>
             </a>
           </div>
@@ -103,7 +103,7 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
                     title="How to train a model"
                   />
                 </div>
-                <span className="font-satoshi-bold text-sm">How to train a model</span>
+                <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
               </div>
             </a>
           </div>
@@ -113,7 +113,19 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
                 <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
                   <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
                 </div>
-                <span className="font-satoshi-bold text-sm">Download the Neural Amp Modeling Plugin</span>
+                <span className="font-satoshi-bold text-sm hover:underline">
+                  Download the Neural Amp Modeling Plugin
+                </span>
+              </div>
+            </a>
+          </div>
+          <div className="flex-1  pb-3 mb-3">
+            <a href="https://discord.gg/anM9ytZTSu" target="_new">
+              <div className="flex flex-row items-center">
+                <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                  <img className="object-cover w-14 h-14" src={imgDiscord} alt="discord" title="Join our Discord" />
+                </div>
+                <span className="font-satoshi-bold text-sm hover:underline">Join our Discord</span>
               </div>
             </a>
           </div>
