@@ -78,7 +78,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         categoryId: data?.categoryId ? +data?.categoryId : 0,
         tags: data?.tags,
         filecount: +data?.filecount,
-        licenseId: data?.licenseId ? data.licenseId : 1,
+        licenseId: data?.licenseId ? +data.licenseId : 1,
       },
     });
 
