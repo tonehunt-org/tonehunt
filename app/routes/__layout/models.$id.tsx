@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 export default function ModelPage() {
   const data = useLoaderData();
 
-  console.log(data);
+  //console.log(data);
   return (
     <div>
       <h2 className="text-2xl pb-3 font-bold">{data?.model.title}</h2> <hr className="pb-3" />
