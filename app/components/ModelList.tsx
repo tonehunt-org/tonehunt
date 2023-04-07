@@ -7,8 +7,9 @@ import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithFavorites } from "~/services/profile";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
+import ButtonLink from "./ui/ButtonLink";
 
 interface ModelListType {
   data: Model[];
@@ -48,6 +49,12 @@ const ModelsListComponent = ({
     "px-2 py-0.5 border border-white/20 hover:border-white/70  rounded-lg relative w-[36px] h-[36px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
+  const location = useLocation();
+
+  const newestSearchParams = new URLSearchParams(location.search);
+  const popularSearchParams = new URLSearchParams(location.search);
+  newestSearchParams.set("sortBy", "newest");
+  popularSearchParams.set("sortBy", "popular");
 
   return (
     <div>
@@ -56,26 +63,23 @@ const ModelsListComponent = ({
         {showMenu ? (
           <div className="flex-none items-center">
             <div className="flex items-center mt-2">
-              <Button
-                type="button"
-                variant="secondary"
+              <ButtonLink
+                to={`${location.pathname}?${newestSearchParams.toString()}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   selectedSortBy === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
-                onClick={() => (onSortChange ? onSortChange("newest") : null)}
               >
                 NEWEST
-              </Button>
-              <Button
+              </ButtonLink>
+              <ButtonLink
                 type="button"
-                variant="secondary"
+                to={`${location.pathname}?${popularSearchParams.toString()}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   selectedSortBy === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
                 }`}
-                onClick={() => (onSortChange ? onSortChange("popular") : null)}
               >
                 POPULAR
-              </Button>
+              </ButtonLink>
             </div>
           </div>
         ) : null}
