@@ -45,7 +45,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const [tags, categories, licenses] = await Promise.all([
     getTags(),
     db.category.findMany({ where: { NOT: { title: "IR" } } }),
-    db.license.findMany({ where: { active: true } }),
+    db.license.findMany({ where: { active: true }, orderBy: { id: "asc" } }),
   ]);
 
   return json<LoaderData>({
@@ -92,7 +92,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 export default function ModelsNewPage() {
   const data = useLoaderData<LoaderData>();
   const [drag, setDrag] = useState(false);
-  const [showFields, setShowFields] = useState(false);
+  const [showFields, setShowFields] = useState(true);
   const [formValidity, setFormValidity] = useState(false);
   const [fileCount, setFileCount] = useState<number>();
   const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
@@ -269,6 +269,7 @@ export default function ModelsNewPage() {
                   required
                   label="License *"
                   name="licenseId"
+                  showEmptyOption={false}
                   options={data.licenses.map((l) => {
                     return {
                       value: String(l.id),
@@ -302,16 +303,20 @@ export default function ModelsNewPage() {
                 })}
               </div>
             </div>
-            <div className="flex mt-3 font-satoshi-regular text-sm">
-              * Not sure which license to choose? Click{" "}
-              <Link
-                to="/support/licensing"
-                target="_new"
-                className="inline mx-1 hover:underline text-tonehunt-blue-light"
-              >
-                here
-              </Link>{" "}
-              for more information.
+            <div className="flex flex-col mt-3 font-satoshi-regular text-sm">
+              <p className="block">* Not sure which license to choose?</p>
+              <p className="block ml-2">
+                Click
+                <Link
+                  to="/support/licensing"
+                  target="_new"
+                  className="inline mx-1 hover:underline text-tonehunt-blue-light"
+                >
+                  here
+                </Link>
+                {""}
+                for more information.
+              </p>
             </div>
 
             {fileUploadFetcher.data?.path ? (
