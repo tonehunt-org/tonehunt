@@ -49,7 +49,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
   ) : (
     <Popover className="relative">
       <Popover.Button as={Button} variant="primary">
-        Login
+        Login or Sign Up
       </Popover.Button>
       <Popover.Panel className="absolute right-0 mt-2 z-20 bg-zinc-800 border-2 border-white rounded-lg p-5 w-72 shadow-lg">
         <LoginForm redirectTo={`${location.pathname}${location.search}`} />

@@ -12,7 +12,7 @@ import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction = ({ data, location }) => {
   const d = data as LoaderData;
 
   const title = `"${d.search}" Search Results | ToneHunt`;

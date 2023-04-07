@@ -6,7 +6,7 @@ import { getSession } from "~/auth.server";
 import LoginForm from "~/components/LoginForm";
 import Alert from "~/components/ui/Alert";
 
-export const meta: MetaFunction = () => ({
+export const meta: MetaFunction = ({ location }) => ({
   title: "Login | ToneHunt",
   description: "Login to ToneHunt and start uploading your models!",
 
