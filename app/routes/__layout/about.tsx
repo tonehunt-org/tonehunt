@@ -74,19 +74,19 @@ export default function AboutPage() {
 
       <p className="pb-10">
         It is very important to us that we have a place that we can provide an equitable destination for creating the
-        sound that you, me, or anyone is looking for.
+        sound that you, me or anyone is looking for.
       </p>
 
       <h3 className="text-3xl font-satoshi-medium pb-10">Who Is Building ToneHunt</h3>
 
       <p className="pb-10">
-        ToneHunt is and will always be a collaborative effort by many people passionate about music, open source,
-        people, and software. There are many collaborators that are making ToneHunt possible. We will soon have a list
-        here that will include everyone who has ever contributed to ToneHunt.
+        ToneHunt is and will always be a collaborative effort by many people passionate about music, open source, people
+        and software. There are many collaborators that are making ToneHunt possible. We will soon have a list here that
+        will include everyone who has ever contributed to ToneHunt.
       </p>
 
       <p className="pb-10">
-        Since ToneHunt is and open initiative, you can find all the technology used to build the platform in our{" "}
+        Since ToneHunt is an open initiative, you can find all the technology used to build the platform in our{" "}
         <a
           href="https://github.com/scottcorgan/tonehunt"
           className="hover:underline text-tonehunt-blue-light font-satoshi-bold"
