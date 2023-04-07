@@ -13,7 +13,7 @@ const ShareButton = forwardRef(({ onClick, className }: FavoriteButtonProps, ref
       ref={ref}
       type="button"
       variant="secondary"
-      className={`flex items-center text-white/60 hover:border-white hover:bg-transparent hover:text-white ${className}`}
+      className={`flex items-center text-white/90 hover:border-white hover:bg-transparent hover:text-white ${className}`}
       onClick={() => onClick()}
     >
       <LinkIcon className="w-5 h-5 inline-block mr-[6px]" />
