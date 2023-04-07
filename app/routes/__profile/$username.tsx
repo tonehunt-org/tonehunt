@@ -17,7 +17,7 @@ import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
 
-export const meta: MetaFunction<LoaderData> = ({ data }) => {
+export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
 
   const title = `${d.profile?.username}'s Profile | ToneHunt`;
