@@ -17,6 +17,7 @@ export default function DownloadButton({ count, className, modelId, filename }: 
       to={`/models/${modelId}/download`}
       className={className}
       download={filename}
+      prefetch="none"
     >
       <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-[6px]" />
       <span className={twMerge("inline-block text-sm font-satoshi-bold text-[16px]")}>{count}</span>
