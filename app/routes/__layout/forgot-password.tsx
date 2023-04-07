@@ -1,10 +1,16 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import Alert from "~/components/ui/Alert";
 import Button from "~/components/ui/Button";
 import Input from "~/components/ui/Input";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: `Forgot Password | ToneHunt`,
+  };
+};
 
 type ActionData = {
   error?: string;

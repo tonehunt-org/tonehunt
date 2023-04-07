@@ -3,7 +3,7 @@ import FavoriteButton from "~/components/FavoriteButton";
 import DownloadButton from "~/components/DownloadButton";
 import ShareButton from "~/components/ShareButton";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { NotFound } from "./$username";
 import type { Category, Favorite, Model, ModelDownload, Profile } from "@prisma/client";
@@ -15,6 +15,15 @@ import { getSession } from "~/auth.server";
 import { getProfile } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
+
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  const d = data as LoaderData;
+
+  return {
+    title: `${d.model.title} | ToneHunt`,
+    description: `${d.model.title} is a model by ${d.model.profile.username}. ${d.model.description}`,
+  };
+};
 
 type LoaderData = {
   model: Model & {
@@ -133,7 +142,12 @@ export default function ModelDetailPage() {
       <div className="pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
         <div className="flex-grow">
           <h4 className="pb-2">{data.model.ampName}</h4>
-          <p className="text-[22px] opacity-70 pb-[40px] whitespace-pre-line">{data.model.description}</p>
+
+          <p className="text-[22px] opacity-70 pb-8 whitespace-pre-line">{data.model.description}</p>
+
+          <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
+            Uploaded {timeago.format(data.model.createdAt)}
+          </time>
 
           {data.model.tags.length > 0 ? (
             <div>
@@ -166,8 +180,6 @@ export default function ModelDetailPage() {
               </p>
             </div>
           ) : null}
-
-          <span className="opacity-60 text-sm leading-[19px]">Uploaded {timeago.format(data.model.createdAt)}</span>
         </div>
 
         <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">

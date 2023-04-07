@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
@@ -6,15 +6,21 @@ import { getSession } from "~/auth.server";
 import LoginForm from "~/components/LoginForm";
 import Alert from "~/components/ui/Alert";
 
+export const meta: MetaFunction = () => ({
+  title: "Login | ToneHunt",
+  description: "Login to ToneHunt and start uploading your models!",
+});
+
 export type LoginActionData = {
   error?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
+  const url = new URL(request.url);
 
   if (session?.user) {
-    return redirect("/");
+    return redirect(url.searchParams.get("redirectTo") ?? "/");
   }
 
   return json({});

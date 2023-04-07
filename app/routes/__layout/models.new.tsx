@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
@@ -7,7 +7,7 @@ import { toJSON } from "~/utils/form";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/ui/Button";
 import { ArrowUpTrayIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Form, useFetcher, useLoaderData, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
+import { Form, useFetcher, useLoaderData, useNavigate, useNavigation } from "@remix-run/react";
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Loading from "~/components/ui/Loading";
@@ -21,6 +21,13 @@ import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
 import { sortCategories } from "~/utils/categories";
 import { Link } from "@remix-run/react";
+
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  return {
+    title: `New Model | ToneHunt`,
+    description: `Create a new model on ToneHunt`,
+  };
+};
 
 export type ActionData = {
   model?: Model;
@@ -39,7 +46,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const profile = await db.profile.findFirst({ where: { id: session?.user?.id } });
 
   if (!session || !profile) {
-    return redirect("/login");
+    return redirect("/login?redirecTo=/models/new");
   }
 
   const [tags, categories, licenses] = await Promise.all([

@@ -1,5 +1,6 @@
 import { getSession } from "~/auth.server";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import type { User } from "@supabase/supabase-js";
@@ -12,6 +13,13 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import useProfile from "~/hooks/useProfile";
 import type { Model } from "@prisma/client";
 
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  return {
+    title: `My Models | ToneHunt`,
+    description: `A list of my models.`,
+  };
+};
+
 type LoaderData = {
   user: User | null | undefined;
   models: Model[];
@@ -20,6 +28,10 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
   const user = session?.user;
+
+  if (!session) {
+    return redirect("/login?redirectTo=/account/my-models");
+  }
 
   const models = await db.model.findMany({
     where: {
@@ -88,10 +100,12 @@ const MyModelsPage = () => {
               <span className="font-satoshi-bold">Category</span>: {model.category.title}
             </span>
             <span className="block w-full font-satoshi-light text-sm mb-1">
-              <span className="font-satoshi-bold">Created</span>: {timeago.format(new Date(model.createdAt!))}
+              <span className="font-satoshi-bold">Created</span>:{" "}
+              <time dateTime={model.createdAt}>{timeago.format(new Date(model.createdAt!))}</time>
             </span>
             <span className="block w-full font-satoshi-light text-sm mb-1">
-              <span className="font-satoshi-bold">Updated</span>: {timeago.format(new Date(model?.updatedAt!))}
+              <span className="font-satoshi-bold">Updated</span>:{" "}
+              <time dateTime={model.createdAt}>{timeago.format(new Date(model?.updatedAt!))}</time>
             </span>
             <span className="block w-full font-satoshi-light text-sm mb-1">
               <span className="font-satoshi-bold">File</span>: {model.filename}

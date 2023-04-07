@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import type { LoaderFunction, ActionFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react";
 import { getSession } from "~/auth.server";
@@ -7,7 +7,13 @@ import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
 import Input from "~/components/ui/Input";
 import Button from "~/components/ui/Button";
-import { UserIcon } from "@heroicons/react/24/outline";
+
+export const meta: MetaFunction<LoaderData> = ({ data }) => {
+  return {
+    title: `Edit Profile | ToneHunt`,
+    description: `Edit my profile.`,
+  };
+};
 
 type LoaderData = {
   profile: any;
@@ -22,6 +28,10 @@ type ActionData = {
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { session } = await getSession(request);
   const user = session?.user;
+
+  if (!session) {
+    return redirect("/login?redirectTo=/account/profile");
+  }
 
   const profile = await db.profile.findUnique({
     where: {

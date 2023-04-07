@@ -1,18 +1,25 @@
 import { useState } from "react";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import { stringify as qs_stringify } from "qs";
 import { getSession } from "~/auth.server";
 import { getModels } from "~/services/models";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
-import useProfile from "~/hooks/useProfile";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { getProfileWithFavorites } from "~/services/profile";
+
+export const meta: MetaFunction = ({ data }) => {
+  const d = data as LoaderData;
+
+  return {
+    title: `"${d.search}" Search Results | ToneHunt`,
+    description: `List of "${d.search}" models for Neural Amp Modeler.`,
+  };
+};
 
 type LoaderData = {
   models: any;

@@ -19,8 +19,9 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "ToneHunt - Find amps, pedals, and packs for Neural Amp Modeler.",
-  viewport: "width=device-width,initial-scale=1",
+  description: "ToneHunt - Find amps, pedals, and other models for Neural Amp Modeler.",
+  viewport: "width=device-width, initial-scale=1, user-scalable=no",
+  keywords: "ToneHunt, Neural Amp Modeler, NAM, models, guitar, ToneX, guitar tone, plugin",
 });
 
 export type RootLoaderData = {

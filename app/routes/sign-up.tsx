@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
@@ -10,6 +10,11 @@ import Alert from "~/components/ui/Alert";
 import { Link } from "@remix-run/react";
 import type { Counts } from "@prisma/client";
 import { ModelListCountTitle } from "~/components/routes/ModelListPage";
+
+export const meta: MetaFunction = () => ({
+  title: "Sing Up | ToneHunt",
+  description: "Sign Up to ToneHunt and share your models with the world.",
+});
 
 type ActionData = {
   error?: string;
