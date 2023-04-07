@@ -39,7 +39,7 @@ export default function AboutPage() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Neural Amp Modeler (NAM)
+          for the Neural Amp Modeler (NAM)
         </a>
         . We understand how frustrating it can be to search for hours and come up empty-handed. That's why we've created
         an extensive platform to share and find models for NAM.
