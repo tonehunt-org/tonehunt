@@ -77,7 +77,7 @@ export default function AboutPage() {
         sound that you, me, or anyone is looking for.
       </p>
 
-      <h3 className="text-3xl font-satoshi-medium pb-10">Who Built ToneHunt</h3>
+      <h3 className="text-3xl font-satoshi-medium pb-10">Who Is Building ToneHunt</h3>
 
       <p className="pb-10">
         ToneHunt is and will always be a collaborative effort by many people passionate about music, open source,
