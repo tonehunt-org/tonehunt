@@ -69,12 +69,15 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
 
                 <div className="flex-1 flex gap-4 items-center flex-wrap">
                   {model.filecount && model.filecount > 1 ? (
-                    <span className={`font-satoshi-bold uppercase text-xs whitespace-nowrap ${categoryProfile.color}`}>
+                    <Link
+                      to={`/${model.profile.username}/${model.id}`}
+                      className={`font-satoshi-bold uppercase text-xs whitespace-nowrap ${categoryProfile.color} leading-none hover:underline`}
+                    >
                       {model.filecount} models
-                    </span>
+                    </Link>
                   ) : null}
 
-                  <Link to={`/${model.profile.username}`} prefetch="intent">
+                  <Link to={`/${model.profile.username}`} prefetch="intent" className="leading-none">
                     <span className="text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>
@@ -83,7 +86,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   <time
                     // @ts-ignore
                     dateTime={model?.createdAt as string}
-                    className="text-sm font-satoshi-light text-tonehunt-gray-lighter whitespace-nowrap pr-5"
+                    className="text-sm font-satoshi-light text-tonehunt-gray-lighter whitespace-nowrap pr-5 leading-none"
                   >
                     {timeago.format(new Date(model?.createdAt!))}
                   </time>
