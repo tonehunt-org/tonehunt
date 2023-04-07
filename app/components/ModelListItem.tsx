@@ -69,7 +69,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
 
                 <div className="flex-1 flex gap-4 items-center">
                   {model.filecount && model.filecount > 1 ? (
-                    <span className={`font-satoshi-bold uppercase text-xs ${categoryProfile.color}`}>
+                    <span className={`font-satoshi-bold uppercase text-xs whitespace-nowrap ${categoryProfile.color}`}>
                       {model.filecount} models
                     </span>
                   ) : null}
@@ -79,10 +79,11 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.profile.username}
                     </span>
                   </Link>
+
                   <time
                     // @ts-ignore
                     dateTime={model?.createdAt as string}
-                    className="text-sm font-satoshi-light text-tonehunt-gray-lighter"
+                    className="text-sm font-satoshi-light text-tonehunt-gray-lighter whitespace-nowrap pr-5"
                   >
                     {timeago.format(new Date(model?.createdAt!))}
                   </time>
