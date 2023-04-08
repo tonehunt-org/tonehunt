@@ -34,11 +34,11 @@ export default function Select({
 
   const select = (
     <div className="relative mb-3">
-      <ChevronUpDownIcon className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2" />
+      <ChevronUpDownIcon className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-white z-20" />
 
       <select
         name={name}
-        className={twMerge("appearance-none relative", inputClassNames, className, "pr-9")}
+        className={twMerge("appearance-none relative", inputClassNames, className, "pr-9", "bg-tonehunt-gray-dark")}
         style={{ borderRadius: "27px", marginBottom: 0 }}
         required={required}
         value={defaultSelected ?? undefined}
