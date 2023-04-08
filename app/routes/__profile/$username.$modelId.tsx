@@ -102,11 +102,11 @@ export default function ModelDetailPage() {
 
   return (
     <section className="w-full">
-      <header className="pt-[80px] text-center relative">
+      <header className="pt-[40px] lg:pt-[80px] text-center relative">
         <div className="relative z-10">
-          <div className="pb-[40px]">
+          <div className="pb-[20px] lg:pb-[40px]">
             <img
-              className="m-auto w-32 h-32"
+              className="m-auto w-20 h-20 lg:w-32 lg:h-32"
               src={getCategoryProfile(data.model.category.slug, data.model.filecount ?? undefined).icon}
               alt={data.model.category.title}
             />
@@ -117,9 +117,11 @@ export default function ModelDetailPage() {
               ? `${data.model.filecount} ${data.model.category.pluralTitle}`
               : data.model.category.title}
           </h4>
-          <h3 className="font-satoshi-bold text-[47px] pb-8 max-w-[990px] m-auto">{data.model.title}</h3>
+          <h3 className="font-satoshi-bold text-2xl lg:text-[47px] pb-8 max-w-[990px] m-auto px-4 leading-tight">
+            {data.model.title}
+          </h3>
 
-          <div className="flex gap-[12px] justify-center pb-16">
+          <div className="flex gap-[12px] justify-center pb-8 lg:pb-16">
             <DownloadButton
               count={data.model.downloads.length}
               className="bg-tonehunt-gray-darker"
@@ -153,11 +155,11 @@ export default function ModelDetailPage() {
         </div>
       </header>
 
-      <div className="pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
+      <div className="pt-8 lg:pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
         <div className="flex-grow">
           <h4 className="pb-2">{data.model.ampName}</h4>
 
-          <p className="text-[22px] opacity-70 pb-8 whitespace-pre-line">{data.model.description}</p>
+          <p className="text-[18px] lg:text-[22px] opacity-70 pb-8 whitespace-pre-line">{data.model.description}</p>
 
           <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
             Uploaded {timeago.format(data.model.createdAt)}
