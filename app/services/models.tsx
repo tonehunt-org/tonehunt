@@ -18,6 +18,8 @@ interface getModelsType {
 export const getModels = async (params: getModelsType) => {
   const tagsScala = params.tags && params.tags !== "" ? split(params.tags, ",") : null;
 
+  const tsquerySpecialChars = /[()|&:*!]/g;
+
   const sortParam = params.sortBy ?? "createdAt";
   const sortDirection = params.sortDirection ?? "desc";
 
@@ -28,6 +30,8 @@ export const getModels = async (params: getModelsType) => {
   };
 
   const sort = sortParam === "popular" || params.search ? orderByPopular : orderByParam;
+
+  const search = params.search?.replace(tsquerySpecialChars, " ").trim().split(/\s+/).join(" | ");
 
   const models = await db.$transaction([
     db.model.count({
@@ -48,8 +52,7 @@ export const getModels = async (params: getModelsType) => {
         }),
         ...(params.search && {
           title: {
-            contains: params.search,
-            mode: "insensitive",
+            search,
           },
         }),
         ...(tagsScala && {
@@ -79,10 +82,10 @@ export const getModels = async (params: getModelsType) => {
           OR: [
             {
               title: {
-                search: params.search?.replace(" ", " & "),
+                search,
               },
             },
-            { description: { search: params.search.replace(" ", " | ") } },
+            { description: { search } },
           ],
         }),
         ...(tagsScala && {
