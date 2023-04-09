@@ -51,9 +51,21 @@ export const getModels = async (params: getModelsType) => {
           profileId: params.profileId,
         }),
         ...(params.search && {
-          title: {
-            search,
-          },
+          OR: [
+            {
+              title: {
+                search,
+              },
+            },
+            { description: { search } },
+            {
+              profile: {
+                username: {
+                  search,
+                },
+              },
+            },
+          ],
         }),
         ...(tagsScala && {
           tags: {
@@ -86,6 +98,13 @@ export const getModels = async (params: getModelsType) => {
               },
             },
             { description: { search } },
+            {
+              profile: {
+                username: {
+                  search,
+                },
+              },
+            },
           ],
         }),
         ...(tagsScala && {
