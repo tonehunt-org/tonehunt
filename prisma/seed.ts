@@ -1,193 +1,41 @@
 import { PrismaClient } from "@prisma/client";
 
+import { Categories } from "./seeders/categories";
+import { Licenses } from "./seeders/licenses";
+import { Tags } from "./seeders/tags";
+import { Models } from "./seeders/models";
+
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Start seeding...");
 
-  // CREATE SAMPLE CATEGORIES
-  for (const c of sampleCategories) {
+  // CREATE CATEGORIES
+  for (const c of Categories) {
     const category = await prisma.category.create({ data: c });
     console.log(`Created category with id: ${category.id}`);
   }
 
-  // CREATE SAMPLE MODELS
-  for (const m of sampleModels) {
+  // CREATE LICENSES
+  for (const l of Licenses) {
+    const license = await prisma.license.create({ data: l });
+    console.log(`Created license with id: ${license.id}`);
+  }
+
+  // CREATE TAGS
+  for (const t of Tags) {
+    const tag = await prisma.tag.create({ data: t });
+    console.log(`Created tag with id: ${tag.id}`);
+  }
+
+  // CREATE MODELS
+  for (const m of Models) {
     const model = await prisma.model.create({ data: m });
     console.log(`Created model with id: ${model.id}`);
   }
+
   console.log(`Seeding finished.`);
 }
-
-const sampleCategories = [
-  {
-    id: 1,
-    title: "Amps",
-    slug: "amps",
-    icon: "icon_amp.svg",
-    order: 1,
-  },
-  {
-    id: 2,
-    title: "Packs",
-    slug: "packs",
-    icon: "icon_pack.svg",
-    order: 2,
-  },
-  {
-    id: 3,
-    title: "Pedals",
-    slug: "pedals",
-    icon: "icon_pedal.svg",
-    order: 3,
-  },
-  {
-    id: 4,
-    title: "IRs",
-    slug: "irs",
-    icon: "icon_ir.svg",
-    order: 4,
-  },
-];
-
-/*
-    FOR profileId, MAKE SURE TO USE THE ID OF AN EXISTING USER IN auth.user AND THAT A RECORD
-    EXIST IN PROFILE TABLE WITH THE SAME ID. 
-*/
-const sampleModels = [
-  {
-    title: "Rectifier 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Mesa",
-    modelPath: "Clean Channel",
-    filename: "file_1.nam",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 1,
-    tags: "high gain, metal, mesa, rectifier",
-  },
-  {
-    title: "Rectifier 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Mesa",
-    modelPath: "Crunch Channel",
-    filename: "file_2.nam",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 1,
-    tags: "high gain, metal, mesa, rectifier, crunch",
-  },
-  {
-    title: "Dual Rectifier Collection",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Mesa",
-    modelPath: "Lead Channel",
-    filename: "file_3.zip",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 2,
-    tags: "high gain, metal, mesa, rectifier, lead",
-  },
-  {
-    title: "EVH 5150 Clean",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "EVH",
-    modelPath: "Clean Channel",
-    filename: "file_4.nam",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 1,
-    tags: "clean, metal, evh, 5150",
-  },
-  {
-    title: "EVH 5150 Dist 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "EVH",
-    modelPath: "Dist 1 Channel",
-    filename: "file_5.nam",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 1,
-    tags: "crunch, metal, evh, 5150",
-  },
-  {
-    title: "EVH 5150 Collection",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "EVH",
-    modelPath: "Dsit 2 Channel",
-    filename: "file_6.zip",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 2,
-    tags: "crunch, metal, evh, 5150",
-  },
-  {
-    title: "Orange Dark Terror",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Orange",
-    modelPath: "Crunch Channel",
-    filename: "file_7.nam",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 1,
-    tags: "crunch, metal, rock, orange, dark terror",
-  },
-  {
-    title: "Orange Tiny Terror",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Orange",
-    modelPath: "Crunch Channel",
-    filename: "file_8.nam",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 1,
-    tags: "crunch, metal, rock, orange, tiny terror",
-  },
-  {
-    title: "Orange Rockverb",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Orange",
-    modelPath: "Crunch Channel",
-    filename: "file_9.nam",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 1,
-    tags: "crunch, metal, rock, orange, rockverb",
-  },
-  {
-    title: "Fender Deluxe",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Fender",
-    modelPath: "Crunch Channel",
-    filename: "file_10.nam",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 1,
-    tags: "clean, rock, pop, fender, deluxe",
-  },
-  {
-    title: "Ibanez Tube Screamer",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Ibanez",
-    modelPath: "Boosted",
-    filename: "file_10.nam",
-    profileId: "c33120be-fd15-43ae-ad8b-7f293b54dc4e",
-    categoryId: 3,
-    tags: "pedals, tube screamer, boost",
-  },
-  {
-    title: "Boss Blues Driver",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mollis ex ut lacus scelerisque commodo.",
-    ampName: "Boss",
-    modelPath: "BD-2",
-    filename: "file_10.nam",
-    profileId: "650cbb55-776b-4a79-a2b3-ea9e085e6324",
-    categoryId: 3,
-    tags: "pedals, tube screamer, boost",
-  },
-];
 
 main()
   .then(async () => {

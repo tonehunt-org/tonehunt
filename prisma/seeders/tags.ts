@@ -1,19 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-async function main() {
-  console.log("Start seeding...");
-
-  // CREATE SAMPLE CATEGORIES
-  for (const c of sampleTags) {
-    const tag = await prisma.tag.create({ data: c });
-    console.log(`Created tag with id: ${tag.id}`);
-  }
-  console.log(`Seeding finished.`);
-}
-
-const sampleTags = [
+export const Tags = [
   { name: "rock", group: "genre" },
   { name: "metal", group: "genre" },
   { name: "country", group: "genre" },
@@ -63,13 +48,3 @@ const sampleTags = [
   { name: "2010s", group: "era" },
   { name: "2020s", group: "era" },
 ];
-
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
