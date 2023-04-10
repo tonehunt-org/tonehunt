@@ -64,8 +64,8 @@ export default function FavoriteButton({
       </Button>
 
       {/* TODO: refactor into component */}
-      <PopperUnstyled open={Boolean(anchorEl)} anchorEl={anchorEl} placement="top">
-        <div className=" bg-tonehunt-gray-darker text-white px-3 py-2 z-50 rounded-full relative top-1 border border-white/10">
+      <PopperUnstyled open={Boolean(anchorEl)} anchorEl={anchorEl} placement="top" className="z-50">
+        <div className=" bg-tonehunt-gray-darker text-white px-3 py-2 rounded-full relative top-1 border border-white/10">
           You must be logged in to favorite a model
         </div>
       </PopperUnstyled>
