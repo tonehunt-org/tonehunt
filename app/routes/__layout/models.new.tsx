@@ -72,7 +72,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 
   try {
     const formData = await request.formData();
-    const data = toJSON(formData);
+    const data = toJSON<Model>(formData);
 
     const model = await db.model.create({
       data: {
@@ -84,7 +84,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         profileId: profile.id,
         categoryId: data?.categoryId ? +data?.categoryId : 0,
         tags: data?.tags,
-        filecount: +data?.filecount,
+        filecount: +(data?.filecount ?? 0),
         licenseId: data?.licenseId ? +data.licenseId : 1,
       },
     });
@@ -147,7 +147,7 @@ export default function ModelsNewPage() {
       files = asArray(files);
 
       // TODO: this needs to be more robust, but works for now
-      const hasInvalidFiles = files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
+      const hasInvalidFiles = files.some((file) => !file.type.match(/audio.*wav/) && !file.name.includes(".nam"));
 
       if (hasInvalidFiles) {
         alert("Only NAM models and IR wav files are allowed");
