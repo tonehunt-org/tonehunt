@@ -31,10 +31,37 @@ export const getModels = async (params: getModelsType) => {
 
   const sort = sortParam === "popular" || params.search ? orderByPopular : orderByParam;
 
-  const search = params.search?.replace(tsquerySpecialChars, " ").trim().split(/\s+/).join(" | ");
+  const searchList = params.search?.replace(tsquerySpecialChars, " ").trim().split(/\s+/);
+  const search = searchList?.join(" | ");
+  // const contains = searchList?.map((term) => {
+  //   return [{ title: term }, { profile: { username: { contains: term } } }];
+  // });
+
+  const titleSearch =
+    searchList?.map((term) => {
+      return {
+        title: {
+          contains: term,
+          mode: "insensitive",
+        },
+      };
+    }) ?? [];
+
+  const usernameSearch =
+    searchList?.map((term) => {
+      return {
+        profile: {
+          username: {
+            contains: term,
+            mode: "insensitive",
+          },
+        },
+      };
+    }) ?? [];
 
   const models = await db.$transaction([
     db.model.count({
+      // @ts-ignore - TODO: fix
       where: {
         private: false,
         active: true,
@@ -51,21 +78,7 @@ export const getModels = async (params: getModelsType) => {
           profileId: params.profileId,
         }),
         ...(params.search && {
-          OR: [
-            {
-              title: {
-                search,
-              },
-            },
-            { description: { search } },
-            {
-              profile: {
-                username: {
-                  search,
-                },
-              },
-            },
-          ],
+          OR: [...usernameSearch, ...titleSearch, { description: { search } }],
         }),
         ...(tagsScala && {
           tags: {
@@ -75,6 +88,7 @@ export const getModels = async (params: getModelsType) => {
       },
     }),
     db.model.findMany({
+      // @ts-ignore - TODO: fix
       where: {
         private: false,
         active: true,
@@ -91,21 +105,7 @@ export const getModels = async (params: getModelsType) => {
           profileId: params.profileId,
         }),
         ...(params.search && {
-          OR: [
-            {
-              title: {
-                search,
-              },
-            },
-            { description: { search } },
-            {
-              profile: {
-                username: {
-                  search,
-                },
-              },
-            },
-          ],
+          OR: [...usernameSearch, ...titleSearch, { description: { search } }],
         }),
         ...(tagsScala && {
           tags: {
@@ -154,6 +154,7 @@ export const getModels = async (params: getModelsType) => {
           },
         },
       },
+      // @ts-ignore - TODO: fix
       orderBy: sort,
       skip: params.next ?? 0,
       take: params.limit ?? 10,
