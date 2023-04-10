@@ -27,7 +27,7 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
     ? `#${searchParams.get("tags")} Models | ToneHunt`
     : searchParams.get("filter")
     ? `${startCase(searchParams.get("filter") as string)} Models | ToneHunt`
-    : "All Models | ToneHunt";
+    : "ToneHunt | Sound Better!";
 
   const description = `Explore over ${total} Neural Amp Modeler models, including ${
     d.counts.find((count) => count.name === "amps")?.count
