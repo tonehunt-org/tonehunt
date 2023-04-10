@@ -4,8 +4,9 @@ import { useFetcher } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import type { ButtonProps } from "~/components/ui/Button";
 import Button from "~/components/ui/Button";
-import PopperUnstyled, { PopperPlacementType } from "@mui/base/PopperUnstyled";
+import PopperUnstyled from "@mui/base/PopperUnstyled";
 import { useState } from "react";
+import { formatNumber } from "~/utils/number";
 
 const starIconClasses = "w-5 h-5 inline-block mr-[6px]";
 
@@ -59,7 +60,7 @@ export default function FavoriteButton({
         disabled={!!disabledReason}
       >
         {favorited ? <StarIconSolid className={starIconClasses} /> : <StarIcon className={starIconClasses} />}
-        <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>
+        <span className="inline-block text-sm font-satoshi-bold text-[16px]">{formatNumber(count)}</span>
       </Button>
 
       {/* TODO: refactor into component */}
