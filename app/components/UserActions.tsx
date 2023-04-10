@@ -28,6 +28,21 @@ export default function UserActions({ user, username }: UserActionsProps) {
               New Model
             </Link>
           </li>
+          <li className="inline lg:hidden">
+            <Link to="/account/my-models" prefetch="intent">
+              My Models
+            </Link>
+          </li>
+          <li className="inline lg:hidden">
+            <Link to="/account/my-favorites" prefetch="intent">
+              My Favorites
+            </Link>
+          </li>
+          <li className="inline lg:hidden">
+            <Link to={`/${username}`} prefetch="intent">
+              View Profile
+            </Link>
+          </li>
           <li>
             <Link to="/account/profile" prefetch="intent">
               Edit Profile

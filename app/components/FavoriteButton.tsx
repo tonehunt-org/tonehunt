@@ -4,8 +4,9 @@ import { useFetcher } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import type { ButtonProps } from "~/components/ui/Button";
 import Button from "~/components/ui/Button";
-import PopperUnstyled, { PopperPlacementType } from "@mui/base/PopperUnstyled";
+import PopperUnstyled from "@mui/base/PopperUnstyled";
 import { useState } from "react";
+import { formatNumber } from "~/utils/number";
 
 const starIconClasses = "w-5 h-5 inline-block mr-[6px]";
 
@@ -59,12 +60,12 @@ export default function FavoriteButton({
         disabled={!!disabledReason}
       >
         {favorited ? <StarIconSolid className={starIconClasses} /> : <StarIcon className={starIconClasses} />}
-        <span className="inline-block text-sm font-satoshi-bold text-[16px]">{count}</span>
+        <span className="inline-block text-sm font-satoshi-bold text-[16px]">{formatNumber(count)}</span>
       </Button>
 
       {/* TODO: refactor into component */}
-      <PopperUnstyled open={Boolean(anchorEl)} anchorEl={anchorEl} placement="top">
-        <div className=" bg-tonehunt-gray-darker text-white px-3 py-2 z-50 rounded-full relative top-1 border border-white/10">
+      <PopperUnstyled open={Boolean(anchorEl)} anchorEl={anchorEl} placement="top" className="z-50">
+        <div className=" bg-tonehunt-gray-darker text-white px-3 py-2 rounded-full relative top-1 border border-white/10">
           You must be logged in to favorite a model
         </div>
       </PopperUnstyled>

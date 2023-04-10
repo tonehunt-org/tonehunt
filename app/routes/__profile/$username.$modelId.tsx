@@ -207,7 +207,7 @@ export default function ModelDetailPage() {
         </div>
 
         <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">
-          <div className="border border-white/20 rounded-2xl p-4 text-center">
+          <div className="border border-white/20 rounded-2xl p-4 text-center sticky top-5">
             <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
             <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
 

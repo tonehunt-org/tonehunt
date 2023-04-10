@@ -12,6 +12,7 @@ import type { Counts } from "@prisma/client";
 import { getCategoryProfile } from "~/services/categories";
 import { twMerge } from "tailwind-merge";
 import { sortCategories } from "~/utils/categories";
+import { formatNumber } from "~/utils/number";
 
 // THE AMOUNT OF MODELS PER PAGE
 export const MODELS_LIMIT = 20;
@@ -178,9 +179,9 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
 
   return (
     <ModelListTitle className={className}>
-      Explore over {total} models, including{" "}
+      Explore over {formatNumber(total)} models, including{" "}
       <Link prefetch="intent" to="/?filter=amp" className="border-tonehunt-green border-b-8 hover:text-tonehunt-green">
-        {counts.find((count) => count.name === "amps")?.count}
+        {formatNumber(counts.find((count) => count.name === "amps")?.count ?? 0)}
       </Link>{" "}
       amps, and{" "}
       <Link
@@ -188,7 +189,7 @@ export const ModelListCountTitle = ({ counts, className }: { className?: string;
         to="/?filter=pedal"
         className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
       >
-        {counts.find((count) => count.name === "pedals")?.count}
+        {formatNumber(counts.find((count) => count.name === "pedals")?.count ?? 0)}
       </Link>{" "}
       pedals.
     </ModelListTitle>
