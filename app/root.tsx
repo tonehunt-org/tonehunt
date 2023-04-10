@@ -23,7 +23,8 @@ export const meta: MetaFunction = ({ data }) => ({
   charset: "utf-8",
   description: "ToneHunt - Find amps, pedals, and other models for Neural Amp Modeler.",
   viewport: "width=device-width, initial-scale=1, user-scalable=no",
-  keywords: "ToneHunt, Neural Amp Modeler, NAM, models, guitar, ToneX, guitar tone, plugin",
+  keywords:
+    "ToneHunt, Neural Amp Modeler, NAM, models, guitar, ToneX, guitar tone, plugin, peavey, mesa, dumble, fender, vox, high gain, low gain, tone",
 
   "og:site_name": "ToneHunt",
   "og:type": "article",
