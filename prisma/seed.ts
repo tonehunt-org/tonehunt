@@ -11,28 +11,64 @@ async function main() {
   console.log("Start seeding...");
 
   // CREATE CATEGORIES
-  for (const c of Categories) {
-    const category = await prisma.category.create({ data: c });
-    console.log(`Created category with id: ${category.id}`);
-  }
+  await Promise.all(
+    Categories.map(async (c) => {
+      const category = await prisma.category.upsert({
+        where: { id: c.id },
+        update: {},
+        create: c,
+      });
+      console.log(`Created category with id: ${category.id}`);
+    })
+  );
 
   // CREATE LICENSES
-  for (const l of Licenses) {
-    const license = await prisma.license.create({ data: l });
-    console.log(`Created license with id: ${license.id}`);
-  }
+  await Promise.all(
+    Licenses.map(async (l) => {
+      const license = await prisma.license.upsert({
+        where: { id: l.id ?? 0 },
+        update: {},
+        create: l,
+      });
+      console.log(`Created license with id: ${license.id}`);
+    })
+  );
 
   // CREATE TAGS
-  for (const t of Tags) {
-    const tag = await prisma.tag.create({ data: t });
-    console.log(`Created tag with id: ${tag.id}`);
-  }
+  await Promise.all(
+    Tags.map(async (t) => {
+      const tag = await prisma.tag.upsert({
+        where: { id: 0 },
+        update: {},
+        create: t,
+      });
+      console.log(`Created tag with id: ${tag.id}`);
+    })
+  );
+
+  // CREATE PROFILES
+  await Promise.all(
+    Models.map(async ({ profileId }) => {
+      const profile = await prisma.profile.upsert({
+        where: { id: profileId },
+        update: {},
+        create: {
+          id: profileId,
+        },
+      });
+      console.log(`Created profile with id: ${profile.id}`);
+    })
+  );
 
   // CREATE MODELS
-  for (const m of Models) {
-    const model = await prisma.model.create({ data: m });
-    console.log(`Created model with id: ${model.id}`);
-  }
+  await Promise.all(
+    Models.map(async (m) => {
+      const model = await prisma.model.create({
+        data: m,
+      });
+      console.log(`Created model with id: ${model.id}`);
+    })
+  );
 
   console.log(`Seeding finished.`);
 }
