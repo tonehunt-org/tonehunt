@@ -3,7 +3,7 @@ import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
 
@@ -14,14 +14,18 @@ import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
+import type { ProfileWithFollows } from "~/services/profile";
+import { getProfileWithFollows } from "~/services/profile";
+import Button from "~/components/ui/Button";
+import FollowButton from "~/components/FollowButton";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
 
-  const title = `${d.profile?.username}'s Profile | ToneHunt`;
-  const description = `${d.profile?.username}'s models include ${d.modelList.models[0]?.title} and ${d.modelList.models[1]?.title}. ${d.profile?.bio}`;
+  const title = d.profile ? `${d.profile?.username}'s Profile | ToneHunt` : "Not Found | ToneHunt";
+  const description = d.profile
+    ? `${d.profile?.username}'s models include ${d.modelList.models[0]?.title} and ${d.modelList.models[1]?.title}. ${d.profile?.bio}`
+    : "Not Found";
 
   return {
     title,
@@ -40,8 +44,18 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
 
 export type LoaderData = {
   user?: User | null | undefined;
-  profile?: Profile | null | undefined;
-  profileWithFavorites: ProfileWithFavorites | null;
+  profile?: ProfileWithFollows | null | undefined;
+  sessionProfile:
+    | (Profile & {
+        favorites: {
+          id: number;
+          modelId: string;
+        }[];
+        following: {
+          targetId: string;
+        }[];
+      })
+    | null;
   modelList: {
     models: any;
     total: number;
@@ -59,15 +73,31 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   if (!page || page === 0) page = 1;
   const offset = (page - 1) * MODELS_LIMIT;
 
-  const profileReq = params.username
-    ? await db.profile.findUnique({
-        where: {
-          username: params.username,
+  const sessionProfileReq = db.profile.findFirst({
+    where: { id: session?.user.id },
+    include: {
+      favorites: {
+        select: {
+          id: true,
+          modelId: true,
         },
-      })
-    : Promise.resolve(null);
+      },
+      following: {
+        select: {
+          targetId: true,
+        },
+        where: {
+          deleted: false,
+          active: true,
+        },
+      },
+    },
+  });
 
-  const [profileWithFavorites, profile] = await Promise.all([getProfileWithFavorites(session), profileReq]);
+  const [sessionProfile, profile] = await Promise.all([
+    sessionProfileReq,
+    getProfileWithFollows(params.username as string),
+  ]);
 
   // GET MODELS
   const models = profile
@@ -81,7 +111,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     {
       user,
       profile,
-      profileWithFavorites,
+      sessionProfile,
       modelList: {
         models: models.data,
         total: models.total,
@@ -89,6 +119,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       },
     },
     {
+      status: !profile ? 404 : 200,
       headers: {
         ...DEFAULT_CACHE_HEADER,
       },
@@ -120,10 +151,10 @@ export const NotFound = ({ children }: PropsWithChildren) => (
 );
 
 export default function UserProfilePage() {
-  const data = useLoaderData();
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const data = useLoaderData<LoaderData>();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handlePageClick = (selectedPage: number) => {
     setLoading(true);
@@ -132,13 +163,13 @@ export default function UserProfilePage() {
   };
 
   if (data.profile === null) {
-    return <NotFound>User not found</NotFound>;
+    return <NotFound>Not Found</NotFound>;
   }
 
-  const { user, profile, modelList } = data;
+  const arrayLength = Math.floor(5000 / (data.profile?.username?.length ?? 1 * 10));
+  const textForBG = [...new Array(arrayLength)].map(() => data.profile?.username ?? "");
 
-  const arrayLength = Math.floor(5000 / (profile.username.length * 10));
-  const textForBG = [...new Array(arrayLength)].map(() => profile.username);
+  console.log("data.sessionProfile?.following", data.sessionProfile?.following);
 
   return (
     <div className="w-full">
@@ -151,30 +182,42 @@ export default function UserProfilePage() {
             <div className="flex flex-col z-1">
               <div className="flex-1">
                 <div className="flex justify-center">
-                  <UserIcon className="w-40 h-40 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
+                  <UserIcon className="w-32 h-32 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
                 </div>
               </div>
               <div className="flex-1">
                 <div className="flex justify-center">
-                  <h1 className="text-5xl font-satoshi-bold mb-5">{profile.username}</h1>
+                  <h1 className="text-5xl font-satoshi-bold mb-6">{data.profile?.username}</h1>
                 </div>
-                <div className="flex justify-center">
-                  <span className="text-lg font-satoshi-regular text-tonehunt-gray-lighter">
-                    {profile.bio ?? "No description available"}
+
+                <div className="flex justify-center mb-6">
+                  <span className="text-xl font-satoshi-regular text-tonehunt-gray-lighter">
+                    {data.profile?.bio ?? ""}
                   </span>
                 </div>
-                {/* LOGIC NOT IN PLACE YET. LEAVING FOR REFERENCE */}
-                {/* <div className="flex justify-center flex-row">
+
+                <div className="flex justify-center flex-row mb-6 gap-6">
                   <div>
-                    <span className="text-lg font-satoshi-regular mb-5">241 Followers</span>
+                    <span className="font-satoshi-bold text-tonehunt-gray-lighter">
+                      {data.profile?.followers.length} {data.profile?.followers.length === 1 ? `Follower` : `Followers`}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-lg font-satoshi-regular mb-5">241 Following</span>
+                    <span className="font-satoshi-bold text-tonehunt-gray-lighter">
+                      {data.profile?.following.length} Following
+                    </span>
                   </div>
                 </div>
-                <div className="flex justify-center">
-                  <h1 className="text-3xl font-satoshi-bold">+ FOLLOW BUTTON</h1>
-                </div> */}
+
+                {data.profile?.username ? (
+                  <FollowButton
+                    profileId={data.profile.id}
+                    profileUsername={data.profile.username}
+                    isFollowing={
+                      !!data.sessionProfile?.following.find((following) => following.targetId === data.profile?.id)
+                    }
+                  />
+                ) : null}
               </div>
             </div>
           </div>
@@ -190,15 +233,15 @@ export default function UserProfilePage() {
                 ) : null}
                 {!loading ? (
                   <ModelsListComponent
-                    data={modelList.models}
-                    total={modelList.total}
-                    currentPage={modelList.page}
+                    data={data.modelList.models}
+                    total={data.modelList.total}
+                    currentPage={data.modelList.page}
                     limit={MODELS_LIMIT}
                     handlePageClick={handlePageClick}
                     showMenu={false}
                     showFilters={false}
-                    user={user}
-                    profile={data.profileWithFavorites}
+                    user={data.user}
+                    profile={data.sessionProfile}
                   />
                 ) : null}
               </div>
