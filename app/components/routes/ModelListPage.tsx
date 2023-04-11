@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useLoaderData, useNavigate, useNavigation, useSearchParams } from "@remix-run/react";
+import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { find } from "lodash";
 import { stringify as qs_stringify } from "qs";
 
@@ -9,7 +9,6 @@ import type { SelectOption } from "~/components/ui/Select";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import type { Counts } from "@prisma/client";
-import { getCategoryProfile } from "~/services/categories";
 import { twMerge } from "tailwind-merge";
 import { sortCategories } from "~/utils/categories";
 import { formatNumber } from "~/utils/number";

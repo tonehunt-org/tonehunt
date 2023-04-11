@@ -8,6 +8,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithFavorites } from "~/services/profile";
 import { useLocation } from "@remix-run/react";
 import ButtonLink from "./ui/ButtonLink";
+import { sortBy } from "lodash";
+import Button from "./ui/Button";
 
 interface ModelListType {
   data: Model[];
@@ -20,7 +22,7 @@ interface ModelListType {
   setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
   showFilters?: boolean;
   showMenu?: boolean;
-  selectedSortBy?: string;
+  selectedSortBy?: "newest" | "popular" | "following";
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
   profile: ProfileWithFavorites | null;
@@ -37,7 +39,7 @@ const ModelsListComponent = ({
   setSelectedFilter = undefined,
   showFilters = true,
   showMenu = true,
-  selectedSortBy = "newest",
+  selectedSortBy = "following",
   onSortChange = undefined,
   user = null,
   profile,
@@ -49,18 +51,29 @@ const ModelsListComponent = ({
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
   const location = useLocation();
 
+  const followSearchParams = new URLSearchParams(location.search);
   const newestSearchParams = new URLSearchParams(location.search);
   const popularSearchParams = new URLSearchParams(location.search);
+
+  followSearchParams.delete("sortBy");
   newestSearchParams.set("sortBy", "newest");
   popularSearchParams.set("sortBy", "popular");
 
   return (
     <div>
-      <div className="flex mb-2">
+      <div className="flex mb-2 lg:flex-nowrap flex-wrap gap-5">
         {/* SORT AREA */}
         {showMenu ? (
           <div className="flex-none items-center">
             <div className="flex items-center mt-2">
+              <ButtonLink
+                to={`${location.pathname}?${followSearchParams.toString()}`}
+                className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                  selectedSortBy === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
+                }`}
+              >
+                FOLLOWING
+              </ButtonLink>
               <ButtonLink
                 to={`${location.pathname}?${newestSearchParams.toString()}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
@@ -84,13 +97,14 @@ const ModelsListComponent = ({
 
         {/* CATEGORIES AREA */}
         {showFilters ? (
-          <div className="flex-grow">
-            <div className="flex justify-end">
+          <div className="flex-grow flex justify-end items-center">
+            <div className="w-full sm:w-auto">
               <Select
                 options={filterOptions}
                 onChange={setSelectedFilter || undefined}
                 defaultSelected={selectedFilter ?? ""}
                 showEmptyOption={false}
+                fullWidth
               />
             </div>
           </div>
@@ -99,7 +113,29 @@ const ModelsListComponent = ({
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {data.length === 0 ? <span>No results</span> : null}
+        {data.length === 0 ? (
+          selectedSortBy === "following" ? (
+            <div className="w-full max-w-2xltext-center flex flex-col gap-10 relative">
+              <div className="z-0 relative">
+                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-50 mb-5" />
+                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-20 mb-5" />
+                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-10 mb-5" />
+                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-5 mb-5" />
+              </div>
+
+              <div className="absolute top-[100px] left-1/2 z-10 -translate-x-1/2 text-center ">
+                <div className="text-xl mb-10">You are not yet following anyone.</div>
+                <div>
+                  <ButtonLink to={`${location.pathname}?${popularSearchParams.toString()}`} variant="button-primary">
+                    Find interesting users to follow
+                  </ButtonLink>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <span>No results</span>
+          )
+        ) : null}
         {data.length > 0
           ? data.map((model: any) => <ModelListItem key={model.id} profile={profile} model={model} />)
           : null}

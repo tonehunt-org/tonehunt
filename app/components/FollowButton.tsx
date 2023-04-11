@@ -20,8 +20,8 @@ export default function FollowButton({
 
   return isFollowing ? (
     <followFetcher.Form method="post" action={`/${profileUsername}/unfollow`}>
-      <Button variant="primary-alt" className="mx-auto block" {...buttonProps} loading={loading}>
-        + Unfollow {profileUsername}
+      <Button variant="primary-alt" className="mx-auto block " {...buttonProps} loading={loading}>
+        Unfollow
       </Button>
     </followFetcher.Form>
   ) : (

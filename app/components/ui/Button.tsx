@@ -14,7 +14,7 @@ export const base =
   "relative px-5 py-3 font-satoshi-bold rounded-full text-[rgba(255,255,255,1)] appearance-none focus:ring-2 focus:outline-none focus:ring-bg-tonehunt-blue-medium";
 export const primaryClassNames = twMerge(
   base,
-  "bg-tonehunt-blue-dark  text-center hover:bg-tonehunt-blue-medium focus:bg-tonehunt-blue-medium"
+  "bg-tonehunt-blue-dark  text-center focus:bg-tonehunt-blue-medium hover:bg-tonehunt-blue-medium"
 );
 export const primaryAltClassNames = twMerge(base, "bg-white/95 text-black hover:bg-white active:bg-white/90 ");
 export const secondaryClassNames = twMerge(
