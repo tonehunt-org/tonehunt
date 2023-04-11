@@ -7,8 +7,8 @@ import { getSession } from "~/auth.server";
 import type { User } from "@supabase/supabase-js";
 import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
+import type { ProfileWithSocials } from "~/services/profile";
+import { getProfileWithSocials } from "~/services/profile";
 import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 import ModelListPage, { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import ModelDetailPage from "~/components/routes/ModelDetailPage";
@@ -62,7 +62,7 @@ export type LoaderData = {
     tags: string | null;
   };
   modelDetail?: {};
-  profile: ProfileWithFavorites | null;
+  profile: ProfileWithSocials | null;
   counts: Counts[];
 };
 
@@ -78,7 +78,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = session?.user;
   const url = new URL(request.url);
 
-  const profile = await getProfileWithFavorites(session);
+  const profile = await getProfileWithSocials(session);
 
   // GET PAGE
   let page = Number(url.searchParams.get("page")) ?? 1;
