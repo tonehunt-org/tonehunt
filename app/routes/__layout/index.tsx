@@ -9,7 +9,6 @@ import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 import ModelListPage, { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import ModelDetailPage from "~/components/routes/ModelDetailPage";
 import type { Counts } from "@prisma/client";
@@ -124,29 +123,22 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const [counts, models] = await Promise.all([countsReq, modelsReq]);
 
-  return json<LoaderData>(
-    {
-      counts,
-      user,
-      username: usernameParam,
-      modelList: {
-        models: models.data,
-        total: models.total,
-        page: page - 1,
-        filter,
-        categories,
-        sortBy: selectedSortBy?.slug ?? "newest",
-        sortDirection,
-        tags: tagsParam,
-      },
-      profile,
+  return json<LoaderData>({
+    counts,
+    user,
+    username: usernameParam,
+    modelList: {
+      models: models.data,
+      total: models.total,
+      page: page - 1,
+      filter,
+      categories,
+      sortBy: selectedSortBy?.slug ?? "newest",
+      sortDirection,
+      tags: tagsParam,
     },
-    {
-      headers: {
-        ...DEFAULT_CACHE_HEADER,
-      },
-    }
-  );
+    profile,
+  });
 };
 
 export default function Index() {

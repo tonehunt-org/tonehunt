@@ -3,7 +3,7 @@ import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
 
@@ -13,10 +13,8 @@ import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
-import { DEFAULT_CACHE_HEADER } from "~/utils/response";
 import type { ProfileWithFollows } from "~/services/profile";
 import { getProfileWithFollows } from "~/services/profile";
-import Button from "~/components/ui/Button";
 import FollowButton from "~/components/FollowButton";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
@@ -120,9 +118,6 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     },
     {
       status: !profile ? 404 : 200,
-      headers: {
-        ...DEFAULT_CACHE_HEADER,
-      },
     }
   );
 };
@@ -168,8 +163,6 @@ export default function UserProfilePage() {
 
   const arrayLength = Math.floor(5000 / (data.profile?.username?.length ?? 1 * 10));
   const textForBG = [...new Array(arrayLength)].map(() => data.profile?.username ?? "");
-
-  console.log("data.sessionProfile?.following", data.sessionProfile?.following);
 
   return (
     <div className="w-full">

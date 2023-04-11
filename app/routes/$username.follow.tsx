@@ -31,25 +31,22 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   // TODO: upsert
-  // await db.follow.upsert({
-  //   where: {
-  //     profileId_targetId: {
-  //       profileId: sessionProfile.id,
-  //       targetId: targetProfile.id,
-  //     }
-  //   },
-  //   update: {
-  //     profileId: sessionProfile.id,
-  //     targetId: targetProfile.id,
-  //   },
-  //   create: {
-
-  //   }
-  //   // data: {
-  //   //   profileId: sessionProfile.id,
-  //   //   targetId: targetProfile.id,
-  //   // },
-  // });
+  await db.follow.upsert({
+    where: {
+      profileId_targetId: {
+        profileId: sessionProfile.id,
+        targetId: targetProfile.id,
+      },
+    },
+    update: {
+      deleted: false,
+      active: true,
+    },
+    create: {
+      profileId: sessionProfile.id,
+      targetId: targetProfile.id,
+    },
+  });
 
   return new Response("");
 };
