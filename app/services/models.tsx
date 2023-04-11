@@ -34,19 +34,23 @@ export const getModels = async (params: getModelsType) => {
 
   const searchList = params.search?.replace(tsquerySpecialChars, " ").trim().split(/\s+/);
   const search = searchList?.join(" | ");
-  // const contains = searchList?.map((term) => {
-  //   return [{ title: term }, { profile: { username: { contains: term } } }];
-  // });
 
   const followingQuery = {
     profile: {
-      followers: {
-        some: {
-          profileId: params.user?.id,
-          active: true,
-          deleted: false,
+      OR: [
+        {
+          followers: {
+            some: {
+              profileId: params.user?.id,
+              active: true,
+              deleted: false,
+            },
+          },
         },
-      },
+        {
+          id: params.user?.id,
+        },
+      ],
     },
   };
 
