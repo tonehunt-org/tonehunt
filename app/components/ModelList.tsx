@@ -66,14 +66,16 @@ const ModelsListComponent = ({
         {showMenu ? (
           <div className="flex-none items-center">
             <div className="flex items-center mt-2">
-              <ButtonLink
-                to={`${location.pathname}?${followSearchParams.toString()}`}
-                className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  selectedSortBy === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
-                }`}
-              >
-                FOLLOWING
-              </ButtonLink>
+              {user ? (
+                <ButtonLink
+                  to={`${location.pathname}?${followSearchParams.toString()}`}
+                  className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                    selectedSortBy === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
+                  }`}
+                >
+                  FOLLOWING
+                </ButtonLink>
+              ) : null}
               <ButtonLink
                 to={`${location.pathname}?${newestSearchParams.toString()}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
