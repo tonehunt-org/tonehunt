@@ -10,8 +10,8 @@ import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import { getFavorites } from "~/services/favorites";
 import { map } from "lodash";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
+import type { ProfileWithSocials } from "~/services/profile";
+import { getProfileWithSocials } from "~/services/profile";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
@@ -28,7 +28,7 @@ export type LoaderData = {
     total: number;
     page: number;
   };
-  profile: ProfileWithFavorites | null;
+  profile: ProfileWithSocials | null;
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   const url = new URL(request.url);
 
-  const profile = await getProfileWithFavorites(session);
+  const profile = await getProfileWithSocials(session);
 
   // GET PAGE
   let page = Number(url.searchParams.get("page")) ?? 1;

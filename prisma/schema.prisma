@@ -135,4 +135,6 @@ model Follow {
   createdAt 	  DateTime    @default(now()) @db.Timestamptz(3)
   updatedAt 	  DateTime    @updatedAt @db.Timestamptz(3)
   deleted       Boolean     @default(false)
+
+  @@unique([profileId, targetId])
 }

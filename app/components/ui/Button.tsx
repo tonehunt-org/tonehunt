@@ -4,20 +4,22 @@ import { twMerge } from "tailwind-merge";
 import Loading from "./Loading";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "link";
+  variant?: "primary" | "primary-alt" | "secondary" | "link";
   size?: "small" | "default";
   loading?: boolean;
 };
 
 export const smallClasses = "px-2 py-[2px] font-satoshi-regular text-sm leading-5";
-export const base = "relative px-5 py-3 font-satoshi-bold rounded-full text-[rgba(255,255,255,1)] appearance-none";
+export const base =
+  "relative px-5 py-3 font-satoshi-bold rounded-full text-[rgba(255,255,255,1)] appearance-none focus:ring-2 focus:outline-none focus:ring-bg-tonehunt-blue-medium";
 export const primaryClassNames = twMerge(
   base,
-  "bg-tonehunt-blue-dark focus:ring-2 focus:outline-none focus:ring-bg-tonehunt-blue-medium text-center hover:bg-tonehunt-blue-medium focus:bg-tonehunt-blue-medium"
+  "bg-tonehunt-blue-dark  text-center hover:bg-tonehunt-blue-medium focus:bg-tonehunt-blue-medium"
 );
+export const primaryAltClassNames = twMerge(base, "bg-white/95 text-black hover:bg-white active:bg-white/90 ");
 export const secondaryClassNames = twMerge(
   base,
-  "hover:border-white hover:bg-transparent hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300  focus:ring-blue-800 border border-white/10"
+  "hover:border-white hover:bg-transparent hover:text-white border border-white/10"
 );
 export const disabledClassNames = twMerge(base, "cursor-not-allowed opacity-80 text-white/50");
 export const linkClassNames = "p-0 border-0";
@@ -29,6 +31,8 @@ const Button = forwardRef(
       switch (variant) {
         case "primary":
           return primaryClassNames;
+        case "primary-alt":
+          return primaryAltClassNames;
         case "secondary":
           return secondaryClassNames;
         case "link":
