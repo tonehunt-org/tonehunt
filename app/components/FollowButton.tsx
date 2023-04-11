@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useNavigation } from "@remix-run/react";
 import type { ButtonProps } from "./ui/Button";
 import Button from "./ui/Button";
 
@@ -16,15 +16,17 @@ export default function FollowButton({
 }: FollowButtonProps) {
   const followFetcher = useFetcher();
 
+  const loading = followFetcher.state === "submitting" || followFetcher.state === "loading";
+
   return isFollowing ? (
     <followFetcher.Form method="post" action={`/${profileUsername}/unfollow`}>
-      <Button variant="primary-alt" className="mx-auto block" {...buttonProps}>
+      <Button variant="primary-alt" className="mx-auto block" {...buttonProps} loading={loading}>
         + Unfollow {profileUsername}
       </Button>
     </followFetcher.Form>
   ) : (
     <followFetcher.Form method="post" action={`/${profileUsername}/follow`}>
-      <Button variant="primary-alt" className="mx-auto block" {...buttonProps}>
+      <Button variant="primary-alt" className="mx-auto block" {...buttonProps} loading={loading}>
         + Follow {profileUsername}
       </Button>
     </followFetcher.Form>

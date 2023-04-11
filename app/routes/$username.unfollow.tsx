@@ -30,10 +30,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     return new Response("", { status: 400 });
   }
 
-  await db.follow.updateMany({
+  await db.follow.update({
     where: {
-      profileId: sessionProfile.id,
-      targetId: targetProfile.id,
+      profileId_targetId: {
+        profileId: sessionProfile.id,
+        targetId: targetProfile.id,
+      },
     },
     data: {
       deleted: true,
