@@ -25,6 +25,8 @@ model Profile {
   downloads   ModelDownload[]
   licenseId   Int?
   license     License?    @relation(fields: [licenseId], references: [id])
+  Following   Follow[]    @relation("UserFollow")
+  Followers   Follow[]    @relation("TargetFollow")
 }
 
 model Category {
@@ -121,4 +123,16 @@ model License {
   deleted     Boolean   @default(false)
   profiles    Profile[]
   models    	Model[]
+}
+
+model Follow {
+  id            Int         @id @default(autoincrement())
+  profileId 		String
+  profile			  Profile		  @relation("UserFollow", fields: [profileId], references: [id])
+  targetId      String
+  target			  Profile		  @relation("TargetFollow", fields: [targetId], references: [id])
+  active			  Boolean		  @default(true)
+  createdAt 	  DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt 	  DateTime    @updatedAt @db.Timestamptz(3)
+  deleted       Boolean     @default(false)
 }
