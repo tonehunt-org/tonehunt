@@ -30,6 +30,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     return new Response("", { status: 400 });
   }
 
+  if (sessionProfile.id === targetProfile.id) {
+    return new Response("You cannot follow yourself", { status: 400 });
+  }
+
   // TODO: upsert
   await db.follow.upsert({
     where: {
