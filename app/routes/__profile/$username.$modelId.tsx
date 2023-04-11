@@ -12,9 +12,11 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import { getCategoryProfile } from "~/services/categories";
 import { getSession } from "~/auth.server";
-import { getProfile } from "~/services/profile";
+import type { ProfileWithFollows } from "~/services/profile";
+import { getProfile, getProfileWithFollows } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import ButtonLink from "~/components/ui/ButtonLink";
+import FollowButton from "~/components/FollowButton";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   const d = data as LoaderData;
@@ -42,10 +44,12 @@ type LoaderData = {
   };
   favorite: Favorite | null;
   user?: User;
+  profileWithFollows: ProfileWithFollows | null;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { session } = await getSession(request);
+
   const modelReq = db.model.findFirst({
     where: {
       id: params.modelId as string,
@@ -71,6 +75,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const [model, profile] = await Promise.all([modelReq, profileReq]);
 
+  // TODO: we're doing duplicate calls to the db that are unnecessary. It's fine for now, but
+  // we need to optimize
+  const profileWithFollows = profile?.username ? await getProfileWithFollows(profile.username) : null;
+
   const favorite = profile
     ? await db.favorite.findFirst({
         where: {
@@ -84,7 +92,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("", { status: 404 });
   }
 
-  return json<LoaderData>({ model, favorite, user: session?.user });
+  return json<LoaderData>({ model, favorite, user: session?.user, profileWithFollows });
 };
 
 export default function ModelDetailPage() {
@@ -210,13 +218,34 @@ export default function ModelDetailPage() {
             <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
             <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
 
-            <Link
-              to={`/${data.model.profile.username}`}
-              prefetch="intent"
-              className="block hover:bg-tonehunt-gray-light text-base text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl"
-            >
-              Profile
-            </Link>
+            <div className="flex items-center gap-4">
+              {data.user && data.model.profile.id !== data.user.id ? (
+                <div className="flex-1">
+                  <FollowButton
+                    isFollowing={
+                      !!data.profileWithFollows?.following.find(
+                        (following) => following.targetId === data.model.profile?.id
+                      )
+                    }
+                    showUsername={false}
+                    profileId={data.model.profile.id}
+                    profileUsername={data.model.profile.username ?? ""}
+                    className="block w-full hover:bg-tonehunt-gray-light text-sm text-white/70 py-3 px-5 bg-tonehunt-gray-medium active:bg-tonehunt-gray-light rounded-xl "
+                    formClassName="block"
+                  />
+                </div>
+              ) : null}
+
+              <div className="flex-1">
+                <Link
+                  to={`/${data.model.profile.username}`}
+                  prefetch="intent"
+                  className="block hover:bg-tonehunt-gray-light text-sm text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl font-satoshi-bold"
+                >
+                  Profile
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
