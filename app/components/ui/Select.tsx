@@ -18,6 +18,7 @@ type SelectProps = {
   defaultSelected?: string;
   onChange?: (arg: ChangeEvent<HTMLSelectElement>) => void | undefined;
   showEmptyOption?: boolean;
+  fullWidth?: boolean;
 };
 
 export default function Select({
@@ -29,11 +30,12 @@ export default function Select({
   defaultSelected,
   onChange,
   showEmptyOption = true,
+  fullWidth = false,
 }: SelectProps) {
   const id = useId();
 
   const select = (
-    <div className="relative mb-3">
+    <div className={twMerge("relative mb-3", fullWidth ? "w-full" : "")}>
       <ChevronUpDownIcon className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-white z-20" />
 
       <select
