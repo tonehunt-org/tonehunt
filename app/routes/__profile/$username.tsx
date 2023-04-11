@@ -202,7 +202,7 @@ export default function UserProfilePage() {
                   </div>
                 </div>
 
-                {data.profile?.username ? (
+                {data.user && data.profile?.username && data.profile?.id !== data.sessionProfile?.id ? (
                   <FollowButton
                     profileId={data.profile.id}
                     profileUsername={data.profile.username}
