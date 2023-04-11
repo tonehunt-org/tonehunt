@@ -3,8 +3,9 @@ import { Prisma } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
-import type { ProfileWithFavorites } from "~/services/profile";
+import type { ProfileWithSocials } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
+import Button from "./ui/Button";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -18,7 +19,7 @@ type ModelWithCategoryAndProfile = Prisma.ModelGetPayload<typeof modelWithCatego
 
 interface ModelListItemType {
   model: ModelWithCategoryAndProfile;
-  profile: ProfileWithFavorites | null;
+  profile: ProfileWithSocials | null;
 }
 
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
@@ -77,7 +78,11 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                     </Link>
                   ) : null}
 
-                  <Link to={`/${model.profile.username}`} prefetch="intent" className="leading-none">
+                  <Link
+                    to={`/${model.profile.username}`}
+                    prefetch="intent"
+                    className="leading-none flex gap-2 items-center"
+                  >
                     <span className="text-sm font-satoshi-bold text-tonehunt-gray-lighter hover:underline">
                       {model.profile.username}
                     </span>

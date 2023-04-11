@@ -66,6 +66,7 @@ export type LoaderData = {
 };
 
 const sortByOptions = [
+  { slug: "following", field: "createdAt" },
   { slug: "newest", field: "createdAt" },
   { slug: "popular", field: "popular" },
   { slug: "name", field: "title" },
@@ -85,7 +86,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const offset = (page - 1) * MODELS_LIMIT;
 
   // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
+  const sortByParam = url.searchParams.get("sortBy") || "following";
   const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
   const sortBy = selectedSortBy?.field ?? "createdAt";
 
@@ -119,6 +120,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     username: usernameParam,
     user,
     tags: tagsParam,
+    following: sortByParam === "following",
   });
 
   const [counts, models] = await Promise.all([countsReq, modelsReq]);
@@ -133,7 +135,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       page: page - 1,
       filter,
       categories,
-      sortBy: selectedSortBy?.slug ?? "newest",
+      sortBy: selectedSortBy?.slug || "following",
       sortDirection,
       tags: tagsParam,
     },
