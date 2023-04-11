@@ -75,6 +75,8 @@ const sortByOptions = [
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
+  const defaultSortBy = session?.user.id ? "following" : "newest";
+
   const user = session?.user;
   const url = new URL(request.url);
 
@@ -86,7 +88,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const offset = (page - 1) * MODELS_LIMIT;
 
   // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") || "following";
+  const sortByParam = url.searchParams.get("sortBy") || defaultSortBy;
   const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
   const sortBy = selectedSortBy?.field ?? "createdAt";
 
@@ -109,7 +111,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   const countsReq = await db.counts.findMany();
-  //console.log("offset", offset);
+
   // GET MODELS
   const modelsReq = getModels({
     limit: MODELS_LIMIT,
