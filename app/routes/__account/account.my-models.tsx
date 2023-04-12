@@ -11,7 +11,7 @@ import Button from "~/components/ui/Button";
 import ButtonLink from "~/components/ui/ButtonLink";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import useProfile from "~/hooks/useProfile";
-import type { Model } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -20,9 +20,31 @@ export const meta: MetaFunction<LoaderData> = ({ data }) => {
   };
 };
 
+type ModelWithCustomData = Prisma.ModelGetPayload<{
+  select: {
+    id: true;
+    title: true;
+    description: true;
+    tags: true;
+    createdAt: true;
+    updatedAt: true;
+    filename: true;
+    private: true;
+    active: true;
+    profileId: true;
+    category: {
+      select: {
+        id: true;
+        title: true;
+        slug: true;
+      };
+    };
+  };
+}>;
+
 type LoaderData = {
   user: User | null | undefined;
-  models: Model[];
+  models: ModelWithCustomData[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

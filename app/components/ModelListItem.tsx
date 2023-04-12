@@ -5,7 +5,6 @@ import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithSocials } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
-import Button from "./ui/Button";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {

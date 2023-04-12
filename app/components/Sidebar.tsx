@@ -5,13 +5,13 @@ import imgArticle1 from "~/assets/articles/article_1.jpg";
 import imgArticle2 from "~/assets/articles/article_2.jpg";
 import imgArticle3 from "~/assets/articles/article_3.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
-import type { Tag } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
+import type { SampleTag } from "~/services/tags";
 
 type SidebarProps = {
   user?: User | null | undefined;
   username?: string | null | undefined;
-  tags: Tag[];
+  tags: SampleTag[];
 };
 
 const Sidebar = ({ user, username, tags }: SidebarProps) => {

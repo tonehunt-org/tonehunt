@@ -39,7 +39,7 @@ type LoaderData = {
   total: number;
   page: number;
   search: string | null;
-  profileWithFavs: ProfileWithSocials;
+  profileWithSocials: ProfileWithSocials | null;
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
@@ -64,7 +64,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
           total: 0,
         });
 
-  const [models, profileWithFavs] = await Promise.all([modelsReq, getProfileWithSocials(session)]);
+  const [models, profileWithSocials] = await Promise.all([modelsReq, getProfileWithSocials(session)]);
 
   return json<LoaderData>({
     models: models.data,
@@ -72,7 +72,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     user,
     page: page - 1,
     search: searchParam,
-    profileWithFavs,
+    profileWithSocials,
   });
 };
 
@@ -111,7 +111,7 @@ export default function SearchResults() {
               showMenu={false}
               showFilters={false}
               user={data.user}
-              profile={data.profileWithFavs}
+              profile={data.profileWithSocials}
             />
           ) : null}
         </div>

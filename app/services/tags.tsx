@@ -1,7 +1,15 @@
+import type { Prisma } from "@prisma/client";
 import { db } from "~/utils/db.server";
 
+export type Tag = Prisma.ModelGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    group: true;
+  };
+}>;
 export const getTags = async () => {
-  const tags = await db.tag.findMany({
+  return db.tag.findMany({
     where: {
       active: true,
       deleted: false,
@@ -17,11 +25,11 @@ export const getTags = async () => {
       },
     ],
   });
-
-  return tags;
 };
 
-export const getSampleTags = () => {
+export type SampleTag = { id: number; name: string };
+
+export const getSampleTags = (): SampleTag[] => {
   return [
     { id: 1, name: "rock" },
     { id: 2, name: "metal" },

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, RefObject } from "react";
 import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 import Loading from "./Loading";
@@ -42,7 +42,7 @@ const Button = forwardRef(
 
     return (
       <button
-        ref={ref}
+        ref={ref as RefObject<HTMLButtonElement>}
         {...props}
         onMouseDown={(e: any) => {
           // Need to simulate the disabled prop on a button because we need the other events
