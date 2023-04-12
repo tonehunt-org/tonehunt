@@ -205,7 +205,6 @@ export default function ModelsNewPage() {
               "hover:opacity-80"
             )}
             onDragEnter={() => {
-              //console.log("drag enter");
               setDrag(true);
             }}
             onDragExit={() => setDrag(false)}
