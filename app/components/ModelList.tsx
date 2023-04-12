@@ -5,11 +5,10 @@ import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { useLocation } from "@remix-run/react";
+import type { ProfileWithSocials } from "~/services/profile";
 import ButtonLink from "./ui/ButtonLink";
-import { sortBy } from "lodash";
-import Button from "./ui/Button";
+import EmptyFollowFeed from "./EmptyFollowFeed";
+import { useSearchParams } from "@remix-run/react";
 
 interface ModelListType {
   data: Model[];
@@ -25,7 +24,7 @@ interface ModelListType {
   selectedSortBy?: "newest" | "popular" | "following";
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
-  profile: ProfileWithFavorites | null;
+  profile: ProfileWithSocials | null;
 }
 
 const ModelsListComponent = ({
@@ -44,20 +43,22 @@ const ModelsListComponent = ({
   user = null,
   profile,
 }: ModelListType) => {
+  const [searchParams] = useSearchParams();
+
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle =
     "px-2 py-0.5 border border-white/20 hover:border-white/70  rounded-lg relative w-[36px] h-[36px] inline-flex items-center justify-center text-white/60";
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
-  const location = useLocation();
 
-  const followSearchParams = new URLSearchParams(location.search);
-  const newestSearchParams = new URLSearchParams(location.search);
-  const popularSearchParams = new URLSearchParams(location.search);
+  const sortByParam = searchParams.get("sortBy");
 
-  followSearchParams.delete("sortBy");
-  newestSearchParams.set("sortBy", "newest");
-  popularSearchParams.set("sortBy", "popular");
+  const pageIsFiltered = currentPage > 0 || searchParams.get("filter");
+  const isAllFilter = searchParams.get("filter") === "all" || searchParams.get("filter") === null;
+  const isSortedByFollowing = searchParams.get("filter") === "following";
+  const pageIsEmpty = data.length === 0;
+  const pageIsEmptyFollowFeed =
+    data.length === 0 && selectedSortBy === "following" && isAllFilter && !isSortedByFollowing && !pageIsFiltered;
 
   return (
     <div>
@@ -68,27 +69,27 @@ const ModelsListComponent = ({
             <div className="flex items-center mt-2">
               {user ? (
                 <ButtonLink
-                  to={`${location.pathname}?${followSearchParams.toString()}`}
+                  to="/"
                   className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                    selectedSortBy === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
+                    sortByParam === "following" || sortByParam === null ? activeSortStyle : "text-tonehunt-gray-disable"
                   }`}
                 >
                   FOLLOWING
                 </ButtonLink>
               ) : null}
               <ButtonLink
-                to={`${location.pathname}?${newestSearchParams.toString()}`}
+                to={`/?sortBy=newest`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  selectedSortBy === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
+                  sortByParam === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
               >
                 NEWEST
               </ButtonLink>
               <ButtonLink
                 type="button"
-                to={`${location.pathname}?${popularSearchParams.toString()}`}
+                to={`/?sortBy=popular`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  selectedSortBy === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
+                  sortByParam === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
                 }`}
               >
                 POPULAR
@@ -115,29 +116,14 @@ const ModelsListComponent = ({
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {data.length === 0 ? (
-          selectedSortBy === "following" ? (
-            <div className="w-full max-w-2xltext-center flex flex-col gap-10 relative">
-              <div className="z-0 relative">
-                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-50 mb-5" />
-                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-20 mb-5" />
-                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-10 mb-5" />
-                <div className="flex-1 p-3 bg-tonehunt-gray-medium text-white rounded-xl text-to h-[64px] opacity-5 mb-5" />
-              </div>
-
-              <div className="absolute top-[100px] left-1/2 z-10 -translate-x-1/2 text-center ">
-                <div className="text-xl mb-10">You are not yet following anyone.</div>
-                <div>
-                  <ButtonLink to={`${location.pathname}?${popularSearchParams.toString()}`} variant="button-primary">
-                    Find interesting users to follow
-                  </ButtonLink>
-                </div>
-              </div>
-            </div>
+        {pageIsEmpty ? (
+          pageIsEmptyFollowFeed ? (
+            <EmptyFollowFeed />
           ) : (
-            <span>No results</span>
+            <div className="text-lg text-center py-10">No results</div>
           )
         ) : null}
+
         {data.length > 0
           ? data.map((model: any) => <ModelListItem key={model.id} profile={profile} model={model} />)
           : null}
