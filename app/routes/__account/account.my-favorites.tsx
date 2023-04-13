@@ -111,6 +111,7 @@ export default function MyFavoritesPage() {
               showFilters={false}
               user={user}
               profile={data.profile}
+              emptyMessage="You haven't favorited any models yet."
             />
           ) : null}
         </div>

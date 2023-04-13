@@ -235,6 +235,11 @@ export default function UserProfilePage() {
                     showFilters={false}
                     user={data.user}
                     profile={data.sessionProfile}
+                    emptyMessage={
+                      data.profile && data.sessionProfile && data.profile.id === data.sessionProfile.id
+                        ? "You haven't uploaded any models yet."
+                        : `${data.profile?.username ?? "This user"} hasn't uplaoded any models yet.`
+                    }
                   />
                 ) : null}
               </div>

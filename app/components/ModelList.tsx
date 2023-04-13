@@ -25,6 +25,7 @@ interface ModelListType {
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
   profile: ProfileWithSocials | null;
+  emptyMessage?: string;
 }
 
 const ModelsListComponent = ({
@@ -42,6 +43,7 @@ const ModelsListComponent = ({
   onSortChange = undefined,
   user = null,
   profile,
+  emptyMessage = "No results",
 }: ModelListType) => {
   const location = useLocation();
 
@@ -67,7 +69,12 @@ const ModelsListComponent = ({
   const isSortedByFollowing = searchParams.get("filter") === "following";
   const pageIsEmpty = data.length === 0;
   const pageIsEmptyFollowFeed =
-    data.length === 0 && selectedSortBy === "following" && isAllFilter && !isSortedByFollowing && !pageIsFiltered;
+    data.length === 0 &&
+    selectedSortBy === "following" &&
+    isAllFilter &&
+    !isSortedByFollowing &&
+    !pageIsFiltered &&
+    !user;
 
   return (
     <div>
@@ -129,7 +136,7 @@ const ModelsListComponent = ({
           pageIsEmptyFollowFeed ? (
             <EmptyFollowFeed />
           ) : (
-            <div className="text-lg text-center py-10">No results</div>
+            <div className="text-lg text-center py-10">{emptyMessage}</div>
           )
         ) : null}
 
