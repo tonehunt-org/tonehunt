@@ -74,7 +74,8 @@ const ModelsListComponent = ({
     isAllFilter &&
     !isSortedByFollowing &&
     !pageIsFiltered &&
-    !user;
+    showFilters &&
+    user;
 
   return (
     <div>
