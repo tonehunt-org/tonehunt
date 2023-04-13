@@ -29,12 +29,12 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
       key={model.id}
       className="transition ease-in-out flex-1 p-3 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to"
     >
-      <div className="flex flex-row">
+      <div className="sm:flex flex-row">
         <div className="flex-1 lg:flex-grow">
           <div className="flex flex-row items-start">
             <div className="flex-none items-center">
               <div className="flex h-full items-start lg:items-center">
-                <div className="w-14 h-14 inline-block mr-4 rounded-xl">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 inline-block mr-4 rounded-xl">
                   <img className="w-full h-auto" src={categoryProfile.icon} alt="cab" title={model.category.title} />
                 </div>
               </div>
@@ -47,12 +47,12 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   to={`/${model.profile.username}/${model.id}`}
                   className="flex-1 hover:underline"
                 >
-                  <h3 className="font-satoshi-bold text-xl lg:block lg:max-w-[400px] lg:truncate" title={model.title}>
+                  <h3 className="font-satoshi-bold text-lg sm:text-xl lg:block " title={model.title}>
                     {model.title}
                   </h3>
                 </Link>
 
-                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[400px] items-center flex-wrap gap-2 uppercase font-satoshi-medium my-1.5">
+                <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[500px] items-center flex-wrap gap-2 uppercase font-satoshi-medium my-1.5">
                   {model.tags.map((tag) => (
                     <li key={tag}>
                       <Link
@@ -96,17 +96,23 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
           </div>
         </div>
 
-        <div className="flex-1 lg:flex-none lg:pl-4 hidden sm:block">
+        <div className="flex-1 lg:flex-none lg:pl-4 block">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex justify-end mt-2 lg:mt-0 gap-2">
+              <div className="flex ml-[56px] sm:ml-0 sm:justify-end mt-2 lg:mt-0 gap-2">
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
                   modelId={model.id}
                   disabledReason={profile ? undefined : "You must be logged in"}
+                  className="px-4 py-[4px] sm:px-5 sm:py-3"
                 />
-                <DownloadButton count={model._count?.downloads} filename={model.filename} modelId={model.id} />
+                <DownloadButton
+                  count={model._count?.downloads}
+                  filename={model.filename}
+                  modelId={model.id}
+                  className="px-4 py-[4px] sm:px-5 sm:py-3"
+                />
               </div>
             </div>
           </div>
