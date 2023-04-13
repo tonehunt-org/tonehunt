@@ -8,7 +8,7 @@ import PopperUnstyled from "@mui/base/PopperUnstyled";
 import { useState } from "react";
 import { formatNumber } from "~/utils/number";
 
-const starIconClasses = "w-5 h-5 inline-block mr-[6px]";
+const starIconClasses = "w-5 h-5 inline-block mr-[6px] -translate-y-0.5";
 
 type FavoriteButtonProps = ButtonProps & {
   favorited?: boolean;

@@ -20,7 +20,7 @@ export default function DownloadButton({ count, className, modelId, filename }: 
       download={filename}
       prefetch="none"
     >
-      <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-[6px]" />
+      <ArrowDownTrayIcon className="w-5 h-5 inline-block mr-[6px] -translate-y-0.5" />
       <span className={twMerge("inline-block text-sm font-satoshi-bold text-[16px]")}>{formatNumber(count)}</span>
     </ButtonLink>
   );
