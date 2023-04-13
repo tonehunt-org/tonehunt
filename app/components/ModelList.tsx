@@ -8,7 +8,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithSocials } from "~/services/profile";
 import ButtonLink from "./ui/ButtonLink";
 import EmptyFollowFeed from "./EmptyFollowFeed";
-import { useSearchParams } from "@remix-run/react";
+import { useLocation, useSearchParams } from "@remix-run/react";
 
 interface ModelListType {
   data: Model[];
@@ -43,7 +43,16 @@ const ModelsListComponent = ({
   user = null,
   profile,
 }: ModelListType) => {
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
+  const [followSearchParams] = useSearchParams();
+  const [newestSearchParams] = useSearchParams();
+  const [popularSearchParams] = useSearchParams();
+
+  followSearchParams.set("sortBy", "following");
+  newestSearchParams.set("sortBy", "newest");
+  popularSearchParams.set("sortBy", "popular");
 
   const pageCount = Math.ceil(total / limit);
   const paginationButtonLinkStyle =
@@ -51,7 +60,7 @@ const ModelsListComponent = ({
 
   const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
 
-  const sortByParam = searchParams.get("sortBy");
+  const sortByParam = searchParams.get("sortBy") ?? selectedSortBy;
 
   const pageIsFiltered = currentPage > 0 || searchParams.get("filter");
   const isAllFilter = searchParams.get("filter") === "all" || searchParams.get("filter") === null;
@@ -69,7 +78,7 @@ const ModelsListComponent = ({
             <div className="flex items-center mt-2">
               {user ? (
                 <ButtonLink
-                  to="/"
+                  to={`${location.pathname}?${followSearchParams}`}
                   className={`font-satoshi-bold mr-2 text-xs border-0 ${
                     sortByParam === "following" || sortByParam === null ? activeSortStyle : "text-tonehunt-gray-disable"
                   }`}
@@ -78,7 +87,7 @@ const ModelsListComponent = ({
                 </ButtonLink>
               ) : null}
               <ButtonLink
-                to={`/?sortBy=newest`}
+                to={`${location.pathname}?${newestSearchParams}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   sortByParam === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
@@ -87,7 +96,7 @@ const ModelsListComponent = ({
               </ButtonLink>
               <ButtonLink
                 type="button"
-                to={`/?sortBy=popular`}
+                to={`${location.pathname}?${popularSearchParams}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
                   sortByParam === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
                 }`}
