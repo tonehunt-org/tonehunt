@@ -7,9 +7,8 @@ import { getSession } from "~/auth.server";
 import type { User } from "@supabase/supabase-js";
 import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
-import { DEFAULT_CACHE_HEADER } from "~/utils/response";
+import type { ProfileWithSocials } from "~/services/profile";
+import { getProfileWithSocials } from "~/services/profile";
 import ModelListPage, { MODELS_LIMIT } from "~/components/routes/ModelListPage";
 import ModelDetailPage from "~/components/routes/ModelDetailPage";
 import type { Counts } from "@prisma/client";
@@ -62,11 +61,12 @@ export type LoaderData = {
     tags: string | null;
   };
   modelDetail?: {};
-  profile: ProfileWithFavorites | null;
+  profile: ProfileWithSocials | null;
   counts: Counts[];
 };
 
 const sortByOptions = [
+  { slug: "following", field: "createdAt" },
   { slug: "newest", field: "createdAt" },
   { slug: "popular", field: "popular" },
   { slug: "name", field: "title" },
@@ -75,10 +75,12 @@ const sortByOptions = [
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
+  const defaultSortBy = session?.user.id ? "following" : "newest";
+
   const user = session?.user;
   const url = new URL(request.url);
 
-  const profile = await getProfileWithFavorites(session);
+  const profile = await getProfileWithSocials(session);
 
   // GET PAGE
   let page = Number(url.searchParams.get("page")) ?? 1;
@@ -86,7 +88,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const offset = (page - 1) * MODELS_LIMIT;
 
   // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") ?? "newest";
+  const sortByParam = url.searchParams.get("sortBy") || defaultSortBy;
   const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
   const sortBy = selectedSortBy?.field ?? "createdAt";
 
@@ -109,7 +111,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   const countsReq = await db.counts.findMany();
-  //console.log("offset", offset);
+
   // GET MODELS
   const modelsReq = getModels({
     limit: MODELS_LIMIT,
@@ -120,33 +122,27 @@ export const loader: LoaderFunction = async ({ request }) => {
     username: usernameParam,
     user,
     tags: tagsParam,
+    following: sortByParam === "following",
   });
 
   const [counts, models] = await Promise.all([countsReq, modelsReq]);
 
-  return json<LoaderData>(
-    {
-      counts,
-      user,
-      username: usernameParam,
-      modelList: {
-        models: models.data,
-        total: models.total,
-        page: page - 1,
-        filter,
-        categories,
-        sortBy: selectedSortBy?.slug ?? "newest",
-        sortDirection,
-        tags: tagsParam,
-      },
-      profile,
+  return json<LoaderData>({
+    counts,
+    user,
+    username: usernameParam,
+    modelList: {
+      models: models.data,
+      total: models.total,
+      page: page - 1,
+      filter,
+      categories,
+      sortBy: selectedSortBy?.slug || "following",
+      sortDirection,
+      tags: tagsParam,
     },
-    {
-      headers: {
-        ...DEFAULT_CACHE_HEADER,
-      },
-    }
-  );
+    profile,
+  });
 };
 
 export default function Index() {

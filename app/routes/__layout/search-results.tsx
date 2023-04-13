@@ -9,8 +9,8 @@ import { getModels } from "~/services/models";
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
 import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
-import type { ProfileWithFavorites } from "~/services/profile";
-import { getProfileWithFavorites } from "~/services/profile";
+import type { ProfileWithSocials } from "~/services/profile";
+import { getProfileWithSocials } from "~/services/profile";
 
 export const meta: MetaFunction = ({ data, location }) => {
   const d = data as LoaderData;
@@ -39,7 +39,7 @@ type LoaderData = {
   total: number;
   page: number;
   search: string | null;
-  profileWithFavs: ProfileWithFavorites;
+  profileWithSocials: ProfileWithSocials | null;
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
@@ -64,7 +64,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
           total: 0,
         });
 
-  const [models, profileWithFavs] = await Promise.all([modelsReq, getProfileWithFavorites(session)]);
+  const [models, profileWithSocials] = await Promise.all([modelsReq, getProfileWithSocials(session)]);
 
   return json<LoaderData>({
     models: models.data,
@@ -72,7 +72,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     user,
     page: page - 1,
     search: searchParam,
-    profileWithFavs,
+    profileWithSocials,
   });
 };
 
@@ -111,7 +111,7 @@ export default function SearchResults() {
               showMenu={false}
               showFilters={false}
               user={data.user}
-              profile={data.profileWithFavs}
+              profile={data.profileWithSocials}
             />
           ) : null}
         </div>

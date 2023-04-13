@@ -62,6 +62,18 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 };
 
+type ActionFormData = {
+  title: string;
+  description: string;
+  ampName: string;
+  modelPath: string;
+  filename: string;
+  categoryId?: string;
+  tags: string[];
+  filecount: string;
+  licenseId?: string;
+};
+
 export const action: ActionFunction = async ({ request, context }) => {
   const { session } = await getSession(request);
   const profile = await db.profile.findFirst({ where: { id: session?.user?.id } });
@@ -72,7 +84,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 
   try {
     const formData = await request.formData();
-    const data = toJSON(formData);
+    const data = toJSON<ActionFormData>(formData);
 
     const model = await db.model.create({
       data: {
@@ -205,7 +217,6 @@ export default function ModelsNewPage() {
               "hover:opacity-80"
             )}
             onDragEnter={() => {
-              //console.log("drag enter");
               setDrag(true);
             }}
             onDragExit={() => setDrag(false)}

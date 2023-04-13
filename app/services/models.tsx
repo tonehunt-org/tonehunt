@@ -13,6 +13,7 @@ interface getModelsType {
   search?: string | null | undefined;
   profileId?: string | null | undefined;
   tags?: string | null | undefined;
+  following?: boolean;
 }
 
 export const getModels = async (params: getModelsType) => {
@@ -33,9 +34,25 @@ export const getModels = async (params: getModelsType) => {
 
   const searchList = params.search?.replace(tsquerySpecialChars, " ").trim().split(/\s+/);
   const search = searchList?.join(" | ");
-  // const contains = searchList?.map((term) => {
-  //   return [{ title: term }, { profile: { username: { contains: term } } }];
-  // });
+
+  const followingQuery = {
+    profile: {
+      OR: [
+        {
+          followers: {
+            some: {
+              profileId: params.user?.id,
+              active: true,
+              deleted: false,
+            },
+          },
+        },
+        {
+          id: params.user?.id,
+        },
+      ],
+    },
+  };
 
   const titleSearch =
     searchList?.map((term) => {
@@ -85,6 +102,7 @@ export const getModels = async (params: getModelsType) => {
             hasSome: tagsScala,
           },
         }),
+        ...(params.following && followingQuery),
       },
     }),
     db.model.findMany({
@@ -112,6 +130,7 @@ export const getModels = async (params: getModelsType) => {
             hasSome: tagsScala,
           },
         }),
+        ...(params.following && followingQuery),
       },
       select: {
         _count: {

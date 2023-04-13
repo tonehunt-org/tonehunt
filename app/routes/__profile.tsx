@@ -4,9 +4,10 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import type { Category, Tag } from "@prisma/client";
+import type { Category } from "@prisma/client";
 import ProfileLayout from "~/layouts/ProfileLayout";
 import useProfile from "~/hooks/useProfile";
+import type { Tag } from "~/services/tags";
 import { getTags } from "~/services/tags";
 
 type LoaderData = {
