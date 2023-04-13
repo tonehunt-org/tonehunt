@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
@@ -156,6 +157,12 @@ export default function UserProfilePage() {
     searchParams.set("page", String(selectedPage + 1));
     setSearchParams(searchParams);
   };
+
+  useEffect(() => {
+    if (data.modelList) {
+      setLoading(false);
+    }
+  }, [data.modelList, searchParams]);
 
   if (data.profile === null) {
     return <NotFound>Not Found</NotFound>;
