@@ -72,6 +72,7 @@ const ModelsListComponent = ({
     data.length === 0 &&
     selectedSortBy === "following" &&
     isAllFilter &&
+    !searchParams.get("tags") &&
     !isSortedByFollowing &&
     !pageIsFiltered &&
     showFilters &&

@@ -1,6 +1,6 @@
 import * as timeago from "timeago.js";
 import { Prisma } from "@prisma/client";
-import { Link } from "@remix-run/react";
+import { Link, useLocation, useSearchParams } from "@remix-run/react";
 import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithSocials } from "~/services/profile";
@@ -23,6 +23,8 @@ interface ModelListItemType {
 
 const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const categoryProfile = getCategoryProfile(model.category.slug, model.filecount ?? undefined);
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   return (
     <div
@@ -53,18 +55,22 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 </Link>
 
                 <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[500px] items-center flex-wrap gap-2 uppercase font-satoshi-medium my-1.5">
-                  {model.tags.map((tag) => (
-                    <li key={tag}>
-                      <Link
-                        key={tag}
-                        to={`/?tags=${tag}`}
-                        prefetch="intent"
-                        className={`text-[#afafaf] bg-[#383838] rounded-full inline-block px-2 py-[3px] leading-tight hover:underline whitespace-nowrap`}
-                      >
-                        {`#${tag}`}
-                      </Link>
-                    </li>
-                  ))}
+                  {model.tags.map((tag) => {
+                    const params = new URLSearchParams(searchParams);
+                    params.set("tags", tag);
+                    return (
+                      <li key={tag}>
+                        <Link
+                          key={tag}
+                          to={`${location.pathname}?${params}`}
+                          prefetch="intent"
+                          className={`text-[#afafaf] bg-[#383838] rounded-full inline-block px-2 py-[3px] leading-tight hover:underline whitespace-nowrap`}
+                        >
+                          {`#${tag}`}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 <div className="flex-1 flex gap-4 items-center flex-wrap">
