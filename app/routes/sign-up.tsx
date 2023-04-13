@@ -45,7 +45,6 @@ const USERNAME_REGEX = /^\w(?:\w|[.-](?=\w)){3,31}$/;
 export const action: ActionFunction = async ({ request, context }) => {
   const { supabase, response } = await getSession(request);
   const formData = await request.formData();
-  const url = new URL(request.url);
 
   const username = formData.get("username") as string | null;
 

@@ -132,8 +132,8 @@ export default function ModelDetailPage() {
             <DownloadButton
               count={data.model.downloads.length}
               className="bg-tonehunt-gray-darker"
-              filename={data.model.filename}
               modelId={data.model.id}
+              modelName={data.model.title}
             />
 
             <FavoriteButton

@@ -24,10 +24,15 @@ export const action: ActionFunction = async ({ request }) => {
     const file = formData.get("file") as File;
     const fileName = `${Math.random().toString()}.zip`;
 
-    const { data } = await supabase.storage.from("models").upload(fileName, file, {
+    const { data, error } = await supabase.storage.from("models").upload(fileName, file, {
       cacheControl: "3600000000000",
       upsert: false,
     });
+
+    if (error) {
+      console.error("ERROR UPLOADING:", error);
+      return new Response(error.message, { status: 500 });
+    }
 
     return json<ActionData>({ path: data?.path });
   } catch (e: any) {

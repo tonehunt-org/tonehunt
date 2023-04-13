@@ -113,8 +113,8 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 />
                 <DownloadButton
                   count={model._count?.downloads}
-                  filename={model.filename}
                   modelId={model.id}
+                  modelName={model.title}
                   className="px-4 py-[4px] sm:px-5 sm:py-3"
                 />
               </div>

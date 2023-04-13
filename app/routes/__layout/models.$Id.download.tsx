@@ -1,7 +1,13 @@
 import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
 import { redirect } from "@remix-run/node";
+
+export type ModelDownloadLoaderData = {
+  downloadUrl?: string;
+  error?: string;
+};
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { supabase, session } = await getSession(request);
@@ -19,11 +25,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
     const filename = model?.modelPath ?? "";
 
-    const { data } = await supabase.storage.from("models").download(filename);
-
-    if (!data) {
-      return new Response("", { status: 500 });
-    }
+    const { data } = supabase.storage.from("models").getPublicUrl(filename);
 
     // Only count downloads for logged in users
     if (user?.id) {
@@ -47,15 +49,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       });
     }
 
-    return new Response(data, {
-      status: 200,
-      headers: {
-        "Content-Disposition": `attachment; filename=${model?.title}.zip`,
-        "Content-Type": data.type as string,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    return redirect(returnUrl ?? "/", {});
+    return json<ModelDownloadLoaderData>({ downloadUrl: data.publicUrl });
+  } catch (error: any) {
+    console.log("ERROR GENERATING DOWNLOAD LINK", error);
+    return json<ModelDownloadLoaderData>({ error: error.message });
   }
 };
