@@ -180,8 +180,10 @@ export default function ModelDetailPage() {
               <iframe
                 width="420"
                 height="315"
-                loading="lazy"
                 width="100%"
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                frameBorder="0"
                 src={data.model.link}
                 title={`Demonstration for ${data.model.title}`}
               />
