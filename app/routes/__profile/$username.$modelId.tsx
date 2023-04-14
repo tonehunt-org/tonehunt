@@ -17,6 +17,7 @@ import { getProfile, getProfileWithFollows } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import ButtonLink from "~/components/ui/ButtonLink";
 import FollowButton from "~/components/FollowButton";
+import { formatYoutubeLink } from "~/utils/link";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   const d = data as LoaderData;
@@ -184,7 +185,7 @@ export default function ModelDetailPage() {
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 frameBorder="0"
-                src={data.model.link}
+                src={formatYoutubeLink(data.model.link)}
                 title={`Demonstration for ${data.model.title}`}
               />
             </div>
