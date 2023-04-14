@@ -21,6 +21,7 @@ import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
 import { sortCategories } from "~/utils/categories";
 import { Link } from "@remix-run/react";
+import { formatYoutubeLink } from "~/utils/link";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -72,6 +73,7 @@ type ActionFormData = {
   tags: string[];
   filecount: string;
   licenseId?: string;
+  link?: string;
 };
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -86,6 +88,8 @@ export const action: ActionFunction = async ({ request, context }) => {
     const formData = await request.formData();
     const data = toJSON<ActionFormData>(formData);
 
+    const formattedLink = formatYoutubeLink(data.link);
+
     const model = await db.model.create({
       data: {
         title: data?.title,
@@ -98,6 +102,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         tags: data?.tags,
         filecount: +data?.filecount,
         licenseId: data?.licenseId ? +data.licenseId : 1,
+        link: formattedLink === "" ? null : formattedLink,
       },
     });
 
@@ -283,17 +288,11 @@ export default function ModelsNewPage() {
               <div className="flex-grow flex flex-col gap-3 basis-1/2">
                 <Input name="title" label="Title" required autoFocus />
                 <Input name="description" label="Description" style={{ height: "168px" }} multiline />
-                <Select
-                  required
-                  label="License *"
-                  name="licenseId"
-                  showEmptyOption={false}
-                  options={data.licenses.map((l) => {
-                    return {
-                      value: String(l.id),
-                      description: l.name,
-                    };
-                  })}
+                <Input
+                  name="link"
+                  label="Link"
+                  type="url"
+                  placeholder="Link to a Youtube video demonstrating the model"
                 />
               </div>
 
@@ -310,31 +309,45 @@ export default function ModelsNewPage() {
                     };
                   })}
                 />
-                <MultiSelect
-                  label="Tags"
-                  options={tagOptions}
-                  onChange={(e: any) => setSelectedTags(e)}
-                  defaultValue={selectedTags}
-                />
+                <div className="mb-3">
+                  <MultiSelect
+                    label="Tags"
+                    options={tagOptions}
+                    onChange={(e: any) => setSelectedTags(e)}
+                    defaultValue={selectedTags}
+                  />
+                </div>
                 {selectedTags.map((tag) => {
                   return <input type="hidden" name="tags" value={tag.value} key={tag.value} />;
                 })}
+                <Select
+                  required
+                  label="License *"
+                  name="licenseId"
+                  showEmptyOption={false}
+                  options={data.licenses.map((l) => {
+                    return {
+                      value: String(l.id),
+                      description: l.name,
+                    };
+                  })}
+                />
+                <div className="flex flex-col font-satoshi-regular text-sm">
+                  <p className="block">* Not sure which license to choose?</p>
+                  <p className="block ml-2">
+                    Click
+                    <Link
+                      to="/support/licensing"
+                      target="_new"
+                      className="inline mx-1 hover:underline text-tonehunt-blue-light"
+                    >
+                      here
+                    </Link>
+                    {""}
+                    for more information.
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col mt-3 font-satoshi-regular text-sm">
-              <p className="block">* Not sure which license to choose?</p>
-              <p className="block ml-2">
-                Click
-                <Link
-                  to="/support/licensing"
-                  target="_new"
-                  className="inline mx-1 hover:underline text-tonehunt-blue-light"
-                >
-                  here
-                </Link>
-                {""}
-                for more information.
-              </p>
             </div>
 
             {fileUploadFetcher.data?.path ? (

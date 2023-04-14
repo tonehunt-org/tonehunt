@@ -14,6 +14,7 @@ import Button from "~/components/ui/Button";
 import { split, join, map } from "lodash";
 import MultiSelect from "~/components/ui/MultiSelect";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";
+import { formatYoutubeLink } from "~/utils/link";
 
 type LoaderData = {
   model: any;
@@ -66,13 +67,17 @@ export const action: ActionFunction = async ({ request, context }) => {
       const tags = formData.get("tags") as string;
       const tagsScala = tags && tags !== "" ? split(tags, ",") : [];
 
+      // Auto format YT embed link from YT video url
+      // TODO: should just unfurl links we allow them to post.
+      const formattedLink = formatYoutubeLink(link);
+
       const params = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         ampName: formData.get("ampName") as string,
         categoryId: Number(formData.get("categoryId")) as number,
         active: status === "1" ? true : false,
-        link: link === "" ? null : link,
+        link: formattedLink === "" ? null : formattedLink,
         tags: tagsScala,
       };
 
@@ -233,7 +238,8 @@ export default function EditModelPage() {
                 <Input
                   name="link"
                   label="Link"
-                  placeholder="Link to Youtube, Soundcloud, etc"
+                  type="url"
+                  placeholder="Link to a Youtube video demonstrating the model"
                   defaultValue={model.link}
                 />
               </div>

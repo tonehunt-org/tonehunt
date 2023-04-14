@@ -17,6 +17,7 @@ import { getProfile, getProfileWithFollows } from "~/services/profile";
 import type { User } from "@supabase/supabase-js";
 import ButtonLink from "~/components/ui/ButtonLink";
 import FollowButton from "~/components/FollowButton";
+import { formatYoutubeLink } from "~/utils/link";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   const d = data as LoaderData;
@@ -164,9 +165,31 @@ export default function ModelDetailPage() {
 
       <div className="pt-8 lg:pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
         <div className="flex-grow">
-          <h4 className="pb-2">{data.model.ampName}</h4>
+          <div className="pb-10">
+            <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Make and model</h5>
+            <h4 className=" font-satoshi-bold text-lg">{data.model.ampName}</h4>
+          </div>
 
-          <p className="text-[18px] lg:text-[22px] opacity-70 pb-8 whitespace-pre-line">{data.model.description}</p>
+          <div className="pb-10">
+            <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Description</h5>
+            <p className="text-[18px] lg:text-[22px]  whitespace-pre-line">{data.model.description}</p>
+          </div>
+
+          {data.model.link ? (
+            <div className="pb-10">
+              <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Preview</h5>
+              <iframe
+                width="420"
+                height="315"
+                width="100%"
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                frameBorder="0"
+                src={formatYoutubeLink(data.model.link)}
+                title={`Demonstration for ${data.model.title}`}
+              />
+            </div>
+          ) : null}
 
           <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
             Uploaded {timeago.format(data.model.createdAt)}
@@ -174,7 +197,7 @@ export default function ModelDetailPage() {
 
           {data.model.tags.length > 0 ? (
             <div>
-              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">Tags</h5>
+              <h5 className="text-xs uppercase leading-4 opacity-40 font-satoshi-bold pb-4">Tags</h5>
 
               <ul className="m-0 p-0 pb-[44px] flex gap-1.5 flex-wrap ">
                 {data.model.tags?.map((tag) => {
@@ -196,8 +219,8 @@ export default function ModelDetailPage() {
 
           {data.model.license ? (
             <div className="mb-4">
-              <h5 className="text-xs uppercase leading-4 opacity-60 font-satoshi-bold pb-4">License</h5>
-              <p className="font-satoshi-light text-sm text-white/60">
+              <h5 className="text-xs uppercase leading-4 opacity-40 font-satoshi-bold pb-2">License</h5>
+              <p className="font-satoshi-light text-sm text-white/40">
                 <span className="font-satoshi-medium inline mr-1">{data.model.license.name}:</span>
                 {data.model.license.description}
               </p>

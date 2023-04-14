@@ -37,20 +37,13 @@ export const getModels = async (params: getModelsType) => {
 
   const followingQuery = {
     profile: {
-      OR: [
-        {
-          followers: {
-            some: {
-              profileId: params.user?.id,
-              active: true,
-              deleted: false,
-            },
-          },
+      followers: {
+        some: {
+          profileId: params.user?.id,
+          active: true,
+          deleted: false,
         },
-        {
-          id: params.user?.id,
-        },
-      ],
+      },
     },
   };
 

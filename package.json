@@ -2,10 +2,13 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "npm run generateTypes && remix build",
+    "build": "npx prisma migrate deploy && remix build",
     "dev": "npx prisma generate && remix dev",
     "typecheck": "tsc",
-    "generateTypes": "npx prisma generate"
+    "generateTypes": "npx prisma generate",
+    "seed": "npx prisma db seed",
+    "migrate": "npx prisma migrate dev",
+    "admin:changeEmail": "node --require esbuild-register admin/change-email.ts"
   },
   "postinstall": "npm run generateTypes",
   "prisma": {
@@ -46,6 +49,7 @@
     "@remix-run/eslint-config": "1.15.x",
     "@remix-run/serve": "1.15.x",
     "@types/lodash": "^4.14.191",
+    "@types/prompt": "^1.1.5",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
@@ -53,6 +57,7 @@
     "esbuild-register": "^3.4.2",
     "eslint": "^8.27.0",
     "prisma": "^4.12.0",
+    "prompt": "^1.3.0",
     "tailwindcss": "^3.2.7",
     "typescript": "^4.8.4"
   },
