@@ -39,7 +39,7 @@ const ModelsListComponent = ({
   setSelectedFilter = undefined,
   showFilters = true,
   showMenu = true,
-  selectedSortBy = "following",
+  selectedSortBy = "newest",
   onSortChange = undefined,
   user = null,
   profile,
@@ -85,20 +85,10 @@ const ModelsListComponent = ({
         {showMenu ? (
           <div className="flex-none items-center">
             <div className="flex items-center mt-2">
-              {user ? (
-                <ButtonLink
-                  to={`${location.pathname}?${followSearchParams}`}
-                  className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                    sortByParam === "following" || sortByParam === null ? activeSortStyle : "text-tonehunt-gray-disable"
-                  }`}
-                >
-                  FOLLOWING
-                </ButtonLink>
-              ) : null}
               <ButtonLink
                 to={`${location.pathname}?${newestSearchParams}`}
                 className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  sortByParam === "newest" ? activeSortStyle : "text-tonehunt-gray-disable"
+                  sortByParam === "newest" || sortByParam === null ? activeSortStyle : "text-tonehunt-gray-disable"
                 }`}
               >
                 NEWEST
@@ -112,6 +102,16 @@ const ModelsListComponent = ({
               >
                 POPULAR
               </ButtonLink>
+              {user ? (
+                <ButtonLink
+                  to={`${location.pathname}?${followSearchParams}`}
+                  className={`font-satoshi-bold mr-2 text-xs border-0 ${
+                    sortByParam === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
+                  }`}
+                >
+                  FOLLOWING
+                </ButtonLink>
+              ) : null}
             </div>
           </div>
         ) : null}

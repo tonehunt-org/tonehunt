@@ -198,13 +198,16 @@ export default function UserProfilePage() {
 
                 <div className="flex justify-center flex-row mb-6 gap-6">
                   <div>
-                    <span className="font-satoshi-bold text-tonehunt-gray-lighter">
-                      {data.profile?.followers.length} {data.profile?.followers.length === 1 ? `Follower` : `Followers`}
+                    <span className="font-satoshi-bold">
+                      {data.profile?.followers.length}{" "}
+                      <span className="text-tonehunt-gray-lighter">
+                        {data.profile?.followers.length === 1 ? `Follower` : `Followers`}
+                      </span>
                     </span>
                   </div>
                   <div>
-                    <span className="font-satoshi-bold text-tonehunt-gray-lighter">
-                      {data.profile?.following.length} Following
+                    <span className="font-satoshi-bold">
+                      {data.profile?.following.length} <span className="text-tonehunt-gray-lighter">Following</span>
                     </span>
                   </div>
                 </div>
