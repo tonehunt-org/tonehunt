@@ -9,10 +9,11 @@ import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import ModelListPage, { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import ModelListPage from "~/components/routes/ModelListPage";
 import ModelDetailPage from "~/components/routes/ModelDetailPage";
 import type { Counts } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { MODELS_LIMIT } from "~/utils/constants";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;

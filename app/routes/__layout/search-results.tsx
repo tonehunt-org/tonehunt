@@ -8,7 +8,7 @@ import { getModels } from "~/services/models";
 
 import ModelsListComponent from "~/components/ModelList";
 import Loading from "~/components/ui/Loading";
-import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import { MODELS_LIMIT } from "~/utils/constants";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
 

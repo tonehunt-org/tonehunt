@@ -12,9 +12,7 @@ import type { Category, Counts } from "@prisma/client";
 import { twMerge } from "tailwind-merge";
 import { sortCategories } from "~/utils/categories";
 import { formatNumber } from "~/utils/number";
-
-// THE AMOUNT OF MODELS PER PAGE
-export const MODELS_LIMIT = 20;
+import { MODELS_LIMIT } from "~/utils/constants";
 
 type ModelListPageProps = {
   counts: Counts[];
