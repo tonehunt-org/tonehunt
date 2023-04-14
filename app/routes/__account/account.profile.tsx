@@ -7,6 +7,7 @@ import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
 import Input from "~/components/ui/Input";
 import Button from "~/components/ui/Button";
+import AvatarButton from "~/components/AvatarButton";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -108,6 +109,10 @@ export default function ProfileInformationPage() {
           </div>
         </div>
       ) : null}
+
+      <div className="flex flex-col mt-5 justify-center relative">
+        <AvatarButton profile={profile} />
+      </div>
 
       <div className="flex flex-col mt-5">
         <div className="flex-1">
