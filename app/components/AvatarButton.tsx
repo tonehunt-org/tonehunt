@@ -2,8 +2,7 @@ import { useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { useFetcher } from "@remix-run/react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-
-const MAX_UPLOAD_SIZE = 2000000;
+import { AVATAR_MAX_UPLOAD_SIZE } from "~/utils/constants";
 
 const AvatarButton = ({ profile }: any) => {
   console.log(profile);
@@ -20,7 +19,7 @@ const AvatarButton = ({ profile }: any) => {
       fileInput = true;
     }
 
-    if (event.target.files[0].size >= MAX_UPLOAD_SIZE) {
+    if (event.target.files[0].size >= AVATAR_MAX_UPLOAD_SIZE) {
       console.log("MAX SIZE READCHED");
       setError("Max size reached");
       return;
@@ -91,11 +90,11 @@ const AvatarButton = ({ profile }: any) => {
           <div className="text-tiny text-center uppercase mt-3 text-white/60">
             Recommended:
             <br />
-            500 x 500
+            Dimensions: 500 x 500
             <br />
-            jpg / png
+            Format: jpg | png
             <br />
-            Max size: 2mb
+            Max size: 4mb
           </div>
           {error ? <div>{error}</div> : null}
         </div>
