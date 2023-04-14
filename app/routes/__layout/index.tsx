@@ -75,7 +75,7 @@ const sortByOptions = [
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
-  const defaultSortBy = session?.user.id ? "following" : "newest";
+  const defaultSortBy = "newest";
 
   const user = session?.user;
   const url = new URL(request.url);
