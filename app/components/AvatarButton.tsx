@@ -3,6 +3,7 @@ import Resizer from "react-image-file-resizer";
 import { useFetcher } from "@remix-run/react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { AVATAR_MAX_UPLOAD_SIZE } from "~/utils/constants";
+import Alert from "./ui/Alert";
 
 const AvatarButton = ({ profile }: any) => {
   console.log(profile);
@@ -10,9 +11,8 @@ const AvatarButton = ({ profile }: any) => {
 
   const avatarFetcher = useFetcher();
 
-  const fileChangedHandler = (event) => {
+  const fileChangedHandler = (event: any) => {
     setError(undefined);
-    console.log(event.target.files[0].size);
 
     let fileInput = false;
     if (event.target.files[0]) {
@@ -20,8 +20,7 @@ const AvatarButton = ({ profile }: any) => {
     }
 
     if (event.target.files[0].size >= AVATAR_MAX_UPLOAD_SIZE) {
-      console.log("MAX SIZE READCHED");
-      setError("Max size reached");
+      setError("File size is larger than 4mb.");
       return;
     }
 
@@ -35,7 +34,6 @@ const AvatarButton = ({ profile }: any) => {
           90,
           0,
           (uri: any) => {
-            console.log(uri);
             const formData = new FormData();
             formData.set("file", uri);
             formData.set("id", profile.id);
@@ -53,12 +51,12 @@ const AvatarButton = ({ profile }: any) => {
         );
       } catch (err) {
         console.log(err);
+        setError("An error has ocurred. Please try again.");
       }
     }
   };
 
   const isAvatar = profile.avatar && profile.avatar !== "";
-  console.log();
 
   return (
     <div className="block w-full ">
@@ -96,7 +94,11 @@ const AvatarButton = ({ profile }: any) => {
             <br />
             Max size: 4mb
           </div>
-          {error ? <div>{error}</div> : null}
+          {error ? (
+            <div className="w-full max-w-lg mt-2">
+              <Alert title="Upload error:" description={error} variant="error" />
+            </div>
+          ) : null}
         </div>
       </avatarFetcher.Form>
     </div>
