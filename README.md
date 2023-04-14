@@ -84,11 +84,12 @@ ToneHunt is a web application designed to be a central repository for Neural Amp
    SUPABASE_URL=get_this # from Supabase
    SUPABASE_ANON_KEY=get_this # from Supabase
    DATABASE_URL=get_this # from Supabase
+   DIRECT_URL=get_this # from Supabase; necessary for pooling
    ```
 
    Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
 
-   There's additional env variables in the project but they are optional for local enviorement (admin scripts, pooling, etc). For more information, you can follow this guide: [https://supabase.com/docs/guides/integrations/prisma](https://supabase.com/docs/guides/integrations/prisma).
+   There's additional env variables in the project but they are optional for local enviorement (admin scripts, etc). For more information (like pooling), you can follow this guide: [https://supabase.com/docs/guides/integrations/prisma](https://supabase.com/docs/guides/integrations/prisma).
 
 7. Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
 
