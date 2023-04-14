@@ -12,7 +12,7 @@ import { getFavorites } from "~/services/favorites";
 import { map } from "lodash";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import { MODELS_LIMIT } from "~/utils/constants";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {

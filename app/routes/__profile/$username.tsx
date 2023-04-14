@@ -13,7 +13,7 @@ import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
-import { MODELS_LIMIT } from "~/components/routes/ModelListPage";
+import { MODELS_LIMIT } from "~/utils/constants";
 import type { ProfileWithFollows } from "~/services/profile";
 import { getProfileWithFollows } from "~/services/profile";
 import FollowButton from "~/components/FollowButton";
