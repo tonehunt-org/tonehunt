@@ -6,7 +6,6 @@ import { AVATAR_MAX_UPLOAD_SIZE } from "~/utils/constants";
 import Alert from "./ui/Alert";
 
 const AvatarButton = ({ profile }: any) => {
-  console.log(profile);
   const [error, setError] = useState<string>();
 
   const avatarFetcher = useFetcher();
