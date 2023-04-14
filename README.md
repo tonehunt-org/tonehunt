@@ -1,6 +1,8 @@
-<img width="697" alt="Screen Shot 2023-03-23 at 12 17 08 PM" src="https://user-images.githubusercontent.com/974723/227276744-f6bd9004-5337-4856-8896-b187f41adb82.png">
+<img width="697" alt="logo_tonehunt" src="public/logo_tonehunt.jpg">
 
 ToneHunt is a web application designed to be a central repository for Neural Amp Modeler (NAM) models.
+
+Visit [https://tonehunt.org/](https://tonehunt.org/) for the live site.
 
 ## Technologies Used
 
