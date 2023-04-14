@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { useFetcher } from "@remix-run/react";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
 
 const MAX_UPLOAD_SIZE = 2000000;
 
@@ -57,18 +58,47 @@ const AvatarButton = ({ profile }: any) => {
     }
   };
 
+  const isAvatar = profile.avatar && profile.avatar !== "";
+  console.log();
+
   return (
-    <div className="block w-28 h-28 m-auto relative">
+    <div className="block w-full ">
       <avatarFetcher.Form method="post" action="/avatar/upload">
-        <input
-          type="file"
-          name="file"
-          onChange={fileChangedHandler}
-          accept="image/jpeg, /image/png"
-          className="w-28 h-28 border-0 cursor-pointer bg-tonehunt-gray-medium overflow-hidden  absolute top-0 left-0"
-        />
-        <div className="w-28 h-28 bg-slate-500 hover:bg-slate-900 rounded-full">IMG HERE</div>
-        {error ? <div>{error}</div> : null}
+        <div className="flex flex-col items-center">
+          <label
+            className={`w-28 h-28 flex flex-col items-center ${
+              !isAvatar ? "px-4 py-6" : ""
+            } bg-tonehunt-gray-light rounded-full cursor-pointer overflow-hidden`}
+          >
+            {isAvatar ? (
+              <img
+                className="w-28 h-28 object-cover transition ease-in-out delay-150 rounded-full border-4 border-tonehunt-blue-dark hover:border-tonehunt-blue-medium"
+                src={profile.avatar}
+                title="Change avatar"
+                alt="Change avatar"
+              />
+            ) : (
+              <UserPlusIcon className="inline w-16 h-16 transition ease-in-out delay-150 text-tonehunt-gray-lighter hover:text-white" />
+            )}
+            <input
+              type="file"
+              name="file"
+              onChange={fileChangedHandler}
+              accept="image/jpeg, /image/png"
+              className="hidden"
+            />
+          </label>
+          <div className="text-tiny text-center uppercase mt-3 text-white/60">
+            Recommended:
+            <br />
+            500 x 500
+            <br />
+            jpg / png
+            <br />
+            Max size: 2mb
+          </div>
+          {error ? <div>{error}</div> : null}
+        </div>
       </avatarFetcher.Form>
     </div>
   );

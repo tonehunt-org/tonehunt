@@ -1,6 +1,7 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData } from "@remix-run/node";
 import { getSession } from "~/auth.server";
+import { db } from "~/utils/db.server";
 
 export type ActionData = {
   error?: string;
@@ -23,6 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     const file = formData.get("file") as File;
     const fileName = formData.get("filename") as string;
+    const profileId = formData.get("id") as string;
 
     const { data, error } = await supabase.storage.from("avatars").upload(fileName, file, {
       cacheControl: "3600000000000",
@@ -33,6 +35,15 @@ export const action: ActionFunction = async ({ request }) => {
       console.error("ERROR UPLOADING:", error);
       return new Response(error.message, { status: 500 });
     }
+
+    await db.profile.update({
+      where: {
+        id: profileId,
+      },
+      data: {
+        avatar: fileName,
+      },
+    });
 
     return json<ActionData>({ path: data?.path });
   } catch (e: any) {

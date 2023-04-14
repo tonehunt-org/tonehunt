@@ -27,7 +27,7 @@ type ActionData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { session } = await getSession(request);
+  const { session, supabase } = await getSession(request);
   const user = session?.user;
 
   if (!session) {
@@ -42,6 +42,12 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   if (!profile || profile.id !== user?.id) {
     return redirect("/");
+  }
+
+  // GET AVATAR PUBLIC URL
+  if (profile.avatar && profile?.avatar !== "") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(profile.avatar);
+    profile.avatar = data.publicUrl ?? null;
   }
 
   return json<LoaderData>({ profile, user });
