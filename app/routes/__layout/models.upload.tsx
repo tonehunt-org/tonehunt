@@ -1,13 +1,12 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData } from "@remix-run/node";
 import { getSession } from "~/auth.server";
+import { MODELS_MAX_UPLOAD_SIZE } from "~/utils/constants";
 
 export type ActionData = {
   error?: string;
   path?: string;
 };
-
-const MAX_UPLOAD_SIZE = 500000000;
 
 export const action: ActionFunction = async ({ request }) => {
   const { session, supabase } = await getSession(request);
@@ -17,7 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   try {
-    const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: MAX_UPLOAD_SIZE });
+    const uploadHandler = unstable_createMemoryUploadHandler({ maxPartSize: MODELS_MAX_UPLOAD_SIZE });
 
     const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
