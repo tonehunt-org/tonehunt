@@ -13,9 +13,15 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  const { session } = await getSession(request);
+  const { session, supabase } = await getSession(request);
 
   const profile = await db.profile.findFirst({ where: { id: session?.user.id } });
+
+  // GET AVATAR PUBLIC URL
+  if (profile && profile.avatar && profile?.avatar !== "") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(profile.avatar);
+    profile.avatar = data.publicUrl ?? null;
+  }
 
   return json<LoaderData>({
     user: session?.user,

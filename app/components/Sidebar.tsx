@@ -7,20 +7,32 @@ import imgArticle3 from "~/assets/articles/article_3.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
+import type { Profile } from "@prisma/client";
 
 type SidebarProps = {
   user?: User | null | undefined;
-  username?: string | null | undefined;
+  profile?: Profile | null | undefined;
   tags: SampleTag[];
 };
 
-const Sidebar = ({ user, username, tags }: SidebarProps) => {
+const Sidebar = ({ user, profile, tags }: SidebarProps) => {
   const UserBlock = () => {
+    const isAvatar = profile?.avatar && profile?.avatar !== "";
     return (
       <div className="w-full">
         <div className="flex flex-row mb-6 items-center">
-          <UserIcon className="block w-11 h-11 rounded-full p-2 bg-tonehunt-green mr-4" />
-          <h3 className="font-satoshi-bold text-lg">{username}</h3>
+          {isAvatar ? (
+            <img
+              className="block w-11 h-11 object-cover rounded-full mr-4"
+              src={profile.avatar ?? ""}
+              title={profile.username ?? "avatar"}
+              alt={profile.username ?? "avatar"}
+            />
+          ) : (
+            <UserIcon className="block w-11 h-11 rounded-full p-2 bg-tonehunt-green mr-4" />
+          )}
+
+          <h3 className="font-satoshi-bold text-lg">{profile?.username}</h3>
         </div>
         <div className="flex flex-col">
           <div className="flex-1 border-b border-gray-600 pb-3 mb-3">
@@ -41,7 +53,7 @@ const Sidebar = ({ user, username, tags }: SidebarProps) => {
           </div>
           <div className="flex-1">
             <div className="flex flex-row items-center">
-              <Link to={`/${username}`} prefetch="intent" className="hover:underline">
+              <Link to={`/${profile?.username}`} prefetch="intent" className="hover:underline">
                 <UserCircleIcon className="inline w-5 h-5 mr-2" />
                 <span className="font-satoshi-regular text-sm">View Profile</span>
               </Link>

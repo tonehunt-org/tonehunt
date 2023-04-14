@@ -49,7 +49,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { session } = await getSession(request);
+  const { session, supabase } = await getSession(request);
 
   const modelReq = db.model.findFirst({
     where: {
@@ -93,6 +93,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("", { status: 404 });
   }
 
+  if (model.profile && model.profile.avatar && model.profile.avatar !== "") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(model.profile.avatar);
+    model.profile.avatar = data.publicUrl ?? null;
+  }
+
   return json<LoaderData>({ model, favorite, user: session?.user, profileWithFollows });
 };
 
@@ -102,6 +107,7 @@ export default function ModelDetailPage() {
 
   const arrayLength = Math.floor(5000 / (data.model.title.length * 10));
   const textForBG = [...new Array(arrayLength)].map(() => data.model.title);
+  const isAvatar = data.model.profile?.avatar && data.model.profile?.avatar !== "";
 
   const reportMail = {
     subject: `Report model: ${data.model.id} - ${data.model.title}`,
@@ -238,7 +244,17 @@ export default function ModelDetailPage() {
 
         <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">
           <div className="border border-white/20 rounded-2xl p-4 text-center sticky top-5">
-            <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
+            {isAvatar ? (
+              <img
+                className="h-[110px] w-[110px] rounded-full m-auto bg-tonehunt-gray-light mb-4 object-cover"
+                src={data.model.profile?.avatar ?? ""}
+                title={data.model.profile?.username ?? "avatar"}
+                alt={data.model.profile?.username ?? "avatar"}
+              />
+            ) : (
+              <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
+            )}
+
             <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
 
             <div className="flex items-center gap-4">

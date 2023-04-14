@@ -63,7 +63,7 @@ export type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { session } = await getSession(request);
+  const { session, supabase } = await getSession(request);
   const user = session?.user;
   const url = new URL(request.url);
 
@@ -97,6 +97,11 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     sessionProfileReq,
     getProfileWithFollows(params.username as string),
   ]);
+
+  if (profile && profile.avatar && profile?.avatar !== "") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(profile.avatar);
+    profile.avatar = data.publicUrl ?? null;
+  }
 
   // GET MODELS
   const models = profile
@@ -170,6 +175,7 @@ export default function UserProfilePage() {
 
   const arrayLength = Math.floor(5000 / (data.profile?.username?.length ?? 1 * 10));
   const textForBG = [...new Array(arrayLength)].map(() => data.profile?.username ?? "");
+  const isAvatar = data.profile?.avatar && data.profile?.avatar !== "";
 
   return (
     <div className="w-full">
@@ -182,7 +188,16 @@ export default function UserProfilePage() {
             <div className="flex flex-col z-1">
               <div className="flex-1">
                 <div className="flex justify-center">
-                  <UserIcon className="w-32 h-32 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
+                  {isAvatar ? (
+                    <img
+                      className="w-32 h-32 rounded-full bg-tonehunt-gray-light mb-5 object-cover"
+                      src={data.profile?.avatar ?? ""}
+                      title={data.profile?.username ?? "avatar"}
+                      alt={data.profile?.username ?? "avatar"}
+                    />
+                  ) : (
+                    <UserIcon className="w-32 h-32 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
+                  )}
                 </div>
               </div>
               <div className="flex-1">
