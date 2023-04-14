@@ -3,12 +3,17 @@ import { PrismaClient } from "@prisma/client";
 import { Categories } from "./seeders/categories";
 import { Licenses } from "./seeders/licenses";
 import { Tags } from "./seeders/tags";
-import { Models } from "./seeders/models";
+import { getModelList } from "./seeders/models";
+import { createUser } from "./seeders/users";
+
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Start seeding...");
+
+  const profileIds = await createUser(prisma);
 
   // CREATE CATEGORIES
   for (const c of Categories) {
@@ -29,7 +34,7 @@ async function main() {
   }
 
   // CREATE MODELS
-  for (const m of Models) {
+  for (const m of getModelList(profileIds)) {
     const model = await prisma.model.create({ data: m });
     console.log(`Created model with id: ${model.id}`);
   }

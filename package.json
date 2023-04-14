@@ -5,7 +5,9 @@
     "build": "npx prisma migrate deploy && remix build",
     "dev": "npx prisma generate && remix dev",
     "typecheck": "tsc",
-    "generateTypes": "npx prisma generate"
+    "generateTypes": "npx prisma generate",
+    "seed": "npx prisma db seed",
+    "migrate": "npx prisma migrate dev"
   },
   "postinstall": "npm run generateTypes",
   "prisma": {
