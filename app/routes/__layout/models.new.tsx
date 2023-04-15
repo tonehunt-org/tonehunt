@@ -51,7 +51,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const [tags, categories, licenses] = await Promise.all([
     getTags(),
-    db.category.findMany({ where: { NOT: { title: "IR" } } }),
+    db.category.findMany(),
     db.license.findMany({ where: { active: true }, orderBy: { id: "asc" } }),
   ]);
 
