@@ -21,7 +21,6 @@ import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
 import { sortCategories } from "~/utils/categories";
 import { Link } from "@remix-run/react";
-import { formatYoutubeLink } from "~/utils/link";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -52,7 +51,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const [tags, categories, licenses] = await Promise.all([
     getTags(),
-    db.category.findMany({ where: { NOT: { title: "IR" } } }),
+    db.category.findMany(),
     db.license.findMany({ where: { active: true }, orderBy: { id: "asc" } }),
   ]);
 
@@ -88,8 +87,6 @@ export const action: ActionFunction = async ({ request, context }) => {
     const formData = await request.formData();
     const data = toJSON<ActionFormData>(formData);
 
-    const formattedLink = formatYoutubeLink(data.link);
-
     const model = await db.model.create({
       data: {
         title: data?.title,
@@ -102,7 +99,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         tags: data?.tags,
         filecount: +data?.filecount,
         licenseId: data?.licenseId ? +data.licenseId : 1,
-        link: formattedLink === "" ? null : formattedLink,
+        link: data.link === "" ? null : data.link,
       },
     });
 
