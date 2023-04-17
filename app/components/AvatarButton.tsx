@@ -76,20 +76,12 @@ const AvatarButton = ({ profile }: any) => {
             ) : (
               <UserPlusIcon className="inline w-16 h-16 text-tonehunt-gray-lighter hover:text-white" />
             )}
-            <input
-              type="file"
-              name="file"
-              onChange={fileChangedHandler}
-              accept="image/jpeg, image/png"
-              className="hidden"
-            />
+            <input type="file" name="file" onChange={fileChangedHandler} accept="image/*" className="hidden" />
           </label>
           <div className="text-tiny text-center uppercase mt-3 text-white/60">
             Recommended:
             <br />
-            Dimensions: 500 x 500
-            <br />
-            Format: jpg | png
+            500 x 500
             <br />
             Max size: 4mb
           </div>
