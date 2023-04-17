@@ -68,19 +68,19 @@ const AvatarButton = ({ profile }: any) => {
           >
             {isAvatar ? (
               <img
-                className="w-28 h-28 object-cover transition ease-in-out delay-150 rounded-full border-4 border-tonehunt-blue-dark hover:border-tonehunt-blue-medium"
+                className="w-28 h-28 object-cover rounded-full border-4 border-tonehunt-blue-dark hover:border-tonehunt-blue-medium"
                 src={profile.avatar}
                 title="Change avatar"
                 alt="Change avatar"
               />
             ) : (
-              <UserPlusIcon className="inline w-16 h-16 transition ease-in-out delay-150 text-tonehunt-gray-lighter hover:text-white" />
+              <UserPlusIcon className="inline w-16 h-16 text-tonehunt-gray-lighter hover:text-white" />
             )}
             <input
               type="file"
               name="file"
               onChange={fileChangedHandler}
-              accept="image/jpeg, /image/png"
+              accept="image/jpeg, image/png"
               className="hidden"
             />
           </label>
