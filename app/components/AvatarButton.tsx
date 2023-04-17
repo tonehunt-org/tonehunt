@@ -83,6 +83,8 @@ const AvatarButton = ({ profile }: any) => {
             <br />
             500 x 500
             <br />
+            JPG | PNG
+            <br />
             Max size: 4mb
           </div>
           {error ? (
