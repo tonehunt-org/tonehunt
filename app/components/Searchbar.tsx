@@ -22,6 +22,7 @@ const Searchbar = ({ value, className, ...props }: InputProps) => {
         <input
           id={id}
           {...props}
+          autoComplete="off"
           style={{ borderRadius: "27px", ...props.style }}
           className={`${inputClassNames} ${className}`}
         />
