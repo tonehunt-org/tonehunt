@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { formatNumber } from "~/utils/number";
 import { useFetcher } from "@remix-run/react";
 import Button from "./ui/Button";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ModelDownloadLoaderData } from "~/routes/__layout/models.$Id.download";
 
 type FavoriteButtonProps = {
@@ -15,9 +15,11 @@ type FavoriteButtonProps = {
 
 export default function DownloadButton({ count, className, modelId, modelName }: FavoriteButtonProps) {
   const downloadFetcher = useFetcher<ModelDownloadLoaderData>();
+  const [fetchingDownload, setFetchingDownload] = useState(false);
 
   const downloadFile = useCallback(() => {
     if (downloadFetcher.data?.downloadUrl) {
+      setFetchingDownload(true);
       fetch(downloadFetcher.data.downloadUrl)
         .then((res) => res.blob())
         .then((blob) => {
@@ -30,7 +32,8 @@ export default function DownloadButton({ count, className, modelId, modelName }:
 
           a.click();
           a.remove();
-        });
+        })
+        .finally(() => setFetchingDownload(false));
     }
   }, [downloadFetcher.data?.downloadUrl, modelName]);
 
@@ -38,10 +41,13 @@ export default function DownloadButton({ count, className, modelId, modelName }:
     downloadFile();
   }, [downloadFetcher.data?.downloadUrl, downloadFile, modelName]);
 
+  const loading = downloadFetcher.state === "loading" || fetchingDownload;
+
   return (
     <Button
       variant="secondary"
       className={className}
+      loading={loading}
       onClick={() => {
         if (downloadFetcher.data?.downloadUrl) {
           downloadFile();
