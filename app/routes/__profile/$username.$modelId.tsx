@@ -145,6 +145,7 @@ export default function ModelDetailPage() {
               modelId={data.model.id}
               disabledReason={data.user ? undefined : "You must be logged in"}
             />
+
             <DownloadButton
               count={data.model.downloads.length}
               className="bg-tonehunt-gray-darker"

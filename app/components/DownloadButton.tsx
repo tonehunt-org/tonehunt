@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { formatNumber } from "~/utils/number";
 import { useFetcher } from "@remix-run/react";
 import Button from "./ui/Button";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import type { ModelDownloadLoaderData } from "~/routes/__layout/models.$Id.download";
 
 type FavoriteButtonProps = {
@@ -13,13 +13,14 @@ type FavoriteButtonProps = {
   modelName: string;
 };
 
-export default function DownloadButton({ count, className, modelId, modelName }: FavoriteButtonProps) {
+const DownloadButton = memo(({ count, className, modelId, modelName }: FavoriteButtonProps) => {
   const downloadFetcher = useFetcher<ModelDownloadLoaderData>();
-  const [fetchingDownload, setFetchingDownload] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
-  const downloadFile = useCallback(() => {
+  const downloadFile = () => {
     if (downloadFetcher.data?.downloadUrl) {
-      setFetchingDownload(true);
+      setDownloading(true);
+
       fetch(downloadFetcher.data.downloadUrl)
         .then((res) => res.blob())
         .then((blob) => {
@@ -33,15 +34,19 @@ export default function DownloadButton({ count, className, modelId, modelName }:
           a.click();
           a.remove();
         })
-        .finally(() => setFetchingDownload(false));
+        .finally(() => {
+          setDownloading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (downloadFetcher.data?.downloadUrl && modelName) {
+      downloadFile();
     }
   }, [downloadFetcher.data?.downloadUrl, modelName]);
 
-  useEffect(() => {
-    downloadFile();
-  }, [downloadFetcher.data?.downloadUrl, downloadFile, modelName]);
-
-  const loading = downloadFetcher.state === "loading" || fetchingDownload;
+  const loading = downloadFetcher.state === "loading" || downloading;
 
   return (
     <Button
@@ -52,7 +57,11 @@ export default function DownloadButton({ count, className, modelId, modelName }:
         if (downloadFetcher.data?.downloadUrl) {
           downloadFile();
         } else {
-          downloadFetcher.load(`/models/${modelId}/download`);
+          // Doing a post to avoid a bad loading state when using a get
+          downloadFetcher.submit(new FormData(), {
+            method: "post",
+            action: `/models/${modelId}/download`,
+          });
         }
       }}
     >
@@ -60,4 +69,6 @@ export default function DownloadButton({ count, className, modelId, modelName }:
       <span className={twMerge("inline-block text-sm font-satoshi-bold text-[16px]")}>{formatNumber(count)}</span>
     </Button>
   );
-}
+});
+
+export default DownloadButton;
