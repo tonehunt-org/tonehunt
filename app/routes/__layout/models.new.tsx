@@ -11,16 +11,17 @@ import { Form, useFetcher, useLoaderData, useNavigate, useNavigation } from "@re
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Loading from "~/components/ui/Loading";
-import type { ActionData as UploadFileActionData } from "~/routes/__layout/models.upload";
 import type { ActionData as ModelCreateActionData } from "~/routes/__layout/models.new";
 import { twMerge } from "tailwind-merge";
-import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { asArray } from "~/utils/array";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";
 import MultiSelect from "~/components/ui/MultiSelect";
 import { getTags } from "~/services/tags";
 import { sortCategories } from "~/utils/categories";
 import { Link } from "@remix-run/react";
+import type { GenerateUploadUrlLoaderData } from "../models.new.generateUploadUrl";
+import { generateUplaodUrlPath } from "../models.new.generateUploadUrl";
+import { zipFiles } from "~/utils/file";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -73,6 +74,7 @@ type ActionFormData = {
   filecount: string;
   licenseId?: string;
   link?: string;
+  active?: string;
 };
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -100,6 +102,7 @@ export const action: ActionFunction = async ({ request, context }) => {
         filecount: +data?.filecount,
         licenseId: data?.licenseId ? +data.licenseId : 1,
         link: data.link === "" ? null : data.link,
+        active: data.active === "1",
       },
     });
 
@@ -115,11 +118,12 @@ export default function ModelsNewPage() {
   const [drag, setDrag] = useState(false);
   const [showFields, setShowFields] = useState(false);
   const [formValidity, setFormValidity] = useState(false);
-  const [fileCount, setFileCount] = useState<number>();
+  const [files, setFiles] = useState<File[]>();
   const [selectedTags, setSelectedTags] = useState<MultiSelectOption[]>([]);
+  const [uploading, setUploading] = useState(false);
 
-  const fileUploadFetcher = useFetcher<UploadFileActionData>();
   const detailsFetcher = useFetcher<ModelCreateActionData>();
+  const signedUploadUrlFecher = useFetcher<GenerateUploadUrlLoaderData>();
   const navigation = useNavigation();
   const navigate = useNavigate();
 
@@ -128,15 +132,13 @@ export default function ModelsNewPage() {
 
   const tagOptions = data.tags.map((tag) => ({ value: tag.name, label: tag.name }));
 
-  const isFileUploading = fileUploadFetcher.state === "submitting";
-
   // Handle upload error
   useEffect(() => {
-    if (fileUploadFetcher.data?.error) {
+    if (signedUploadUrlFecher.data?.error) {
       alert("There was an error uploading your files. Please try again.");
       setShowFields(false);
     }
-  }, [fileUploadFetcher.data?.error]);
+  }, [signedUploadUrlFecher.data?.error]);
 
   const isCreatingModel = detailsFetcher.state === "submitting" || navigation.state === "loading";
 
@@ -151,49 +153,69 @@ export default function ModelsNewPage() {
     }
   }, [detailsFetcher.data?.model, detailsFetcher.type]);
 
+  useEffect(() => {
+    // Once the signed upload url is generated, the upload can begin
+    if (signedUploadUrlFecher.data && signedUploadUrlFecher.type === "done" && files) {
+      zipFiles(files)
+        .then((zippedFile) => {
+          // Create data to send to server
+          const zippedFormData = new FormData();
+
+          zippedFormData.set("file", zippedFile);
+
+          if (!signedUploadUrlFecher.data.signedUrl || !signedUploadUrlFecher.data.apiKey) {
+            throw new Error("Signed Url and related data was missing while fetching");
+          }
+
+          return fetch(signedUploadUrlFecher.data.signedUrl, {
+            method: "PUT",
+            body: zippedFormData,
+            headers: {
+              apikey: signedUploadUrlFecher.data.apiKey,
+              Authorization: `Bearer: ${signedUploadUrlFecher.data.bearer}`,
+            },
+          });
+        })
+        .then(async (response) => {
+          if (!response.ok) {
+            setShowFields(false);
+            const text = await response.text();
+
+            alert(`There was an error uploading your files. ${text}. Please try again`);
+          }
+        })
+        .catch((e) => {
+          setShowFields(false);
+          alert(`There was an error uploading your files. ${e}. Please try again`);
+        })
+        .finally(() => {
+          setUploading(false);
+        });
+    }
+  }, [files, signedUploadUrlFecher.data, signedUploadUrlFecher.data?.path, signedUploadUrlFecher.type]);
+
   const handleFormSubmit = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (formRef.current) {
       const formData = new FormData(formRef.current);
-      let { files } = toJSON<{ files: File[] }>(formData);
-      files = asArray(files);
+      let { files: filesBeingUploaded } = toJSON<{ files: File[] }>(formData);
+      const _files = asArray(filesBeingUploaded);
 
-      // TODO: this needs to be more robust, but works for now
-      const hasInvalidFiles = files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
+      const hasInvalidFiles = _files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
 
       if (hasInvalidFiles) {
         alert("Only NAM models and IR wav files are allowed");
         return;
       }
 
-      setFileCount(files.length);
-
-      // Zip up files
-      const zipFileWriter = new BlobWriter();
-      const zipWriter = new ZipWriter(zipFileWriter);
-
-      await Promise.all(
-        files.map((file) => {
-          const blobReader = new BlobReader(file);
-          return zipWriter.add(file.name, blobReader);
-        })
-      );
-
-      const zippedFile = await zipWriter.close();
-
-      // Create data to send to server
-      const zippedFormData = new FormData();
-      zippedFormData.set("file", zippedFile);
-
-      fileUploadFetcher.submit(zippedFormData, {
-        method: "post",
-        action: "/models/upload",
-        encType: "multipart/form-data",
-      });
-
+      setUploading(true);
+      setFiles(_files);
       setShowFields(true);
+
+      // Get the uplaod url
+      signedUploadUrlFecher.load(`${generateUplaodUrlPath}?filename=${Math.random()}.zip`);
     }
 
     return false;
@@ -260,16 +282,16 @@ export default function ModelsNewPage() {
       {showFields ? (
         <div>
           <div className="mb-12">
-            {isFileUploading ? (
+            {uploading ? (
               <span className="flex items-center gap-3">
                 <Loading />
-                {fileCount === 1 ? "File" : "Files"} uploading ...
+                {files?.length === 1 ? "File" : "Files"} uploading ...
               </span>
             ) : (
               <>
                 <span className="flex items-center gap-3">
                   <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                  <strong> {fileCount === 1 ? "File" : "Files"} Uploaded!</strong>
+                  <strong> {files?.length === 1 ? "File" : "Files"} Uploaded!</strong>
                 </span>
               </>
             )}
@@ -290,6 +312,24 @@ export default function ModelsNewPage() {
                   label="Link"
                   type="url"
                   placeholder="Link to a Youtube video demonstrating the model"
+                />
+
+                <Select
+                  required
+                  label="Status"
+                  name="active"
+                  defaultSelected="1"
+                  showEmptyOption={false}
+                  options={[
+                    {
+                      value: "1",
+                      description: "Published",
+                    },
+                    {
+                      value: "2",
+                      description: "Hidden",
+                    },
+                  ]}
                 />
               </div>
 
@@ -347,14 +387,14 @@ export default function ModelsNewPage() {
               </div>
             </div>
 
-            {fileUploadFetcher.data?.path ? (
-              <input type="hidden" name="modelPath" value={fileUploadFetcher.data?.path} />
+            {signedUploadUrlFecher.data?.path ? (
+              <input type="hidden" name="modelPath" value={signedUploadUrlFecher.data?.path} />
             ) : null}
 
-            {fileCount !== undefined ? <input type="hidden" name="filecount" value={fileCount} /> : null}
+            {files?.length !== undefined ? <input type="hidden" name="filecount" value={files?.length} /> : null}
 
             <div className="pt-12 flex justify-end">
-              <Button disabled={!formValidity} loading={isCreatingModel} type="submit" className="">
+              <Button disabled={!formValidity || uploading} loading={isCreatingModel} type="submit" className="">
                 Create Model
               </Button>
             </div>

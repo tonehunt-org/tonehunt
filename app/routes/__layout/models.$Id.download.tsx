@@ -1,17 +1,15 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getSession } from "~/auth.server";
 import { db } from "~/utils/db.server";
-import { redirect } from "@remix-run/node";
 
 export type ModelDownloadLoaderData = {
   downloadUrl?: string;
   error?: string;
 };
 
-export const loader: LoaderFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({ request, context, params }) => {
   const { supabase, session } = await getSession(request);
-  const returnUrl = request.headers.get("Referer");
   const user = session?.user;
 
   const modelId = params.Id as string;

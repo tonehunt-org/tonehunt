@@ -33,9 +33,39 @@ Visit [https://tonehunt.org/](https://tonehunt.org/) for the live site.
 
    - Go to supabase.io and create an account.
    - Follow this instructions to setup Supabase locally: [https://supabase.com/docs/guides/cli/local-development](https://supabase.com/docs/guides/cli/local-development) (you can skip the Database migrations and Deploy your project sections; we'll cover that below).
-   - To access your local Supabase Dashboard: [http://localhost:54323/](http://localhost:54323/)
+   - After running `supabase start` from the previous step, you should see on the terminal all the necessary credentials needed to continue with the setup.
+   - For example, to access your local Supabase Dashboard: [http://localhost:54323/](http://localhost:54323/)
 
-4. Setup Triggers & Functions in Supabase
+4. To set up the environment variables, rename the `.env.example` file as `.env` file and set the necessary environment variables (you should be able to see the credentials from the previous step):
+
+   ```
+   SUPABASE_URL= use API URL
+   SUPABASE_ANON_KEY= use anon key
+   DATABASE_URL= use DB URL
+   DIRECT_URL= use DB URL
+   ```
+
+   There's additional env variables in the project but they are optional for local enviorement (admin scripts, etc). For more information (like pooling), you can follow this guide: [https://supabase.com/docs/guides/integrations/prisma](https://supabase.com/docs/guides/integrations/prisma).
+
+5. Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
+
+   Run the following command in your terminal to set up the database:
+
+   ```
+   npx prisma migrate dev
+   ```
+
+   This will run the Prisma migrations and create the necessary tables in your database.
+
+   To seed the database, run:
+
+   ```
+   npx prisma db seed
+   ```
+
+   This will populate the database with test data.
+
+6. Setup Triggers, Functions and Buckets in Supabase
 
    **Create a new Function**
 
@@ -43,7 +73,7 @@ Visit [https://tonehunt.org/](https://tonehunt.org/) for the live site.
    2. Select `Functions` and click `Create a new function`
    3. Enter the following:
 
-   - Name of function: can be anything
+   - Name of function: `create_new_profile`
    - Schema: select `public`
    - Return type: select `trigger`
    - Definition: enter the following:
@@ -66,58 +96,47 @@ Visit [https://tonehunt.org/](https://tonehunt.org/) for the live site.
    2. Select `Create a new trigger`
    3. Enter the following:
 
-   - Name of trigger: can be anything
+   - Name of trigger: `create_profiles`
    - Table: select `users auth`
    - Events: select `Insert`
    - Trigger type: select `After the event`
    - Orientation: select `Row`
-   - Function to trigger: select the newly created Function from the steps above
+   - Function to trigger: select the newly created Function from the steps above (`create_new_profile`)
    - Click `Confirm`
 
-5. Set up Supabase credentials
-   Go to your Supabase dashboard and click on the "Settings" tab.
-   Under the "API" section, you will find your Supabase URL and public and secret keys. Copy these credentials as you will need them later to connect your Remix app with Supabase.
-   Under the "Database" section, you will find the Connection String to connect to your database.
+   **Create Buckets**
 
-6. Set up environment variables
-   Rename the .env.example file as .env file and set the necessary environment variables:
+   1. From the left side panel, select `Storage`
+   2. Select `Create a new bucket`
+   3. Enter `models` as the name of the bucket and enable `Public bucket`
+   4. Repeat this process to create another bucket for `avatars`
 
-   ```
-   SUPABASE_URL=get_this # from Supabase
-   SUPABASE_ANON_KEY=get_this # from Supabase
-   DATABASE_URL=get_this # from Supabase
-   DIRECT_URL=get_this # from Supabase; necessary for pooling
-   ```
+   **Create Bucket Policy**
 
-   Replace `your Supabase URL`, `your Supabase secret key` and `your Database URL` with your actual Supabase URL, secret key and connection string, respectively.
+   1. In the same Storage page, select `Policies`
+   2. On the `Other policies under storage.objects` area, select `New policy`
+   3. Select `For Full customization`
+   4. Enter `Enable insert for authenticated users only` as the policy name
+   5. Select `INSERT` from `Allowed operation`
+   6. Select `authenticated` from `Target roles`
+   7. Enter `true` on `WITH CHECK expression`
+   8. Click `Review` and `Save Policy`
 
-   There's additional env variables in the project but they are optional for local enviorement (admin scripts, etc). For more information (like pooling), you can follow this guide: [https://supabase.com/docs/guides/integrations/prisma](https://supabase.com/docs/guides/integrations/prisma).
-
-7. Make sure the Prisma CLI is installed by running `npm install prisma -D` or `yarn add prisma -D` in your project directory.
-
-   Run the following command in your terminal to set up the database:
-
-   ```
-   npx prisma migrate dev
-   ```
-
-   This will run the Prisma migrations and create the necessary tables in your database.
-
-   To seed the database, run:
-
-   ```
-   npx prisma db seed
-   ```
-
-   This will populate the database with test data.
-
-8. Start the project
+7. Start the project
 
    ```
    npm run dev
    ```
 
    This will start the server in development mode and allow you to access the app in your browser at http://localhost:3000.
+
+8. If you need to stop the supabase local container, you should run (in the supabase local folder project):
+
+```
+supabase stop --backup
+```
+
+This will keep the data from the db available for next time the container starts (not using `--backup` will reset and delete everything from the database and you'll need to run the migrations and seeders again).
 
 ## How to contribute
 
