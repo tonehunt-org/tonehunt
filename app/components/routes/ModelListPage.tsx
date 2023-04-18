@@ -127,6 +127,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
   return (
     <div className="w-full">
       {renderTitle()}
+
       <div className="flex">
         <div className="w-full">
           {loading ? (
@@ -159,10 +160,7 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
 export const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
   return (
     <h1
-      className={twMerge(
-        "w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-10 lg:mb-20",
-        className
-      )}
+      className={twMerge("w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-5 lg:mb-14", className)}
     >
       {children}
     </h1>
