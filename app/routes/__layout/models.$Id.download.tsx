@@ -11,7 +11,6 @@ export type ModelDownloadLoaderData = {
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   const { supabase, session } = await getSession(request);
-  const returnUrl = request.headers.get("Referer");
   const user = session?.user;
 
   const modelId = params.Id as string;

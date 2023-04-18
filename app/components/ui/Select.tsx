@@ -43,7 +43,7 @@ export default function Select({
         className={twMerge("appearance-none relative", inputClassNames, className, "pr-9", "bg-tonehunt-gray-dark")}
         style={{ borderRadius: "27px", marginBottom: 0 }}
         required={required}
-        value={defaultSelected ?? undefined}
+        defaultValue={defaultSelected ?? undefined}
         onChange={onChange ?? undefined}
       >
         {showEmptyOption ? <option value=""></option> : null}

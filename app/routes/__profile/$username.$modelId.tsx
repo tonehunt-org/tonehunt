@@ -20,6 +20,13 @@ import FollowButton from "~/components/FollowButton";
 import { formatYoutubeLink } from "~/utils/link";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
+  if (!data?.model) {
+    // TODO: should throw error to trigger not found page
+    return {
+      title: "Not Found",
+    };
+  }
+
   const d = data as LoaderData;
 
   const title = `${d.model.title} | ToneHunt`;
@@ -54,6 +61,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const modelReq = db.model.findFirst({
     where: {
       id: params.modelId as string,
+      deleted: false,
     },
     include: {
       downloads: {
@@ -130,19 +138,18 @@ export default function ModelDetailPage() {
           </h3>
 
           <div className="flex gap-[12px] justify-center pb-8 lg:pb-16">
-            <DownloadButton
-              count={data.model.downloads.length}
-              className="bg-tonehunt-gray-darker"
-              modelId={data.model.id}
-              modelName={data.model.title}
-            />
-
             <FavoriteButton
               count={data.model.favorites.length}
               className="bg-tonehunt-gray-darker"
               favorited={!!data.favorite && data.favorite?.deleted !== true}
               modelId={data.model.id}
               disabledReason={data.user ? undefined : "You must be logged in"}
+            />
+            <DownloadButton
+              count={data.model.downloads.length}
+              className="bg-tonehunt-gray-darker"
+              modelId={data.model.id}
+              modelName={data.model.title}
             />
 
             <ShareButton
