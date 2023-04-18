@@ -13,6 +13,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Start seeding...");
 
+  // CREATE USERS
   const profileIds = await createUser(prisma);
 
   // CREATE CATEGORIES
