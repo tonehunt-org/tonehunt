@@ -16,6 +16,7 @@ import iconOutboard from "~/assets/categories_icons/icon-outboard.svg";
 import iconOutboardCollection from "~/assets/categories_icons/icon-outboard.svg";
 
 import iconGeneric from "~/assets/categories_icons/icon-generic.svg";
+import type { Category } from "@prisma/client";
 
 export const getCategories = async () => {
   const categories = await db.category.findMany({
@@ -70,5 +71,17 @@ export const getCategoryProfile = (catSlug: string, count = 1) => {
         icon: iconGeneric,
         color: "text-tonehunt-purple",
       };
+  }
+};
+
+export const getGategoryPluralType = (category: Category) => {
+  switch (category.slug) {
+    case "ir": {
+      return "Impulses";
+    }
+
+    default: {
+      return "Models";
+    }
   }
 };
