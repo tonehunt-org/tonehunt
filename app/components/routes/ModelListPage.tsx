@@ -9,7 +9,7 @@ export const ModelListTitle = ({ children, className }: PropsWithChildren & { cl
   return (
     <h1
       className={twMerge(
-        "w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-10 lg:mb-10 lg:mt-10",
+        "w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-10 lg:mb-10 lg:mt-5",
         className
       )}
     >
