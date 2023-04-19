@@ -63,10 +63,6 @@ const ModelsListComponent = ({
   const paginationButtonLinkStyle =
     "px-2 py-0.5 border border-white/20 hover:border-white/70  rounded-lg relative w-[36px] h-[36px] inline-flex items-center justify-center text-white/60";
 
-  const activeSortStyle = "bg-tonehunt-gray-medium hover:bg-tonehunt-gray-medium";
-
-  const sortByParam = searchParams.get("sortBy") ?? selectedSortBy;
-
   const pageIsFiltered = currentPage > 0 || searchParams.get("filter");
   const isAllFilter = searchParams.get("filter") === "all" || searchParams.get("filter") === null;
   const isSortedByFollowing = searchParams.get("filter") === "following";
@@ -90,7 +86,7 @@ const ModelsListComponent = ({
 
   return (
     <div>
-      <ul className="list-none p-0 m-0 flex gap-3 items-center justify-end mb-5">
+      <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
         <li>
           <ModelSortDropdown
             icon={<ArrowsUpDownIcon className="w-4- h-4" />}
@@ -180,7 +176,7 @@ const ModelsListComponent = ({
               }
               renderOnZeroPageCount={() => null}
               forcePage={currentPage}
-              containerClassName="flex flex-row justify-end flex-wrap"
+              containerClassName="flex flex-row justify-center lg:justify-end flex-wrap"
               pageClassName="mx-1"
               pageLinkClassName={paginationButtonLinkStyle}
               previousClassName="mr-1"
