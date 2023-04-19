@@ -12,7 +12,6 @@ import { getProfileWithSocials } from "~/services/profile";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
 import type { Category, Model } from "@prisma/client";
-import { getCategories } from "~/services/categories";
 import { getSortFilter } from "~/utils/loader";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
@@ -44,7 +43,6 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const profile = await getProfileWithSocials(session);
 
   const { offset, sortDirection, categoryId, page, categories } = await getSortFilter(url);
-  console.log("categoryId", categoryId);
 
   // GET MODELS
   const favorites = profile
