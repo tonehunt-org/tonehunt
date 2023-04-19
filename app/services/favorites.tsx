@@ -25,6 +25,10 @@ export const getFavorites = async (params: getFavoritesType) => {
       where: {
         deleted: false,
         profileId: params.profileId,
+        model: {
+          active: true,
+          deleted: false,
+        },
         ...categoryFilter,
       },
     }),
@@ -32,6 +36,10 @@ export const getFavorites = async (params: getFavoritesType) => {
       where: {
         deleted: false,
         profileId: params.profileId,
+        model: {
+          active: true,
+          deleted: false,
+        },
         ...categoryFilter,
       },
       select: {

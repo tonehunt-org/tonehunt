@@ -15,6 +15,69 @@ type SidebarProps = {
   tags: SampleTag[];
 };
 
+export const ArticlesBlock = () => {
+  return (
+    <div className="w-full">
+      <div className="flex">
+        <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
+      </div>
+
+      <div className="flex flex-col">
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-purple rounded-xl overflow-hidden flex-none">
+                <img
+                  className="object-cover w-14 h-14"
+                  src={imgArticle1}
+                  alt="capture_image"
+                  title="How to capture your own rig"
+                />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">How to capture your own rig</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-orange rounded-xl overflow-hidden flex-none">
+                <img
+                  className="object-cover w-14 h-14"
+                  src={imgArticle2}
+                  alt="train_image"
+                  title="How to train a model"
+                />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Download the Neural Amp Modeling Plugin</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://discord.gg/anM9ytZTSu" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img className="object-cover w-14 h-14" src={imgDiscord} alt="discord" title="Join our Discord" />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Join the ToneHunt Discord</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Sidebar = ({ user, profile, tags }: SidebarProps) => {
   const UserBlock = () => {
     const isAvatar = profile?.avatar && profile?.avatar !== "";
@@ -76,71 +139,6 @@ const Sidebar = ({ user, profile, tags }: SidebarProps) => {
               #{tag.name}
             </ButtonLink>
           ))}
-        </div>
-      </div>
-    );
-  };
-
-  const ArticlesBlock = () => {
-    return (
-      <div className="w-full">
-        <div className="flex">
-          <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
-        </div>
-
-        <div className="flex flex-col">
-          <div className="flex-1  pb-3 mb-3">
-            <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
-              <div className="flex flex-row items-center">
-                <div className="inline w-14 h-14 mr-2 bg-tonehunt-purple rounded-xl overflow-hidden flex-none">
-                  <img
-                    className="object-cover w-14 h-14"
-                    src={imgArticle1}
-                    alt="capture_image"
-                    title="How to capture your own rig"
-                  />
-                </div>
-                <span className="font-satoshi-bold text-sm hover:underline">How to capture your own rig</span>
-              </div>
-            </a>
-          </div>
-          <div className="flex-1  pb-3 mb-3">
-            <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
-              <div className="flex flex-row items-center">
-                <div className="inline w-14 h-14 mr-2 bg-tonehunt-orange rounded-xl overflow-hidden flex-none">
-                  <img
-                    className="object-cover w-14 h-14"
-                    src={imgArticle2}
-                    alt="train_image"
-                    title="How to train a model"
-                  />
-                </div>
-                <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
-              </div>
-            </a>
-          </div>
-          <div className="flex-1  pb-3 mb-3">
-            <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin" target="_new">
-              <div className="flex flex-row items-center">
-                <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
-                  <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
-                </div>
-                <span className="font-satoshi-bold text-sm hover:underline">
-                  Download the Neural Amp Modeling Plugin
-                </span>
-              </div>
-            </a>
-          </div>
-          <div className="flex-1  pb-3 mb-3">
-            <a href="https://discord.gg/anM9ytZTSu" target="_new">
-              <div className="flex flex-row items-center">
-                <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
-                  <img className="object-cover w-14 h-14" src={imgDiscord} alt="discord" title="Join our Discord" />
-                </div>
-                <span className="font-satoshi-bold text-sm hover:underline">Join the ToneHunt Discord</span>
-              </div>
-            </a>
-          </div>
         </div>
       </div>
     );

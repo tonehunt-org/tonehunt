@@ -16,6 +16,7 @@ interface getModelsType {
   tags?: string | null | undefined;
   following?: boolean;
   lastNDays?: number;
+  all?: boolean;
 }
 
 export const getModels = async (params: getModelsType) => {
@@ -76,8 +77,7 @@ export const getModels = async (params: getModelsType) => {
       // @ts-ignore - TODO: fix
       where: {
         private: false,
-        active: true,
-        deleted: false,
+        ...(params.all ? { deleted: false } : { active: true, deleted: false }),
         ...(params.categoryId && {
           categoryId: params.categoryId,
         }),
@@ -104,8 +104,7 @@ export const getModels = async (params: getModelsType) => {
       // @ts-ignore - TODO: fix
       where: {
         private: false,
-        active: true,
-        deleted: false,
+        ...(params.all ? { deleted: false } : { active: true, deleted: false }),
         ...(params.categoryId && {
           categoryId: params.categoryId,
         }),

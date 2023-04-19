@@ -1,4 +1,5 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { startCase } from "lodash";
@@ -8,7 +9,6 @@ import type { User } from "@supabase/supabase-js";
 import { getModels } from "~/services/models";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 import type { Category, Counts, Model } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
@@ -67,11 +67,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = session?.user;
   const url = new URL(request.url);
 
+  if (!user) {
+    return redirect("/all");
+  }
+
   const profile = await getProfileWithSocials(session);
 
   const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
 
-  const countsReq = await db.counts.findMany();
+  const countsReq = db.counts.findMany();
 
   const modelsReq = getModels({
     limit: MODELS_LIMIT,
@@ -99,22 +103,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const data = useLoaderData<LoaderData>();
 
-  return (
-    <>
-      <ModelListCountTitle counts={data.counts} />
-      {data.models.length === 0 ? (
-        <EmptyFollowFeed />
-      ) : (
-        <ModelList
-          data={data.models}
-          categories={data.categories}
-          total={data.total}
-          currentPage={data.page}
-          limit={MODELS_LIMIT}
-          user={data.user}
-          profile={data.profile}
-        />
-      )}
-    </>
+  return data.models.length === 0 ? (
+    <EmptyFollowFeed />
+  ) : (
+    <ModelList
+      data={data.models}
+      categories={data.categories}
+      total={data.total}
+      currentPage={data.page}
+      limit={MODELS_LIMIT}
+      user={data.user}
+      profile={data.profile}
+    />
   );
 }

@@ -1,31 +1,29 @@
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
-import Sidebar from "~/components/Sidebar";
 import type { User } from "@supabase/supabase-js";
-import type { Profile } from "@prisma/client";
+import type { Counts, Profile } from "@prisma/client";
 import type { PropsWithChildren } from "react";
-import { getSampleTags } from "~/services/tags";
 import { Form, Link, NavLink } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import {
-  ListBulletIcon,
   StarIcon,
   QueueListIcon,
-  ClockIcon,
   ChartBarIcon,
   ArrowTrendingUpIcon,
   UserIcon,
-  EllipsisVerticalIcon,
   HomeIcon,
   GlobeAltIcon,
 } from "@heroicons/react/24/outline";
 import Button from "~/components/ui/Button";
 import RelatedDropdown from "~/components/RelatedDropdown";
+import { ModelListCountTitle } from "~/components/routes/ModelListPage";
+import { ArticlesBlock } from "~/components/Sidebar";
 
 interface DefaultLayoutType {
   user?: User | null | undefined;
   profile?: Profile | null | undefined;
   className?: string | null;
+  counts: Counts[];
 }
 
 const nav1 = [
@@ -33,7 +31,7 @@ const nav1 = [
     title: "Following",
     href: "/",
     icon: HomeIcon,
-    requiresAuth: false,
+    requiresAuth: true,
   },
   {
     title: "Favorites",
@@ -62,8 +60,8 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
     <div className="">
       <Header user={user} profile={profile} />
       <div className="flex p-3 h-fit">
-        <nav className="flex-1 flex justify-end mr-5 sticky top-2 h-fit pb-[84px] overflow-auto">
-          <ul className="list-none p-0 m-0 w-[240px] pt-5 font-satoshi-medium flex flex-col">
+        <nav className="flex-1 flex-grow flex justify-end mr-10 sticky top-2 h-fit pb-[84px] overflow-auto">
+          <ul className="list-none p-0 m-0 w-[220px] pt-5 font-satoshi-medium flex flex-col">
             {nav1
               .filter((item) => {
                 if (item.requiresAuth && !user) {
@@ -82,7 +80,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
                         return twMerge(
                           "block px-5 py-2 rounded-full text-lg",
                           isActive
-                            ? "text-tonehunt-purple"
+                            ? "text-tonehunt-purple bg-tonehunt-gray-medium"
                             : "hover:text-white text-white/80 hover:bg-tonehunt-gray-medium"
                         );
                       }}
@@ -107,7 +105,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
                       return twMerge(
                         "block px-5 py-2 rounded-full text-lg",
                         isActive
-                          ? "text-tonehunt-purple"
+                          ? "text-tonehunt-purple bg-tonehunt-gray-medium"
                           : "hover:text-white text-white/80 hover:bg-tonehunt-gray-medium"
                       );
                     }}
@@ -161,7 +159,12 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
         </nav>
         <div className="w-full max-w-3xl mb-8 mt-8 lg:mb-16 lg:mt-5 xl:mb-16 px-3">{props.children}</div>
 
-        <nav className="flex-1 ml-5"></nav>
+        <nav className="flex-1 ml-10 flex-grow">
+          <div className="max-w-[300px] sticky top-10">
+            <ModelListCountTitle counts={props.counts} className="lg:text-2xl border-b border-white/10 pb-10" />
+            <ArticlesBlock />
+          </div>
+        </nav>
       </div>
 
       <Footer />

@@ -53,6 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     user,
     sortDirection,
     categoryId,
+    all: true,
   });
 
   return json<LoaderData>({
