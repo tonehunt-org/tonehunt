@@ -1,6 +1,6 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { find, startCase } from "lodash";
 import { getSession } from "~/auth.server";
 
@@ -9,11 +9,13 @@ import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import ModelListPage from "~/components/routes/ModelListPage";
-import ModelDetailPage from "~/components/routes/ModelDetailPage";
-import type { Counts } from "@prisma/client";
+import ModelListPage, { ModelListTitle } from "~/components/routes/ModelListPage";
+import type { Counts, Model } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
+import Loading from "~/components/ui/Loading";
+import ModelsList from "~/components/ModelList";
+import { formatNumber } from "~/utils/number";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -50,20 +52,10 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
 
 export type LoaderData = {
   user?: User | null;
-  username: string | null;
-  modelList?: {
-    models: any;
-    total: number;
-    page: number;
-    filter: string;
-    categories: any;
-    sortBy: string;
-    sortDirection: string;
-    tags: string | null;
-  };
-  modelDetail?: {};
+  models: Model[];
   profile: ProfileWithSocials | null;
   counts: Counts[];
+  total: number;
 };
 
 const sortByOptions = [
@@ -84,21 +76,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   const profile = await getProfileWithSocials(session);
 
   // GET PAGE
-  let page = Number(url.searchParams.get("page")) ?? 1;
-  if (!page || page === 0) page = 1;
+  let page = +(url.searchParams.get("page") ?? "1");
   const offset = (page - 1) * MODELS_LIMIT;
-
-  // GET SORT BY
-  const sortByParam = url.searchParams.get("sortBy") || defaultSortBy;
-  const selectedSortBy = find(sortByOptions, ["slug", sortByParam]);
-  const sortBy = selectedSortBy?.field ?? "createdAt";
 
   // GET SORT DIRECTION
   const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
   const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
-
-  // GET USERNAME
-  const usernameParam = url.searchParams.get("username") ?? null;
 
   // GET FILTER
   const filter = url.searchParams.get("filter") ?? "all";
@@ -114,16 +97,58 @@ export const loader: LoaderFunction = async ({ request }) => {
   const countsReq = await db.counts.findMany();
 
   // GET MODELS
+  // const modelsReq = db.model.findMany({
+  //   where: {
+  //     profile: {
+  //       followers: {
+  //         some: {
+  //           profileId: user?.id,
+  //           active: true,
+  //           deleted: false,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   select: {
+  //     id: true,
+  //     title: true,
+  //     description: true,
+  //     tags: true,
+  //     createdAt: true,
+  //     updatedAt: true,
+  //     filename: true,
+  //     filecount: true,
+  //     profile: {
+  //       select: {
+  //         id: true,
+  //         username: true,
+  //       },
+  //     },
+  //     category: {
+  //       select: {
+  //         id: true,
+  //         title: true,
+  //         slug: true,
+  //         pluralTitle: true,
+  //       },
+  //     },
+  //   },
+  //   orderBy: {
+  //     createdAt: "desc",
+  //   },
+  //   skip: offset,
+  //   take: MODELS_LIMIT,
+  // });
+
   const modelsReq = getModels({
     limit: MODELS_LIMIT,
     next: offset,
     categoryId,
-    sortBy,
+    sortBy: "createdAt",
     sortDirection,
-    username: usernameParam,
     user,
     tags: tagsParam,
-    following: sortByParam === "following",
+    following: true,
   });
 
   const [counts, models] = await Promise.all([countsReq, modelsReq]);
@@ -131,17 +156,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     counts,
     user,
-    username: usernameParam,
-    modelList: {
-      models: models.data,
-      total: models.total,
-      page: page - 1,
-      filter,
-      categories,
-      sortBy: selectedSortBy?.slug || "following",
-      sortDirection,
-      tags: tagsParam,
-    },
+    models: models.data,
+    total: models.total,
     profile,
   });
 };
@@ -149,11 +165,52 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const data = useLoaderData<LoaderData>();
 
-  if (data.modelList) {
-    return <ModelListPage counts={data.counts} />;
-  }
+  return (
+    <div className="w-full">
+      <ModelListCountTitle counts={data.counts} />
 
-  if (data.modelDetail) {
-    return <ModelDetailPage />;
-  }
+      <div className="flex">
+        <div className="w-full">
+          <ModelsList
+            data={data.models}
+            total={data.total}
+            currentPage={data.page}
+            limit={MODELS_LIMIT}
+            // handlePageClick={handlePageClick}
+            // filterOptions={selectOptions}
+            // selectedFilter={selectedFilter}
+            // setSelectedFilter={handleFilterChange}
+            // selectedSortBy={modelList.sortBy}
+            // onSortChange={onSortChange}
+            user={data.user}
+            profile={data.profile}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export const ModelListCountTitle = ({ counts, className }: { className?: string; counts: Counts[] }) => {
+  const total = counts.reduce((total, count) => {
+    return total + count.count;
+  }, 0);
+
+  return (
+    <ModelListTitle className={className}>
+      Explore over {formatNumber(total)} models, including{" "}
+      <Link prefetch="intent" to="/?filter=amp" className="border-tonehunt-green border-b-8 hover:text-tonehunt-green">
+        {formatNumber(counts.find((count) => count.name === "amps")?.count ?? 0)}
+      </Link>{" "}
+      amps, and{" "}
+      <Link
+        prefetch="intent"
+        to="/?filter=pedal"
+        className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
+      >
+        {formatNumber(counts.find((count) => count.name === "pedals")?.count ?? 0)}
+      </Link>{" "}
+      pedals.
+    </ModelListTitle>
+  );
+};
