@@ -23,13 +23,13 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
           {props.children}
         </div>
         <div className="w-full lg:w-1/4 xl:hidden">
-          <Sidebar user={user} username={profile?.username} tags={getSampleTags()} />
+          <Sidebar user={user} profile={profile} tags={getSampleTags()} />
         </div>
       </div>
 
       {/* FIXED DESKTOP SIDEBAR */}
       <div className="hidden xl:block absolute top-20 right-0 w-72 min-h-full mb-20">
-        <Sidebar user={user} username={profile?.username} tags={getSampleTags()} />
+        <Sidebar user={user} profile={profile} tags={getSampleTags()} />
       </div>
 
       <Footer />

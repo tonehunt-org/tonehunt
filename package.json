@@ -36,6 +36,7 @@
     "qs": "^6.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-image-file-resizer": "^0.4.8",
     "react-paginate": "^8.1.4",
     "react-select": "^5.7.2",
     "supabase": "^1.42.7",

@@ -7,6 +7,7 @@ import Alert from "~/components/ui/Alert";
 import { db } from "~/utils/db.server";
 import Input from "~/components/ui/Input";
 import Button from "~/components/ui/Button";
+import AvatarButton from "~/components/AvatarButton";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -26,7 +27,7 @@ type ActionData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const { session } = await getSession(request);
+  const { session, supabase } = await getSession(request);
   const user = session?.user;
 
   if (!session) {
@@ -41,6 +42,12 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   if (!profile || profile.id !== user?.id) {
     return redirect("/");
+  }
+
+  // GET AVATAR PUBLIC URL
+  if (profile.avatar && profile?.avatar !== "") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(profile.avatar);
+    profile.avatar = data.publicUrl ?? null;
   }
 
   return json<LoaderData>({ profile, user });
@@ -108,6 +115,10 @@ export default function ProfileInformationPage() {
           </div>
         </div>
       ) : null}
+
+      <div className="flex flex-col mt-5 justify-center relative">
+        <AvatarButton profile={profile} />
+      </div>
 
       <div className="flex flex-col mt-5">
         <div className="flex-1">
