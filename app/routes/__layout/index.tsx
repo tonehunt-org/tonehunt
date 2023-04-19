@@ -1,6 +1,6 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { find, startCase } from "lodash";
 import { getSession } from "~/auth.server";
 
@@ -9,13 +9,11 @@ import { getModels } from "~/services/models";
 import { getCategories } from "~/services/categories";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import ModelListPage, { ModelListTitle } from "~/components/routes/ModelListPage";
-import type { Counts, Model } from "@prisma/client";
+import { ModelListCountTitle } from "~/components/routes/ModelListPage";
+import type { Category, Counts, Model } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
-import Loading from "~/components/ui/Loading";
-import ModelsList from "~/components/ModelList";
-import { formatNumber } from "~/utils/number";
+import ModelList from "~/components/ModelList";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -34,6 +32,8 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const description = `Explore over ${total} Neural Amp Modeler models, including ${
     d.counts.find((count) => count.name === "amps")?.count
   } amps, and ${d.counts.find((count) => count.name === "pedals")?.count} pedals.`;
+
+  // TODO: update this for new layout
 
   return {
     title,
@@ -56,6 +56,8 @@ export type LoaderData = {
   profile: ProfileWithSocials | null;
   counts: Counts[];
   total: number;
+  page: number;
+  categories: Category[];
 };
 
 const sortByOptions = [
@@ -68,16 +70,14 @@ const sortByOptions = [
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
-  const defaultSortBy = "newest";
-
   const user = session?.user;
   const url = new URL(request.url);
 
   const profile = await getProfileWithSocials(session);
 
   // GET PAGE
-  let page = +(url.searchParams.get("page") ?? "1");
-  const offset = (page - 1) * MODELS_LIMIT;
+  let page = +(url.searchParams.get("page") ?? "0");
+  const offset = page * MODELS_LIMIT;
 
   // GET SORT DIRECTION
   const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
@@ -95,50 +95,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const categoryId = selectedCategory?.id ?? null;
 
   const countsReq = await db.counts.findMany();
-
-  // GET MODELS
-  // const modelsReq = db.model.findMany({
-  //   where: {
-  //     profile: {
-  //       followers: {
-  //         some: {
-  //           profileId: user?.id,
-  //           active: true,
-  //           deleted: false,
-  //         },
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     description: true,
-  //     tags: true,
-  //     createdAt: true,
-  //     updatedAt: true,
-  //     filename: true,
-  //     filecount: true,
-  //     profile: {
-  //       select: {
-  //         id: true,
-  //         username: true,
-  //       },
-  //     },
-  //     category: {
-  //       select: {
-  //         id: true,
-  //         title: true,
-  //         slug: true,
-  //         pluralTitle: true,
-  //       },
-  //     },
-  //   },
-  //   orderBy: {
-  //     createdAt: "desc",
-  //   },
-  //   skip: offset,
-  //   take: MODELS_LIMIT,
-  // });
 
   const modelsReq = getModels({
     limit: MODELS_LIMIT,
@@ -159,6 +115,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     models: models.data,
     total: models.total,
     profile,
+    page,
+    categories,
   });
 };
 
@@ -166,51 +124,18 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <div className="w-full">
+    <>
       <ModelListCountTitle counts={data.counts} />
 
-      <div className="flex">
-        <div className="w-full">
-          <ModelsList
-            data={data.models}
-            total={data.total}
-            currentPage={data.page}
-            limit={MODELS_LIMIT}
-            // handlePageClick={handlePageClick}
-            // filterOptions={selectOptions}
-            // selectedFilter={selectedFilter}
-            // setSelectedFilter={handleFilterChange}
-            // selectedSortBy={modelList.sortBy}
-            // onSortChange={onSortChange}
-            user={data.user}
-            profile={data.profile}
-          />
-        </div>
-      </div>
-    </div>
+      <ModelList
+        data={data.models}
+        categories={data.categories}
+        total={data.total}
+        currentPage={data.page}
+        limit={MODELS_LIMIT}
+        user={data.user}
+        profile={data.profile}
+      />
+    </>
   );
 }
-
-export const ModelListCountTitle = ({ counts, className }: { className?: string; counts: Counts[] }) => {
-  const total = counts.reduce((total, count) => {
-    return total + count.count;
-  }, 0);
-
-  return (
-    <ModelListTitle className={className}>
-      Explore over {formatNumber(total)} models, including{" "}
-      <Link prefetch="intent" to="/?filter=amp" className="border-tonehunt-green border-b-8 hover:text-tonehunt-green">
-        {formatNumber(counts.find((count) => count.name === "amps")?.count ?? 0)}
-      </Link>{" "}
-      amps, and{" "}
-      <Link
-        prefetch="intent"
-        to="/?filter=pedal"
-        className="border-tonehunt-yellow border-b-8 hover:text-tonehunt-yellow"
-      >
-        {formatNumber(counts.find((count) => count.name === "pedals")?.count ?? 0)}
-      </Link>{" "}
-      pedals.
-    </ModelListTitle>
-  );
-};

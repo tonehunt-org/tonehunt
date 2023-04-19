@@ -17,6 +17,7 @@ import {
   UserIcon,
   EllipsisVerticalIcon,
   HomeIcon,
+  GlobeAltIcon,
 } from "@heroicons/react/24/outline";
 import Button from "~/components/ui/Button";
 import RelatedDropdown from "~/components/RelatedDropdown";
@@ -49,14 +50,13 @@ const nav1 = [
 ];
 
 const nav2 = [
-  { title: "Newest", href: "/newest", icon: ClockIcon },
+  { title: "All Models", href: "/all", icon: GlobeAltIcon },
   { title: "Trending", href: "/trending", icon: ArrowTrendingUpIcon },
   { title: "Popular", href: "/popular", icon: ChartBarIcon },
 ];
 
 const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
   const { user, profile } = props;
-  console.log("profile", profile);
 
   return (
     <div className="">

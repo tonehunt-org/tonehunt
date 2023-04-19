@@ -22,6 +22,7 @@ export const getCategories = async () => {
   const categories = await db.category.findMany({
     where: {
       active: true,
+      deleted: false,
     },
     select: {
       id: true,

@@ -3,19 +3,21 @@ import ReactPaginate from "react-paginate";
 import Select from "./ui/Select";
 import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
-import type { Model } from "@prisma/client";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import type { Category, Model } from "@prisma/client";
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithSocials } from "~/services/profile";
 import ButtonLink from "./ui/ButtonLink";
 import EmptyFollowFeed from "./EmptyFollowFeed";
 import { useLocation, useSearchParams } from "@remix-run/react";
+import ModelSortDropdown from "./ModelSortDropdown";
+import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
+import { getCategoryProfile } from "~/services/categories";
 
 interface ModelListType {
   data: Model[];
   total: number;
   currentPage: number;
   limit: number;
-  handlePageClick: (arg: number) => void;
   filterOptions?: SelectOption[];
   selectedFilter?: string | undefined | null;
   setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
@@ -26,14 +28,15 @@ interface ModelListType {
   user?: User | null | undefined;
   profile: ProfileWithSocials | null;
   emptyMessage?: string;
+  categories: Category[];
 }
 
 const ModelsListComponent = ({
   data = [],
   total = 0,
   currentPage = 0,
+  categories,
   limit,
-  handlePageClick,
   filterOptions = [],
   selectedFilter = null,
   setSelectedFilter = undefined,
@@ -47,7 +50,7 @@ const ModelsListComponent = ({
 }: ModelListType) => {
   const location = useLocation();
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [followSearchParams] = useSearchParams();
   const [newestSearchParams] = useSearchParams();
   const [popularSearchParams] = useSearchParams();
@@ -78,59 +81,63 @@ const ModelsListComponent = ({
     showFilters &&
     user;
 
+  const [newestParams] = useSearchParams();
+  const [oldestParams] = useSearchParams();
+  newestParams.delete("sortDirection");
+  oldestParams.set("sortDirection", "asc");
+
+  const [filterParams] = useSearchParams();
+
   return (
     <div>
-      <div className="flex mb-2 lg:flex-nowrap flex-wrap gap-5">
-        {/* SORT AREA */}
-        {showMenu ? (
-          <div className="flex-none items-center">
-            <div className="flex items-center mt-2">
-              <ButtonLink
-                to={`${location.pathname}?${newestSearchParams}`}
-                className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  sortByParam === "newest" || sortByParam === null ? activeSortStyle : "text-tonehunt-gray-disable"
-                }`}
-              >
-                NEWEST
-              </ButtonLink>
-              <ButtonLink
-                type="button"
-                to={`${location.pathname}?${popularSearchParams}`}
-                className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                  sortByParam === "popular" ? activeSortStyle : "text-tonehunt-gray-disable hover:text-white"
-                }`}
-              >
-                POPULAR
-              </ButtonLink>
-              {user ? (
-                <ButtonLink
-                  to={`${location.pathname}?${followSearchParams}`}
-                  className={`font-satoshi-bold mr-2 text-xs border-0 ${
-                    sortByParam === "following" ? activeSortStyle : "text-tonehunt-gray-disable"
-                  }`}
-                >
-                  FOLLOWING
-                </ButtonLink>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
+      <ul className="list-none p-0 m-0 flex gap-3 items-center justify-end mb-5">
+        <li>
+          <ModelSortDropdown
+            icon={<ArrowsUpDownIcon className="w-4- h-4" />}
+            renderItem={(item) => item.title}
+            items={[
+              {
+                title: "Newest",
+                href: `${location.pathname}?${newestParams}`,
+                default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
+              },
+              {
+                title: "Oldest",
+                href: `${location.pathname}?${oldestParams}`,
+                default: searchParams.get("sortDirection") === "asc",
+              },
+            ]}
+          />
+        </li>
 
-        {/* CATEGORIES AREA */}
-        {showFilters ? (
-          <div className="flex-grow flex justify-end items-center">
-            <div className="w-full sm:w-auto">
-              <Select
-                options={filterOptions}
-                onChange={setSelectedFilter || undefined}
-                defaultSelected={selectedFilter ?? ""}
-                showEmptyOption={false}
-                fullWidth
-              />
-            </div>
-          </div>
-        ) : null}
-      </div>
+        <li>
+          <ModelSortDropdown
+            icon={<ChevronDownIcon className="w-4 h-4" />}
+            renderItem={(item) => {
+              return (
+                <span className="flex items-center gap-3 py-1">
+                  <img className="w-6 h-6" src={getCategoryProfile(item.slug ?? "").icon} alt={item.title ?? ""} />
+                  <span className="truncate">{item.title} </span>
+                </span>
+              );
+            }}
+            items={[{ title: "All", href: "", default: true }].concat(
+              categories.map((c) => {
+                const params = new URLSearchParams(filterParams);
+                params.set("filter", c.slug);
+                params.delete("page"); // Ensure we don't end up out of bounds
+
+                return {
+                  title: c.pluralTitle ?? "",
+                  href: `${location.pathname}?${params}`,
+                  default: false,
+                  slug: c.slug,
+                };
+              })
+            )}
+          />
+        </li>
+      </ul>
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
@@ -146,6 +153,7 @@ const ModelsListComponent = ({
           ? data.map((model: any) => <ModelListItem key={model.id} profile={profile} model={model} />)
           : null}
       </div>
+
       {/* PAGINATION AREA */}
       {pageCount > 1 ? (
         <div className="flex mt-5">
@@ -157,7 +165,12 @@ const ModelsListComponent = ({
                 <ChevronRightIcon className="w-4 h-4 absolute inline left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" />
               }
               onPageChange={(event) => {
-                handlePageClick(event.selected);
+                if (event.selected === 0) {
+                  searchParams.delete("page");
+                } else {
+                  searchParams.set("page", String(event.selected));
+                }
+                setSearchParams(searchParams);
               }}
               pageRangeDisplayed={3}
               pageCount={pageCount}
@@ -167,7 +180,7 @@ const ModelsListComponent = ({
               }
               renderOnZeroPageCount={() => null}
               forcePage={currentPage}
-              containerClassName="flex flex-row justify-center lg:justify-center flex-wrap"
+              containerClassName="flex flex-row justify-end flex-wrap"
               pageClassName="mx-1"
               pageLinkClassName={paginationButtonLinkStyle}
               previousClassName="mr-1"

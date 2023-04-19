@@ -10,9 +10,9 @@ type RelatedDropdownProps = PropsWithChildren & {
 };
 
 export default function RelatedDropdown({ children, className }: RelatedDropdownProps) {
-  let [referenceElement, setReferenceElement] = useState();
-  let [popperElement, setPopperElement] = useState();
-  let { styles, attributes } = usePopper(referenceElement, popperElement);
+  const [referenceElement, setReferenceElement] = useState();
+  const [popperElement, setPopperElement] = useState();
+  const { styles, attributes } = usePopper(referenceElement, popperElement);
 
   return (
     <Popover className={twMerge("relative", className)}>

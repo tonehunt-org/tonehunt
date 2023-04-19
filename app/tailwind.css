@@ -74,6 +74,8 @@ html {
 
 * {
   scrollbar-color: #8885 #eee;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
 }
 *::-webkit-scrollbar {
   width: 10px;

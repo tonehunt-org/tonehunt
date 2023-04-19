@@ -38,12 +38,6 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
   }));
   const [selectedFilter, setSelectedFilter] = useState(defaultFilter.value);
 
-  const handlePageClick = (selectedPage: number) => {
-    setLoading(true);
-    searchParams.set("page", String(selectedPage + 1));
-    setSearchParams(searchParams);
-  };
-
   useEffect(() => {
     if (modelList) {
       setLoading(false);
@@ -141,7 +135,6 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
               total={modelList.total}
               currentPage={modelList.page}
               limit={MODELS_LIMIT}
-              handlePageClick={handlePageClick}
               filterOptions={selectOptions}
               selectedFilter={selectedFilter}
               setSelectedFilter={handleFilterChange}
@@ -160,7 +153,10 @@ export default function ModelListPage({ counts }: ModelListPageProps) {
 export const ModelListTitle = ({ children, className }: PropsWithChildren & { className?: string }) => {
   return (
     <h1
-      className={twMerge("w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-5 lg:mb-14", className)}
+      className={twMerge(
+        "w-full text-2xl lg:text-[57px] lg:leading-[110%] font-satoshi-bold mb-5 lg:mb-20 lg:mt-10",
+        className
+      )}
     >
       {children}
     </h1>
