@@ -14,6 +14,7 @@ import type { Category, Counts, Model } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
+import { getSortFilter } from "~/utils/loader";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -60,13 +61,6 @@ export type LoaderData = {
   categories: Category[];
 };
 
-const sortByOptions = [
-  { slug: "following", field: "createdAt" },
-  { slug: "newest", field: "createdAt" },
-  { slug: "popular", field: "popular" },
-  { slug: "name", field: "title" },
-];
-
 export const loader: LoaderFunction = async ({ request }) => {
   const { session } = await getSession(request);
 
@@ -75,24 +69,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const profile = await getProfileWithSocials(session);
 
-  // GET PAGE
-  let page = +(url.searchParams.get("page") ?? "0");
-  const offset = page * MODELS_LIMIT;
-
-  // GET SORT DIRECTION
-  const sortDirectionParam = url.searchParams.get("sortDirection") ?? "desc";
-  const sortDirection = sortDirectionParam === "asc" || sortDirectionParam === "desc" ? sortDirectionParam : "desc";
-
-  // GET FILTER
-  const filter = url.searchParams.get("filter") ?? "all";
-
-  // GET TAGS
-  const tagsParam = url.searchParams.get("tags") ?? null;
-
-  // GET CATEGORIES
-  const categories = await getCategories();
-  const selectedCategory = find(categories, ["slug", filter]);
-  const categoryId = selectedCategory?.id ?? null;
+  const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
 
   const countsReq = await db.counts.findMany();
 
@@ -103,7 +80,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     sortBy: "createdAt",
     sortDirection,
     user,
-    tags: tagsParam,
     following: true,
   });
 
