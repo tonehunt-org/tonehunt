@@ -22,13 +22,13 @@ interface ModelListType {
   selectedFilter?: string | undefined | null;
   setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
   showFilters?: boolean;
-  showMenu?: boolean;
   selectedSortBy?: "newest" | "popular" | "following";
   onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
   profile: ProfileWithSocials | null;
   emptyMessage?: string;
   categories: Category[];
+  hideSortOrder?: boolean;
 }
 
 const ModelsListComponent = ({
@@ -41,11 +41,11 @@ const ModelsListComponent = ({
   selectedFilter = null,
   setSelectedFilter = undefined,
   showFilters = true,
-  showMenu = true,
   selectedSortBy = "newest",
   onSortChange = undefined,
   user = null,
   profile,
+  hideSortOrder = false,
   emptyMessage = "No results",
 }: ModelListType) => {
   const location = useLocation();
@@ -87,24 +87,26 @@ const ModelsListComponent = ({
   return (
     <div>
       <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
-        <li>
-          <ModelSortDropdown
-            icon={<ArrowsUpDownIcon className="w-4- h-4" />}
-            renderItem={(item) => item.title}
-            items={[
-              {
-                title: "Newest",
-                href: `${location.pathname}?${newestParams}`,
-                default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
-              },
-              {
-                title: "Oldest",
-                href: `${location.pathname}?${oldestParams}`,
-                default: searchParams.get("sortDirection") === "asc",
-              },
-            ]}
-          />
-        </li>
+        {hideSortOrder ? null : (
+          <li>
+            <ModelSortDropdown
+              icon={<ArrowsUpDownIcon className="w-4- h-4" />}
+              renderItem={(item) => item.title}
+              items={[
+                {
+                  title: "Newest",
+                  href: `${location.pathname}?${newestParams}`,
+                  default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
+                },
+                {
+                  title: "Oldest",
+                  href: `${location.pathname}?${oldestParams}`,
+                  default: searchParams.get("sortDirection") === "asc",
+                },
+              ]}
+            />
+          </li>
+        )}
 
         <li>
           <ModelSortDropdown

@@ -1,6 +1,7 @@
 import { db } from "~/utils/db.server";
 import type { User } from "@supabase/supabase-js";
 import { split } from "lodash";
+import { sub } from "date-fns";
 
 interface getModelsType {
   limit?: number;
@@ -14,6 +15,7 @@ interface getModelsType {
   profileId?: string | null | undefined;
   tags?: string | null | undefined;
   following?: boolean;
+  lastNDays?: number;
 }
 
 export const getModels = async (params: getModelsType) => {
@@ -124,6 +126,13 @@ export const getModels = async (params: getModelsType) => {
           },
         }),
         ...(params.following && followingQuery),
+        ...(params.lastNDays
+          ? {
+              createdAt: {
+                gte: sub(Date.now(), { days: params.lastNDays }),
+              },
+            }
+          : undefined),
       },
       select: {
         _count: {
