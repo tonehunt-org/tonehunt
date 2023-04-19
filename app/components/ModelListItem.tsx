@@ -1,7 +1,7 @@
 import * as timeago from "timeago.js";
 import { Prisma } from "@prisma/client";
 import { Link, useLocation, useSearchParams } from "@remix-run/react";
-import { getCategoryProfile } from "~/services/categories";
+import { getCategoryProfile, getGategoryPluralType } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithSocials } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
@@ -79,7 +79,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       to={`/${model.profile.username}/${model.id}`}
                       className={`font-satoshi-bold uppercase text-xs whitespace-nowrap ${categoryProfile.color} leading-none hover:underline`}
                     >
-                      {model.filecount} models
+                      {model.filecount} {getGategoryPluralType(model.category)}
                     </Link>
                   ) : null}
 
