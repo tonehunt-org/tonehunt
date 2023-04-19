@@ -1,10 +1,11 @@
 import * as timeago from "timeago.js";
 import { Prisma } from "@prisma/client";
 import { Link, useLocation, useSearchParams } from "@remix-run/react";
-import { getCategoryProfile, getGategoryPluralType } from "~/services/categories";
+import { getCategoryProfile } from "~/services/categories";
 import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithSocials } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
+import { getGategoryPluralType } from "~/utils/categories";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {

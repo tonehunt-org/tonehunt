@@ -73,15 +73,3 @@ export const getCategoryProfile = (catSlug: string, count = 1) => {
       };
   }
 };
-
-export const getGategoryPluralType = (category: Category) => {
-  switch (category.slug) {
-    case "ir": {
-      return "Impulses";
-    }
-
-    default: {
-      return "Models";
-    }
-  }
-};

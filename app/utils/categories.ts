@@ -9,3 +9,15 @@ export const sortCategories = (categories: Category[]) => {
     })
     .sort((a, b) => a.sort - b.sort);
 };
+
+export const getGategoryPluralType = (category: Category) => {
+  switch (category.slug) {
+    case "ir": {
+      return "IRs";
+    }
+
+    default: {
+      return "Models";
+    }
+  }
+};
