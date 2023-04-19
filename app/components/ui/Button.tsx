@@ -71,7 +71,7 @@ const Button = forwardRef(
           className
         )}
       >
-        <span className={loading ? "invisible" : ""}>{children}</span>
+        <span className={loading ? "invisible block" : "block"}>{children}</span>
         {loading ? (
           <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
             <Loading size="16" />

@@ -39,9 +39,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   }
 
   const url = new URL(request.url);
-
   const profile = await getProfileWithSocials(session);
-
   const { offset, sortDirection, categoryId, page, categories } = await getSortFilter(url);
 
   // GET MODELS

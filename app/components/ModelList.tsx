@@ -146,7 +146,9 @@ const ModelsListComponent = ({
         ) : null}
 
         {data.length > 0
-          ? data.map((model: any) => <ModelListItem key={model.id} profile={profile} model={model} />)
+          ? data.map((model: any) => {
+              return <ModelListItem key={model.id} profile={profile} model={model} />;
+            })
           : null}
       </div>
 

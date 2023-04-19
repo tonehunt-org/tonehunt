@@ -8,7 +8,6 @@ import type { User } from "@supabase/supabase-js";
 import { getModels } from "~/services/models";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 import type { Category, Counts, Model } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
@@ -78,8 +77,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     categoryId,
     sortBy: "createdAt",
     sortDirection,
-    user,
-    following: true,
   });
 
   const [counts, models] = await Promise.all([countsReq, modelsReq]);
@@ -99,18 +96,14 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <>
-      <ModelListCountTitle counts={data.counts} />
-
-      <ModelList
-        data={data.models}
-        categories={data.categories}
-        total={data.total}
-        currentPage={data.page}
-        limit={MODELS_LIMIT}
-        user={data.user}
-        profile={data.profile}
-      />
-    </>
+    <ModelList
+      data={data.models}
+      categories={data.categories}
+      total={data.total}
+      currentPage={data.page}
+      limit={MODELS_LIMIT}
+      user={data.user}
+      profile={data.profile}
+    />
   );
 }

@@ -61,12 +61,9 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
   return (
     <div className="">
       <Header user={user} profile={profile} />
-      <div className="flex p-3">
+      <div className="flex p-3 h-fit">
         <nav className="flex-1 flex justify-end mr-5 sticky top-2 h-fit pb-[84px] overflow-auto">
-          <ul
-            className="list-none p-0 m-0 w-[240px] pt-5 font-satoshi-medium flex flex-col"
-            style={{ height: "calc(100vh - 130px)" }}
-          >
+          <ul className="list-none p-0 m-0 w-[240px] pt-5 font-satoshi-medium flex flex-col">
             {nav1
               .filter((item) => {
                 if (item.requiresAuth && !user) {
