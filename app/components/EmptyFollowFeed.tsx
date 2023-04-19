@@ -13,7 +13,7 @@ export default function EmptyFollowFeed() {
       <div className="absolute top-[100px] left-1/2 z-10 -translate-x-1/2 text-center ">
         <div className="text-xl mb-10">You are not yet following anyone.</div>
         <div>
-          <ButtonLink to={`/?sortBy=popular`} variant="button-primary">
+          <ButtonLink to={`/popular`} variant="button-primary">
             Find interesting users to follow
           </ButtonLink>
         </div>

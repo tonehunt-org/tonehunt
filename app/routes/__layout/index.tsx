@@ -14,6 +14,7 @@ import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
 import { getSortFilter } from "~/utils/loader";
+import EmptyFollowFeed from "~/components/EmptyFollowFeed";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -101,16 +102,19 @@ export default function Index() {
   return (
     <>
       <ModelListCountTitle counts={data.counts} />
-
-      <ModelList
-        data={data.models}
-        categories={data.categories}
-        total={data.total}
-        currentPage={data.page}
-        limit={MODELS_LIMIT}
-        user={data.user}
-        profile={data.profile}
-      />
+      {data.models.length === 0 ? (
+        <EmptyFollowFeed />
+      ) : (
+        <ModelList
+          data={data.models}
+          categories={data.categories}
+          total={data.total}
+          currentPage={data.page}
+          limit={MODELS_LIMIT}
+          user={data.user}
+          profile={data.profile}
+        />
+      )}
     </>
   );
 }
