@@ -10,6 +10,7 @@ import { useLocation, useSearchParams } from "@remix-run/react";
 import ModelSortDropdown from "./ModelSortDropdown";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { getCategoryProfile } from "~/services/categories";
+import CategoryDropdown from "./CategoryDropdown";
 
 interface ModelListType {
   data: Model[];
@@ -107,31 +108,7 @@ const ModelsListComponent = ({
         )}
 
         <li>
-          <ModelSortDropdown
-            icon={<ChevronDownIcon className="w-4 h-4" />}
-            renderItem={(item) => {
-              return (
-                <span className="flex items-center gap-3 py-1">
-                  <img className="w-6 h-6" src={getCategoryProfile(item.slug ?? "").icon} alt={item.title ?? ""} />
-                  <span className="truncate">{item.title} </span>
-                </span>
-              );
-            }}
-            items={[{ title: "All", href: "", default: true }].concat(
-              categories.map((c) => {
-                const params = new URLSearchParams(filterParams);
-                params.set("filter", c.slug);
-                params.delete("page"); // Ensure we don't end up out of bounds
-
-                return {
-                  title: c.pluralTitle ?? "",
-                  href: `${location.pathname}?${params}`,
-                  default: false,
-                  slug: c.slug,
-                };
-              })
-            )}
-          />
+          <CategoryDropdown categories={categories} />
         </li>
       </ul>
 
