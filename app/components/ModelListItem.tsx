@@ -6,9 +6,6 @@ import FavoriteButton from "./FavoriteButton";
 import type { ProfileWithSocials } from "~/services/profile";
 import DownloadButton from "./DownloadButton";
 import { getGategoryPluralType } from "~/utils/categories";
-import Button from "./ui/Button";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import ButtonLink from "./ui/ButtonLink";
 
 const modelWithCategoryAndProfile = Prisma.validator<Prisma.ModelArgs>()({
   include: {
@@ -30,6 +27,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
+  // TODO: figure out how to show you can edit this model
   const isOwn = model.profile.id === profile?.id;
 
   return (

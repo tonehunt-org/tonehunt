@@ -1,15 +1,13 @@
-import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { Link, NavLink, Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
-import { FaceFrownIcon, UserIcon } from "@heroicons/react/24/outline";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 import ModelList from "~/components/ModelList";
-import Loading from "~/components/ui/Loading";
 import type { User } from "@supabase/supabase-js";
 import type { Category, Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
@@ -20,6 +18,7 @@ import FollowButton from "~/components/FollowButton";
 import { getSortFilter } from "~/utils/loader";
 import ButtonLink from "~/components/ui/ButtonLink";
 import NotFound from "~/components/NotFound";
+import { twMerge } from "tailwind-merge";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -44,7 +43,7 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   };
 };
 
-export type LoaderData = {
+export type ProfileLoaderData = {
   user?: User | null | undefined;
   profile?: ProfileWithFollows | null | undefined;
   categories: Category[];
@@ -112,7 +111,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         total: 0,
       };
 
-  return json<LoaderData>(
+  return json<ProfileLoaderData>(
     {
       categories,
       user,
@@ -131,16 +130,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 };
 
 export default function UserProfilePage() {
-  const data = useLoaderData<LoaderData>();
-  const [searchParams] = useSearchParams();
-
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (data.modelList) {
-      setLoading(false);
-    }
-  }, [data.modelList, searchParams]);
+  const data = useLoaderData<ProfileLoaderData>();
 
   if (data.profile === null) {
     return <NotFound>Not Found</NotFound>;
@@ -176,7 +166,7 @@ export default function UserProfilePage() {
     <div className="w-full">
       <div className="flex flex-col">
         <div className="flex-1 relative">
-          <div className="border border-white/5 rounded-xl text-center block absolute top-0 left-0 w-full h-full leading-[88%] bg-tonehunt-gray-darker font-satoshi-bold -z-10 uppercase text-[80px] overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker">
+          <div className="border border-white/5 rounded-xl rounded-b-none text-center block absolute top-0 left-0 w-full h-full leading-[88%] bg-tonehunt-gray-darker font-satoshi-bold -z-10 uppercase text-[80px] overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker">
             <div style={{ width: "calc(100% + 30px)", transform: "translateX(-15px)" }}>{textForBG}</div>
           </div>
 
@@ -204,7 +194,7 @@ export default function UserProfilePage() {
                   <h1 className="text-5xl font-satoshi-bold mb-6">{data.profile?.username}</h1>
                 </div>
 
-                <div className="flex justify-start flex-row mb-6 gap-6">
+                <div className="flex justify-start flex-row mb-6 gap-6 hidden">
                   <div className="text-tonehunt-purple">
                     <span className="font-satoshi-bold">
                       {data.modelList.total} <span className="font-satoshi-regular">Models</span>
@@ -239,36 +229,51 @@ export default function UserProfilePage() {
             </div>
           </div>
         </div>
-        <div className="flex-1">
-          <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
-            <div className="flex justify-center">
-              <div className="w-full">
-                {loading ? (
-                  <div className="flex justify-center px-10 py-60">
-                    <Loading size="48" />
-                  </div>
-                ) : null}
-                {!loading ? (
-                  <ModelList
-                    data={data.modelList.models}
-                    total={data.modelList.total}
-                    currentPage={data.modelList.page}
-                    limit={MODELS_LIMIT}
-                    user={data.user}
-                    categories={data.categories}
-                    profile={data.sessionProfile}
-                    emptyMessage={
-                      data.profile && data.sessionProfile && data.profile.id === data.sessionProfile.id
-                        ? "You haven't uploaded any models yet."
-                        : `${data.profile?.username ?? "This user"} hasn't uplaoded any models yet.`
-                    }
-                  />
-                ) : null}
-              </div>
-            </div>
-          </div>
+
+        <nav>
+          <ul className="list-none p-0 m-0 flex">
+            <ProfileTab
+              count={data.modelList.total}
+              title={data.modelList.total === 1 ? "Model" : "Models"}
+              href={`/${data.profile?.username}`}
+              end
+            />
+            <ProfileTab
+              count={data.profile?.followers.length ?? 0}
+              title={data.profile?.followers.length === 1 ? `Follower` : `Followers`}
+              href={`/${data.profile?.username}/followers`}
+            />
+            <ProfileTab
+              count={data.profile?.following.length ?? 0}
+              title="Following"
+              href={`/${data.profile?.username}/following`}
+            />
+          </ul>
+        </nav>
+
+        <div className="pb-10 pt-5">
+          <Outlet context={{ ...data }} />
         </div>
       </div>
     </div>
   );
 }
+
+const ProfileTab = ({ count, title, href, end }: { count: number; title: string; href: string; end?: boolean }) => {
+  return (
+    <li className="flex-1">
+      <NavLink
+        className={({ isActive }) => {
+          return twMerge(
+            "block py-5 text-center hover:bg-white/5 border-t border-white/0",
+            isActive ? "border-tonehunt-purple border-t text-tonehunt-purple" : ""
+          );
+        }}
+        to={href}
+        end={end}
+      >
+        <strong className="font-satoshi-bold">{count}</strong> <span className="opacity-70">{title}</span>
+      </NavLink>
+    </li>
+  );
+};
