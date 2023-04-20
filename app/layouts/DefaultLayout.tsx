@@ -11,6 +11,7 @@ interface DefaultLayoutType {
   profile?: Profile | null | undefined;
   className?: string | null;
   counts: Counts[];
+  hideAsidebar?: boolean;
 }
 
 const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
@@ -25,7 +26,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
 
         <div className="w-full max-w-3xl mb-8 mt-8 lg:mb-16 lg:mt-5 xl:mb-16 px-3">{props.children}</div>
 
-        <Asidebar counts={props.counts} />
+        {props.hideAsidebar ? <div className="flex-1 ml-10 flex-grow" /> : <Asidebar counts={props.counts} />}
       </div>
 
       <Footer />

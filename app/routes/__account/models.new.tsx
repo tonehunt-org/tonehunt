@@ -11,7 +11,7 @@ import { Form, useFetcher, useLoaderData, useNavigate, useNavigation } from "@re
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Loading from "~/components/ui/Loading";
-import type { ActionData as ModelCreateActionData } from "~/routes/__layout/models.new";
+import type { ActionData as ModelCreateActionData } from "~/routes/__account/models.new";
 import { twMerge } from "tailwind-merge";
 import { asArray } from "~/utils/array";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";

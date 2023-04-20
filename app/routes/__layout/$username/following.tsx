@@ -7,7 +7,7 @@ import EmptyFeed from "~/components/EmptyFeed";
 export default function ProfileFollowingPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
-  const isOwnProfile = data.sessionProfile && data.profile && data.sessionProfile?.id === data.profile?.id;
+  const isOwnProfile = data.user && data.sessionProfile && data.profile && data.sessionProfile?.id === data.profile?.id;
 
   return data.profile?.following.length !== 0 ? (
     <ul className="py-10 list-none p-0 m-0">

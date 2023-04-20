@@ -44,7 +44,7 @@ export default function Layout() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <DefaultLayout user={data.user} profile={data.profile} counts={data.counts}>
+    <DefaultLayout hideAsidebar user={data.user} profile={data.profile} counts={data.counts}>
       <Outlet />
     </DefaultLayout>
   );
