@@ -14,7 +14,7 @@ import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
 import { getSortFilter } from "~/utils/loader";
-import EmptyFollowFeed from "~/components/EmptyFollowFeed";
+import EmptyFeed from "~/components/EmptyFeed";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -104,7 +104,11 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
 
   return data.models.length === 0 ? (
-    <EmptyFollowFeed />
+    <EmptyFeed
+      headline="You are not yet following anyone."
+      buttonText="Find interesting users to follow"
+      buttonHref="/popular"
+    />
   ) : (
     <ModelList
       data={data.models}

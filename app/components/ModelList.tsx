@@ -3,13 +3,11 @@ import ReactPaginate from "react-paginate";
 import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Category, Model } from "@prisma/client";
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithSocials } from "~/services/profile";
-import EmptyFollowFeed from "./EmptyFollowFeed";
 import { useLocation, useSearchParams } from "@remix-run/react";
 import ModelSortDropdown from "./ModelSortDropdown";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
-import { getCategoryProfile } from "~/services/categories";
 import CategoryDropdown from "./CategoryDropdown";
 
 interface ModelListType {
@@ -62,26 +60,12 @@ const ModelsListComponent = ({
   const paginationButtonLinkStyle =
     "px-2 py-0.5 border border-white/20 hover:border-white/70  rounded-lg relative w-[36px] h-[36px] inline-flex items-center justify-center text-white/60";
 
-  const pageIsFiltered = currentPage > 0 || searchParams.get("filter");
-  const isAllFilter = searchParams.get("filter") === "all" || searchParams.get("filter") === null;
-  const isSortedByFollowing = searchParams.get("filter") === "following";
   const pageIsEmpty = data.length === 0;
-  const pageIsEmptyFollowFeed =
-    data.length === 0 &&
-    selectedSortBy === "following" &&
-    isAllFilter &&
-    !searchParams.get("tags") &&
-    !isSortedByFollowing &&
-    !pageIsFiltered &&
-    showFilters &&
-    user;
 
   const [newestParams] = useSearchParams();
   const [oldestParams] = useSearchParams();
   newestParams.delete("sortDirection");
   oldestParams.set("sortDirection", "asc");
-
-  const [filterParams] = useSearchParams();
 
   return (
     <div>
@@ -114,13 +98,7 @@ const ModelsListComponent = ({
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {pageIsEmpty ? (
-          pageIsEmptyFollowFeed ? (
-            <EmptyFollowFeed />
-          ) : (
-            <div className="text-lg text-center py-10">{emptyMessage}</div>
-          )
-        ) : null}
+        {pageIsEmpty ? <div className="text-lg text-center py-10">{emptyMessage}</div> : null}
 
         {data.length > 0
           ? data.map((model: any) => {

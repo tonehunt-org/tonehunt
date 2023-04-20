@@ -1,6 +1,12 @@
 import ButtonLink from "./ui/ButtonLink";
 
-export default function EmptyFollowFeed() {
+type EmptyFeedProps = {
+  headline: string;
+  buttonText: string;
+  buttonHref: string;
+};
+
+export default function EmptyFeed({ headline, buttonText, buttonHref }: EmptyFeedProps) {
   return (
     <div className="w-full max-w-2xltext-center flex flex-col gap-10 relative">
       <div className="z-0 relative">
@@ -11,10 +17,10 @@ export default function EmptyFollowFeed() {
       </div>
 
       <div className="absolute top-[100px] left-1/2 z-10 -translate-x-1/2 text-center ">
-        <div className="text-xl mb-10">You are not yet following anyone.</div>
+        <div className="text-xl mb-10">{headline}</div>
         <div>
-          <ButtonLink to={`/popular`} variant="button-primary">
-            Find interesting users to follow
+          <ButtonLink to={buttonHref} variant="button-primary">
+            {buttonText}
           </ButtonLink>
         </div>
       </div>

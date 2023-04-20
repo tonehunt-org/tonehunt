@@ -13,6 +13,7 @@ import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
 import type { Category, Model } from "@prisma/client";
 import { getSortFilter } from "~/utils/loader";
+import EmptyFeed from "~/components/EmptyFeed";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -35,7 +36,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const user = session?.user;
 
   if (!session) {
-    return redirect("/login?redirectTo=/account/my-favorites");
+    return redirect("/login?redirectTo=/favorites");
   }
 
   const url = new URL(request.url);
@@ -72,7 +73,13 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 export default function MyFavoritesPage() {
   const data = useLoaderData();
 
-  return (
+  return data.models.length === 0 ? (
+    <EmptyFeed
+      headline="You have not favorited any models yet."
+      buttonText="Find fantastic models to favorite!"
+      buttonHref="/trending"
+    />
+  ) : (
     <ModelList
       data={data.models}
       categories={data.categories}

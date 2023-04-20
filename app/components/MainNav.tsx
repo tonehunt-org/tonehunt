@@ -23,7 +23,7 @@ const nav1 = [
   },
   {
     title: "Favorites",
-    href: "/account/my-favorites",
+    href: "favorites",
     icon: StarIcon,
     requiresAuth: true,
   },
