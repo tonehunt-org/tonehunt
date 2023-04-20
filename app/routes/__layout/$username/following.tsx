@@ -7,6 +7,8 @@ import EmptyFeed from "~/components/EmptyFeed";
 export default function ProfileFollowingPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
+  const isOwnProfile = data.sessionProfile && data.profile && data.sessionProfile?.id === data.profile?.id;
+
   return data.profile?.following.length !== 0 ? (
     <ul className="py-10 list-none p-0 m-0">
       {data.profile?.following.map((user) => {
@@ -44,9 +46,17 @@ export default function ProfileFollowingPage() {
   ) : (
     <div className="mt-10">
       <EmptyFeed
-        headline="You are not following anyone yet"
-        buttonText="Find interesting users to follow"
-        buttonHref="/popular"
+        headline={
+          isOwnProfile ? (
+            "You are not following anyone yet"
+          ) : (
+            <>
+              <strong className="font-satoshi-bold">{data.profile.username}</strong> does not follow anyone yet
+            </>
+          )
+        }
+        buttonText={isOwnProfile ? "Find interesting users to follow" : undefined}
+        buttonHref={isOwnProfile ? "/popular" : undefined}
       />
     </div>
   );

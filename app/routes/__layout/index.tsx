@@ -105,7 +105,7 @@ export default function Index() {
 
   return data.models.length === 0 ? (
     <EmptyFeed
-      headline="You are not yet following anyone"
+      headline="You are not following anyone yet"
       buttonText="Find interesting users to follow"
       buttonHref="/popular"
     />

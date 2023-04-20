@@ -1,7 +1,8 @@
+import type { ReactElement } from "react";
 import ButtonLink from "./ui/ButtonLink";
 
 type EmptyFeedProps = {
-  headline: string;
+  headline: string | ReactElement;
   buttonText?: string;
   buttonHref?: string;
 };
