@@ -8,6 +8,7 @@ import { useLocation, useSearchParams } from "@remix-run/react";
 import ModelSortDropdown from "./ModelSortDropdown";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import CategoryDropdown from "./CategoryDropdown";
+import EmptyFeed from "./EmptyFeed";
 
 interface ModelListType {
   data: Model[];
@@ -54,9 +55,31 @@ const ModelsListComponent = ({
   newestParams.delete("sortDirection");
   oldestParams.set("sortDirection", "asc");
 
+  const renderEmpty = () => {
+    if (!searchParams.get("filter")) {
+      return <div className="text-lg text-center py-10">{emptyMessage}</div>;
+    }
+
+    if (searchParams.get("filter")) {
+      return (
+        <EmptyFeed
+          headline={
+            profile ? (
+              <>
+                <strong className="font-satoshi-bold">{profile.username}</strong> hasn't uploaded this model type yet
+              </>
+            ) : (
+              "These types of models haven't been uploaded yet"
+            )
+          }
+        />
+      );
+    }
+  };
+
   return (
     <div>
-      {pageIsEmpty ? null : (
+      {pageIsEmpty && !searchParams.get("filter") ? null : (
         <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
           {hideSortOrder ? null : (
             <li>
@@ -87,7 +110,7 @@ const ModelsListComponent = ({
 
       {/* MODELS LIST */}
       <div className="flex flex-col">
-        {pageIsEmpty ? <div className="text-lg text-center py-10">{emptyMessage}</div> : null}
+        {pageIsEmpty ? renderEmpty() : null}
 
         {data.length > 0
           ? data.map((model: any) => {
