@@ -103,6 +103,42 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     profile.avatar = data.publicUrl ?? null;
   }
 
+  // Get public urls for avatars
+  // @ts-ignore
+  profile.followers = profile?.followers.map((f) => {
+    if (!f.profile.avatar) {
+      return f;
+    }
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(f.profile.avatar);
+
+    return {
+      ...f,
+      profile: {
+        ...f.profile,
+        avatar: data.publicUrl,
+      },
+    };
+  });
+
+  // Get public urls for avatars
+  // @ts-ignore
+  profile.following = profile?.following.map((f) => {
+    if (!f.target.avatar) {
+      return f;
+    }
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(f.target.avatar);
+
+    return {
+      ...f,
+      target: {
+        ...f.target,
+        avatar: data.publicUrl,
+      },
+    };
+  });
+
   // GET MODELS
   const models = profile
     ? await getModels({ limit: MODELS_LIMIT, next: offset, profileId: profile.id, user })
@@ -147,6 +183,7 @@ export default function UserProfilePage() {
           profileId={data.profile.id}
           profileUsername={data.profile.username}
           isFollowing={!!data.sessionProfile?.following.find((following) => following.targetId === data.profile?.id)}
+          variant="primary-alt"
         />
       );
     }

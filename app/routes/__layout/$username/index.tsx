@@ -18,7 +18,7 @@ export default function UsernamePage() {
       emptyMessage={
         data.profile && data.sessionProfile && data.profile.id === data.sessionProfile.id
           ? "You haven't uploaded any models yet."
-          : `${data.profile?.username ?? "This user"} hasn't uplaoded any models yet.`
+          : `${data.profile?.username ?? "This user"} hasn't uploaded any models yet.`
       }
     />
   );

@@ -1,10 +1,9 @@
 import { Link, useOutletContext } from "@remix-run/react";
 import type { ProfileLoaderData } from "../$username";
 import Avatar from "~/components/Avatar";
-import Button from "~/components/ui/Button";
 import FollowButton from "~/components/FollowButton";
 
-export default function ProfileFollowersPage() {
+export default function ProfileFollowingPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
   return (
@@ -31,7 +30,7 @@ export default function ProfileFollowersPage() {
                     showUsername={false}
                     profileId={user.target.id}
                     profileUsername={user.target.username}
-                    isFollowing={!!data.profile?.following.find((f) => f.targetId === user.target.id)}
+                    isFollowing={!!data.sessionProfile?.following.find((f) => f.targetId === user.target?.id)}
                     formClassName="inline-block"
                   />
                 </div>

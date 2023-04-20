@@ -24,6 +24,13 @@ export type ProfileWithFollows = Prisma.ProfileGetPayload<{
       select: {
         id: true;
         targetId: true;
+        profile: {
+          select: {
+            username: true;
+            avatar: true;
+            id: true;
+          };
+        };
       };
     };
     following: {
@@ -59,6 +66,13 @@ export const getProfileWithFollows = (username: string) => {
         select: {
           id: true,
           targetId: true,
+          profile: {
+            select: {
+              username: true,
+              avatar: true,
+              id: true,
+            },
+          },
         },
       },
       following: {

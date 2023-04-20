@@ -12,7 +12,7 @@ type AvatarProps = {
 export default function Avatar({ size = 24, src, className, title, padding = 2 }: AvatarProps) {
   return src ? (
     <img
-      className={twMerge(`w-${size} h-${size} object-cover mb-3 rounded-full pointer-events-none`, className)}
+      className={twMerge(`w-${size} h-${size} object-cover rounded-full `, className)}
       src={src}
       title={title ?? undefined}
       alt={title ?? undefined}
