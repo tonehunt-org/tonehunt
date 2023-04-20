@@ -1,13 +1,10 @@
-import { useEffect } from "react";
-import { useState } from "react";
 import { db } from "~/utils/db.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, NavLink, Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
+import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 import { UserIcon } from "@heroicons/react/24/outline";
 
-import ModelList from "~/components/ModelList";
 import type { User } from "@supabase/supabase-js";
 import type { Category, Profile } from "@prisma/client";
 import { getModels } from "~/services/models";
@@ -20,8 +17,8 @@ import ButtonLink from "~/components/ui/ButtonLink";
 import NotFound from "~/components/NotFound";
 import { twMerge } from "tailwind-merge";
 
-export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
-  const d = data as LoaderData;
+export const meta: MetaFunction<ProfileLoaderData> = ({ data, location }) => {
+  const d = data as ProfileLoaderData;
 
   const title = d.profile ? `${d.profile?.username}'s Profile | ToneHunt` : "Not Found | ToneHunt";
   const description = d.profile
@@ -70,8 +67,6 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const user = session?.user;
   const url = new URL(request.url);
 
-  const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
-
   const sessionProfileReq = db.profile.findFirst({
     where: { id: session?.user.id },
     include: {
@@ -93,9 +88,10 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     },
   });
 
-  const [sessionProfile, profile] = await Promise.all([
+  const [sessionProfile, profile, { offset, sortDirection, page, categoryId, categories }] = await Promise.all([
     sessionProfileReq,
     getProfileWithFollows(params.username as string),
+    getSortFilter(url),
   ]);
 
   if (profile && profile.avatar && profile?.avatar !== "") {
@@ -141,7 +137,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   // GET MODELS
   const models = profile
-    ? await getModels({ limit: MODELS_LIMIT, next: offset, profileId: profile.id, user })
+    ? await getModels({ limit: MODELS_LIMIT, next: offset, profileId: profile.id, user, categoryId, sortDirection })
     : {
         data: [],
         total: 0,
@@ -156,7 +152,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
       modelList: {
         models: models.data,
         total: models.total,
-        page: page - 1,
+        page,
       },
     },
     {

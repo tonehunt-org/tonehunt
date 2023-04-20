@@ -7,12 +7,11 @@ import EmptyFeed from "~/components/EmptyFeed";
 export default function ProfileFollowersPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
-  const isOwnProfile = data.sessionProfile && data.profile && data.sessionProfile?.id === data.profile?.id;
+  const isOwnProfile = data.user && data.sessionProfile && data.profile && data.sessionProfile?.id === data.profile?.id;
 
   return data.profile?.followers.length !== 0 ? (
     <ul className="py-10 list-none p-0 m-0">
       {data.profile?.followers.map((user) => {
-        console.log("user.profile.avatar", user.profile.avatar);
         return (
           <li
             key={user.profile.id}
