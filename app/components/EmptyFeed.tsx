@@ -2,8 +2,8 @@ import ButtonLink from "./ui/ButtonLink";
 
 type EmptyFeedProps = {
   headline: string;
-  buttonText: string;
-  buttonHref: string;
+  buttonText?: string;
+  buttonHref?: string;
 };
 
 export default function EmptyFeed({ headline, buttonText, buttonHref }: EmptyFeedProps) {
@@ -18,11 +18,13 @@ export default function EmptyFeed({ headline, buttonText, buttonHref }: EmptyFee
 
       <div className="absolute top-[100px] left-1/2 z-10 -translate-x-1/2 text-center ">
         <div className="text-xl mb-10">{headline}</div>
-        <div>
-          <ButtonLink to={buttonHref} variant="button-primary">
-            {buttonText}
-          </ButtonLink>
-        </div>
+        {buttonText && buttonHref ? (
+          <div>
+            <ButtonLink to={buttonHref} variant="button-primary">
+              {buttonText}
+            </ButtonLink>
+          </div>
+        ) : null}
       </div>
     </div>
   );

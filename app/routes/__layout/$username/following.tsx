@@ -2,11 +2,12 @@ import { Link, useOutletContext } from "@remix-run/react";
 import type { ProfileLoaderData } from "../$username";
 import Avatar from "~/components/Avatar";
 import FollowButton from "~/components/FollowButton";
+import EmptyFeed from "~/components/EmptyFeed";
 
 export default function ProfileFollowingPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
-  return (
+  return data.profile?.following.length !== 0 ? (
     <ul className="py-10 list-none p-0 m-0">
       {data.profile?.following.map((user) => {
         return (
@@ -40,5 +41,13 @@ export default function ProfileFollowingPage() {
         );
       })}
     </ul>
+  ) : (
+    <div className="mt-10">
+      <EmptyFeed
+        headline="You are not following anyone yet"
+        buttonText="Find interesting users to follow"
+        buttonHref="/popular"
+      />
+    </div>
   );
 }

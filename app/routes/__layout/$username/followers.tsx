@@ -2,11 +2,12 @@ import { Link, useOutletContext } from "@remix-run/react";
 import type { ProfileLoaderData } from "../$username";
 import Avatar from "~/components/Avatar";
 import FollowButton from "~/components/FollowButton";
+import EmptyFeed from "~/components/EmptyFeed";
 
 export default function ProfileFollowersPage() {
   const data = useOutletContext<ProfileLoaderData>();
 
-  return (
+  return data.profile?.followers.length !== 0 ? (
     <ul className="py-10 list-none p-0 m-0">
       {data.profile?.followers.map((user) => {
         console.log("user.profile.avatar", user.profile.avatar);
@@ -41,5 +42,9 @@ export default function ProfileFollowersPage() {
         );
       })}
     </ul>
+  ) : (
+    <div className="mt-10">
+      <EmptyFeed headline="You do not have any followers yet" />
+    </div>
   );
 }
