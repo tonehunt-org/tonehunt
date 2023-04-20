@@ -1,12 +1,10 @@
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
-import Select from "./ui/Select";
 import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Category, Model } from "@prisma/client";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { ProfileWithSocials } from "~/services/profile";
-import ButtonLink from "./ui/ButtonLink";
 import EmptyFollowFeed from "./EmptyFollowFeed";
 import { useLocation, useSearchParams } from "@remix-run/react";
 import ModelSortDropdown from "./ModelSortDropdown";
