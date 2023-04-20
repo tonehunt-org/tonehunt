@@ -1,10 +1,9 @@
 import { getSession } from "~/auth.server";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { useLoaderData, useSubmit } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import type { User } from "@supabase/supabase-js";
-import useProfile from "~/hooks/useProfile";
 import type { Category, Model } from "@prisma/client";
 import ModelList from "~/components/ModelList";
 import type { ProfileWithSocials } from "~/services/profile";
@@ -12,6 +11,7 @@ import { getProfileWithSocials } from "~/services/profile";
 import { getSortFilter } from "~/utils/loader";
 import { MODELS_LIMIT } from "~/utils/constants";
 import { getModels } from "~/services/models";
+import EmptyFeed from "~/components/EmptyFeed";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -79,6 +79,14 @@ const MyModelsPage = () => {
   //     submit(formData, { method: "post", action: "/models/delete" });
   //   }
   // };
+
+  return (
+    <EmptyFeed
+      headline="You haven't uploaded any models yet"
+      buttonHref="/models/new"
+      buttonText="Start uploading your models"
+    />
+  );
 
   return (
     <ModelList
