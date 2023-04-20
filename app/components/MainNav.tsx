@@ -4,7 +4,6 @@ import { Form, Link, NavLink } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import {
   StarIcon,
-  QueueListIcon,
   ChartBarIcon,
   ArrowTrendingUpIcon,
   UserIcon,
@@ -13,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Button from "~/components/ui/Button";
 import RelatedDropdown from "~/components/RelatedDropdown";
+import Avatar from "./Avatar";
 
 const nav1 = [
   {
@@ -114,7 +114,7 @@ export default function MainNav({ user, profile }: MainNavProps) {
                 className="flex items-center hover:bg-tonehunt-gray-medium rounded-full pr-2 pl-2 relative -left-2 py-2"
               >
                 <div>
-                  <UserIcon className="block w-8 h-8 rounded-full p-2 bg-tonehunt-green mr-4" />
+                  <Avatar src={profile.avatar} size={8} className="w-8 mr-4 bg-tonehunt-purple" />
                 </div>
                 <div className="flex-grow truncate max-w-[120px]">@{profile.username}</div>
               </Link>
