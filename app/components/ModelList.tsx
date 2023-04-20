@@ -56,32 +56,34 @@ const ModelsListComponent = ({
 
   return (
     <div>
-      <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
-        {hideSortOrder ? null : (
-          <li>
-            <ModelSortDropdown
-              icon={<ArrowsUpDownIcon className="w-4- h-4" />}
-              renderItem={(item) => item.title}
-              items={[
-                {
-                  title: "Newest",
-                  href: `${location.pathname}?${newestParams}`,
-                  default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
-                },
-                {
-                  title: "Oldest",
-                  href: `${location.pathname}?${oldestParams}`,
-                  default: searchParams.get("sortDirection") === "asc",
-                },
-              ]}
-            />
-          </li>
-        )}
+      {pageIsEmpty ? null : (
+        <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
+          {hideSortOrder ? null : (
+            <li>
+              <ModelSortDropdown
+                icon={<ArrowsUpDownIcon className="w-4- h-4" />}
+                renderItem={(item) => item.title}
+                items={[
+                  {
+                    title: "Newest",
+                    href: `${location.pathname}?${newestParams}`,
+                    default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
+                  },
+                  {
+                    title: "Oldest",
+                    href: `${location.pathname}?${oldestParams}`,
+                    default: searchParams.get("sortDirection") === "asc",
+                  },
+                ]}
+              />
+            </li>
+          )}
 
-        <li>
-          <CategoryDropdown categories={categories} />
-        </li>
-      </ul>
+          <li>
+            <CategoryDropdown categories={categories} />
+          </li>
+        </ul>
+      )}
 
       {/* MODELS LIST */}
       <div className="flex flex-col">

@@ -5,7 +5,6 @@ import ShareButton from "~/components/ShareButton";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { NotFound } from "~/routes/__layout/$username";
 import type { Category, Favorite, Model, ModelDownload, Profile } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { UserIcon } from "@heroicons/react/24/outline";
@@ -18,6 +17,7 @@ import type { User } from "@supabase/supabase-js";
 import ButtonLink from "~/components/ui/ButtonLink";
 import FollowButton from "~/components/FollowButton";
 import { formatYoutubeLink } from "~/utils/link";
+import NotFound from "~/components/NotFound";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   if (!data?.model) {

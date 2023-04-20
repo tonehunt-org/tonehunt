@@ -4,7 +4,7 @@ import Button from "./ui/Button";
 
 type FollowButtonProps = ButtonProps & {
   profileId: string;
-  profileUsername?: string;
+  profileUsername?: string | null;
   showUsername?: boolean;
   isFollowing?: boolean;
   formClassName?: string;
@@ -24,7 +24,7 @@ export default function FollowButton({
 
   return isFollowing ? (
     <followFetcher.Form method="post" action={`/${profileUsername}/unfollow`} className={formClassName}>
-      <Button variant="primary-alt" className="mx-auto block " {...buttonProps} loading={loading}>
+      <Button variant="secondary" className="mx-auto block " {...buttonProps} loading={loading}>
         Unfollow
       </Button>
     </followFetcher.Form>
