@@ -17,28 +17,28 @@ import RelatedDropdown from "~/components/RelatedDropdown";
 const nav1 = [
   {
     title: "Following",
-    href: "/",
+    href: (profile?: Profile | null) => "/",
     icon: HomeIcon,
     requiresAuth: true,
   },
   {
     title: "Favorites",
-    href: "favorites",
+    href: (profile?: Profile | null) => "favorites",
     icon: StarIcon,
     requiresAuth: true,
   },
   {
-    title: "My Models",
-    href: "/account/my-models",
+    title: "My Profile",
+    href: (profile?: Profile | null) => `/${profile?.username}`,
     requiresAuth: true,
-    icon: QueueListIcon,
+    icon: UserIcon,
   },
 ];
 
 const nav2 = [
-  { title: "All Models", href: "/all", icon: GlobeAltIcon },
-  { title: "Trending", href: "/trending", icon: ArrowTrendingUpIcon },
-  { title: "Popular", href: "/popular", icon: ChartBarIcon },
+  { title: "All Models", href: (profile?: Profile | null) => "/all", icon: GlobeAltIcon },
+  { title: "Trending", href: (profile?: Profile | null) => "/trending", icon: ArrowTrendingUpIcon },
+  { title: "Popular", href: (profile?: Profile | null) => "/popular", icon: ChartBarIcon },
 ];
 
 type MainNavProps = {
@@ -60,9 +60,9 @@ export default function MainNav({ user, profile }: MainNavProps) {
           })
           .map((item) => {
             return (
-              <li key={item.href} className="my-1">
+              <li key={item.href(profile)} className="my-1">
                 <NavLink
-                  to={item.href}
+                  to={item.href(profile)}
                   prefetch="intent"
                   className={({ isActive }) => {
                     return twMerge(
@@ -85,9 +85,9 @@ export default function MainNav({ user, profile }: MainNavProps) {
 
         {nav2.map((item) => {
           return (
-            <li key={item.href} className="my-1">
+            <li key={item.href(profile)} className="my-1">
               <NavLink
-                to={item.href}
+                to={item.href(profile)}
                 prefetch="intent"
                 className={({ isActive }) => {
                   return twMerge(

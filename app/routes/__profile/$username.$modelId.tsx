@@ -5,7 +5,7 @@ import ShareButton from "~/components/ShareButton";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { NotFound } from "./$username";
+import { NotFound } from "~/routes/__layout/$username";
 import type { Category, Favorite, Model, ModelDownload, Profile } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { UserIcon } from "@heroicons/react/24/outline";
@@ -195,7 +195,6 @@ export default function ModelDetailPage() {
               <iframe
                 width="420"
                 height="315"
-                width="100%"
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 frameBorder="0"

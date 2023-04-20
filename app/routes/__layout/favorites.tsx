@@ -75,8 +75,8 @@ export default function MyFavoritesPage() {
 
   return data.models.length === 0 ? (
     <EmptyFeed
-      headline="You have not favorited any models yet."
-      buttonText="Find fantastic models to favorite!"
+      headline="You have not favorited any models yet"
+      buttonText="Find fantastic models to favorite"
       buttonHref="/trending"
     />
   ) : (

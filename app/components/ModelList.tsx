@@ -1,6 +1,5 @@
 import ModelListItem from "./ModelListItem";
 import ReactPaginate from "react-paginate";
-import type { SelectOption } from "~/components/ui/Select";
 import type { User } from "@supabase/supabase-js";
 import type { Category, Model } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -15,12 +14,6 @@ interface ModelListType {
   total: number;
   currentPage: number;
   limit: number;
-  filterOptions?: SelectOption[];
-  selectedFilter?: string | undefined | null;
-  setSelectedFilter?: (arg: React.ChangeEvent<HTMLSelectElement>) => void | undefined;
-  showFilters?: boolean;
-  selectedSortBy?: "newest" | "popular" | "following";
-  onSortChange?: (arg: string) => void | undefined;
   user?: User | null | undefined;
   profile: ProfileWithSocials | null;
   emptyMessage?: string;
@@ -34,12 +27,6 @@ const ModelsListComponent = ({
   currentPage = 0,
   categories,
   limit,
-  filterOptions = [],
-  selectedFilter = null,
-  setSelectedFilter = undefined,
-  showFilters = true,
-  selectedSortBy = "newest",
-  onSortChange = undefined,
   user = null,
   profile,
   hideSortOrder = false,
