@@ -69,6 +69,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       const instagramLink = formData.get("instagram") as string;
       const youtubeLink = formData.get("youtube") as string;
       const githubLink = formData.get("github") as string;
+      const websiteLink = formData.get("website") as string;
 
       const socials = [] as Prisma.JsonArray;
       if (facebookLink && facebookLink !== "") {
@@ -89,6 +90,10 @@ export const action: ActionFunction = async ({ request, context }) => {
 
       if (githubLink && githubLink !== "") {
         socials.push({ social: "github", link: githubLink });
+      }
+
+      if (websiteLink && websiteLink !== "") {
+        socials.push({ social: "website", link: websiteLink });
       }
 
       const params = {
@@ -132,6 +137,7 @@ export default function ProfileInformationPage() {
   const defaultInstagram = find(socials, { social: "instagram" });
   const defaultYouTube = find(socials, { social: "youtube" });
   const defaultGithub = find(socials, { social: "github" });
+  const defaultWebsite = find(socials, { social: "website" });
 
   return (
     <div className="w-full">
@@ -211,6 +217,13 @@ export default function ProfileInformationPage() {
                   <div>
                     <Input name="github" label="Github URL" defaultValue={defaultGithub ? defaultGithub.link : ""} />
                   </div>
+                  <div>
+                    <Input
+                      name="website"
+                      label="Website URL"
+                      defaultValue={defaultWebsite ? defaultWebsite.link : ""}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -218,7 +231,13 @@ export default function ProfileInformationPage() {
               <Input name="id" type="hidden" defaultValue={profile.id} />
             </div>
             <div className="flex justify-end pt-5">
-              <Button disabled={!formValidity} loading={navigation.state === "submitting"} type="submit" className="">
+              <Button
+                disabled={!formValidity}
+                loading={navigation.state === "submitting"}
+                type="submit"
+                className=""
+                onClick={() => window.scrollTo({ top: 0 })}
+              >
                 Update Profile
               </Button>
             </div>
