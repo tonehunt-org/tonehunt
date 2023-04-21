@@ -183,25 +183,33 @@ export default function ProfileInformationPage() {
                   <div>
                     <Input
                       name="facebook"
-                      label="Facebook"
+                      label="Facebook URL"
                       defaultValue={defaultFacebook ? defaultFacebook.link : ""}
                     />
                   </div>
                   <div>
-                    <Input name="twitter" label="Twitter" defaultValue={defaultTwitter ? defaultTwitter.link : ""} />
+                    <Input
+                      name="twitter"
+                      label="Twitter URL"
+                      defaultValue={defaultTwitter ? defaultTwitter.link : ""}
+                    />
                   </div>
                   <div>
                     <Input
                       name="instagram"
-                      label="Instagram"
+                      label="Instagram URL"
                       defaultValue={defaultInstagram ? defaultInstagram.link : ""}
                     />
                   </div>
                   <div>
-                    <Input name="youtube" label="YouTube" defaultValue={defaultYouTube ? defaultYouTube.link : ""} />
+                    <Input
+                      name="youtube"
+                      label="YouTube URL"
+                      defaultValue={defaultYouTube ? defaultYouTube.link : ""}
+                    />
                   </div>
                   <div>
-                    <Input name="github" label="Github" defaultValue={defaultGithub ? defaultGithub.link : ""} />
+                    <Input name="github" label="Github URL" defaultValue={defaultGithub ? defaultGithub.link : ""} />
                   </div>
                 </div>
               </div>
