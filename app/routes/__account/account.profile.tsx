@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Prisma } from "@prisma/client";
 import type { LoaderFunction, ActionFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react";
@@ -8,6 +9,7 @@ import { db } from "~/utils/db.server";
 import Input from "~/components/ui/Input";
 import Button from "~/components/ui/Button";
 import AvatarButton from "~/components/AvatarButton";
+import { find } from "lodash";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -62,10 +64,38 @@ export const action: ActionFunction = async ({ request, context }) => {
 
   if (user?.id === profileId) {
     try {
+      const facebookLink = formData.get("facebook") as string;
+      const twitterLink = formData.get("twitter") as string;
+      const instagramLink = formData.get("instagram") as string;
+      const youtubeLink = formData.get("youtube") as string;
+      const githubLink = formData.get("github") as string;
+
+      const socials = [] as Prisma.JsonArray;
+      if (facebookLink && facebookLink !== "") {
+        socials.push({ social: "facebook", link: facebookLink });
+      }
+
+      if (twitterLink && twitterLink !== "") {
+        socials.push({ social: "twitter", link: twitterLink });
+      }
+
+      if (instagramLink && instagramLink !== "") {
+        socials.push({ social: "instagram", link: instagramLink });
+      }
+
+      if (youtubeLink && youtubeLink !== "") {
+        socials.push({ social: "youtube", link: youtubeLink });
+      }
+
+      if (githubLink && githubLink !== "") {
+        socials.push({ social: "github", link: githubLink });
+      }
+
       const params = {
         firstname: formData.get("firstname") as string,
         lastname: formData.get("lastname") as string,
         bio: formData.get("bio") as string,
+        socials,
       };
 
       await db.profile.update({
@@ -93,6 +123,15 @@ export default function ProfileInformationPage() {
   const handleFormChange = (e: any) => {
     setFormValidity(e.currentTarget.checkValidity());
   };
+
+  const socials =
+    profile?.socials && typeof profile?.socials === "object" && Array.isArray(profile?.socials) ? profile.socials : [];
+
+  const defaultFacebook = find(socials, { social: "facebook" });
+  const defaultTwitter = find(socials, { social: "twitter" });
+  const defaultInstagram = find(socials, { social: "instagram" });
+  const defaultYouTube = find(socials, { social: "youtube" });
+  const defaultGithub = find(socials, { social: "github" });
 
   return (
     <div className="w-full">
@@ -123,29 +162,6 @@ export default function ProfileInformationPage() {
       <div className="flex flex-col mt-5">
         <div className="flex-1">
           <Form method="post" onChange={handleFormChange}>
-            {/* TODO: bring back when user avatar upload is ready */}
-            {/* <div className="mb-10 w-40 h-40 overflow-hidden relative mx-auto rounded-full">
-              <UserIcon className="w-40 h-40 p-6 rounded-full bg-tonehunt-gray-light mb-5" />
-              <input
-                // ref={dropRef}
-                type="file"
-                name="files"
-                multiple
-                // onChange={handleFormSubmit}
-                accept=".nam, .wav"
-                className="opacity-0 hover:opacity-100 border-0 bg-black/50 font-satoshi-bold text-sm uppercase text-white after"
-                style={{
-                  width: "400%",
-                  height: "100%",
-                  marginLeft: "-300%",
-                  border: "none",
-                  cursor: "pointer",
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                }}
-              />
-            </div> */}
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-10">
               <div className="w-full">
                 <div className="flex flex-col gap-3">
@@ -163,6 +179,29 @@ export default function ProfileInformationPage() {
                   </div>
                   <div>
                     <Input name="bio" label="Bio" style={{ height: "168px" }} multiline defaultValue={profile.bio} />
+                  </div>
+                  <div>
+                    <Input
+                      name="facebook"
+                      label="Facebook"
+                      defaultValue={defaultFacebook ? defaultFacebook.link : ""}
+                    />
+                  </div>
+                  <div>
+                    <Input name="twitter" label="Twitter" defaultValue={defaultTwitter ? defaultTwitter.link : ""} />
+                  </div>
+                  <div>
+                    <Input
+                      name="instagram"
+                      label="Instagram"
+                      defaultValue={defaultInstagram ? defaultInstagram.link : ""}
+                    />
+                  </div>
+                  <div>
+                    <Input name="youtube" label="YouTube" defaultValue={defaultYouTube ? defaultYouTube.link : ""} />
+                  </div>
+                  <div>
+                    <Input name="github" label="Github" defaultValue={defaultGithub ? defaultGithub.link : ""} />
                   </div>
                 </div>
               </div>
