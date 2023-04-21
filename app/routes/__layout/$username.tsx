@@ -222,40 +222,16 @@ export default function UserProfilePage() {
                 {renderActionButton()}
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 pt-5">
                 <div className="flex justify-start">
                   <h1 className="text-5xl font-satoshi-bold mb-6">{data.profile?.username}</h1>
                 </div>
 
-                <div className="flex justify-start flex-row mb-6 gap-6 hidden">
-                  <div className="text-tonehunt-purple">
-                    <span className="font-satoshi-bold">
-                      {data.modelList.total} <span className="font-satoshi-regular">Models</span>
-                    </span>
-                  </div>
-
-                  <div className="">
-                    <span className="font-satoshi-bold">
-                      {data.profile?.followers.length}{" "}
-                      <span className="text-tonehunt-gray-lighter font-satoshi-regular">
-                        {data.profile?.followers.length === 1 ? `Follower` : `Followers`}
-                      </span>
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="font-satoshi-bold">
-                      {data.profile?.following.length}{" "}
-                      <span className="text-tonehunt-gray-lighter font-satoshi-regular">Following</span>
-                    </span>
-                  </div>
-                </div>
-
                 {data.profile?.bio ? (
                   <div className="flex mb-6 pt-5">
-                    <span className="text-xl font-satoshi-regular text-tonehunt-gray-lighter whitespace-pre-wrap">
+                    <div className="max-h-[280px] overflow-hidden text-xl font-satoshi-regular text-tonehunt-gray-lighter whitespace-pre-wrap">
                       {data.profile.bio}
-                    </span>
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -296,6 +272,7 @@ const ProfileTab = ({ count, title, href, end }: { count: number; title: string;
   return (
     <li className="flex-1">
       <NavLink
+        preventScrollReset
         className={({ isActive }) => {
           return twMerge(
             "block py-5 text-center hover:bg-white/5 border-t border-white/0",

@@ -21,3 +21,23 @@ export const getGategoryPluralType = (category: Category) => {
     }
   }
 };
+
+export const categoryColor = (slug: string) => {
+  switch (slug) {
+    case "amp": {
+      return "green";
+    }
+    case "pedal": {
+      return "yellow";
+    }
+    case "full-rig": {
+      return "pink";
+    }
+    case "outboard": {
+      return "blue-light";
+    }
+    case "ir": {
+      return "orange";
+    }
+  }
+};
