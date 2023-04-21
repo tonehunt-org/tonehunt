@@ -236,7 +236,7 @@ export default function ProfileInformationPage() {
                 loading={navigation.state === "submitting"}
                 type="submit"
                 className=""
-                onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+                onClick={() => window.scrollTo({ top: 0 })}
               >
                 Update Profile
               </Button>
