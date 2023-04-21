@@ -116,7 +116,7 @@ export default function MainNav({ user, profile }: MainNavProps) {
                 <div>
                   <Avatar src={profile.avatar} size={8} className="w-8 mr-4 bg-tonehunt-purple" />
                 </div>
-                <div className="flex-grow truncate max-w-[120px]">@{profile.username}</div>
+                <div className="flex-grow truncate max-w-[120px] pr-2">@{profile.username}</div>
               </Link>
 
               <RelatedDropdown className="cursor-default">

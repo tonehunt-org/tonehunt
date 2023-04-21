@@ -18,6 +18,9 @@ import ButtonLink from "~/components/ui/ButtonLink";
 import FollowButton from "~/components/FollowButton";
 import { formatYoutubeLink } from "~/utils/link";
 import NotFound from "~/components/NotFound";
+import Avatar from "~/components/Avatar";
+import { twMerge } from "tailwind-merge";
+import { categoryColor } from "~/utils/categories";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location, parentsData }) => {
   if (!data?.model) {
@@ -115,7 +118,6 @@ export default function ModelDetailPage() {
 
   const arrayLength = Math.floor(5000 / (data.model.title.length * 10));
   const textForBG = [...new Array(arrayLength)].map(() => data.model.title);
-  const isAvatar = data.model.profile?.avatar && data.model.profile?.avatar !== "";
 
   const reportMail = {
     subject: `Report model: ${data.model.id} - ${data.model.title}`,
@@ -124,60 +126,84 @@ export default function ModelDetailPage() {
 
   return (
     <section className="w-full">
-      <header className="pt-[40px] lg:pt-[80px] text-center relative">
-        <div className="relative z-10">
-          <div className="pb-[20px] lg:pb-[40px]">
-            <img
-              className="m-auto w-20 h-20 lg:w-32 lg:h-32"
-              src={getCategoryProfile(data.model.category.slug, data.model.filecount ?? undefined).icon}
-              alt={data.model.category.title}
-            />
+      <header className=" relative rounded-xl overflow-hidden px-3 border border-white/5 mb-10 pt-2">
+        <div className="relative z-10 px-10 pt-10">
+          <div className="pb-[20px] ">
+            <div className="flex items-center justify-between">
+              <figure className="flex-grow">
+                <div className="inline-block text-center">
+                  <img
+                    className=" w-20 h-20 lg:w-32 lg:h-32"
+                    src={getCategoryProfile(data.model.category.slug, data.model.filecount ?? undefined).icon}
+                    alt={data.model.category.title}
+                  />
+                  <figcaption
+                    className={twMerge(
+                      `leading-[19px] text-[14px] font-satoshi-bold uppercase text-tonehunt-green pb-5 pt-5`,
+                      `text-tonehunt-${categoryColor(data.model.category.slug)}`
+                    )}
+                  >
+                    {data.model.filecount && data.model.filecount > 1
+                      ? `${data.model.filecount} ${data.model.category.pluralTitle}`
+                      : data.model.category.title}
+                  </figcaption>
+                </div>
+              </figure>
+
+              <div className="flex gap-[12px] pb-[59px]">
+                <FavoriteButton
+                  count={data.model.favorites.length}
+                  className="bg-tonehunt-gray-darker"
+                  favorited={!!data.favorite && data.favorite?.deleted !== true}
+                  modelId={data.model.id}
+                  disabledReason={data.user ? undefined : "You must be logged in"}
+                />
+
+                <DownloadButton
+                  count={data.model.downloads.length}
+                  className="bg-tonehunt-gray-darker"
+                  modelId={data.model.id}
+                  modelName={data.model.title}
+                />
+
+                <ShareButton
+                  ref={shareButtonRef}
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(window.location.href);
+                      alert("Url copied to clipboard");
+                    } catch (e) {}
+                  }}
+                  className="bg-tonehunt-gray-darker"
+                />
+              </div>
+            </div>
           </div>
 
-          <h4 className="mb-0 pb-[12] leading-[19px] text-[14px] font-satoshi-bold uppercase text-tonehunt-green">
-            {data.model.filecount && data.model.filecount > 1
-              ? `${data.model.filecount} ${data.model.category.pluralTitle}`
-              : data.model.category.title}
-          </h4>
-          <h3 className="font-satoshi-bold text-2xl lg:text-[47px] pb-8 max-w-[990px] m-auto px-4 leading-tight">
-            {data.model.title}
+          <h3 className="font-satoshi-bold text-2xl lg:text-[38px] leading-tight mb-5">
+            <span className="relative z-10 shadow-sm">{data.model.title}</span>
           </h3>
 
-          <div className="flex gap-[12px] justify-center pb-8 lg:pb-16">
-            <FavoriteButton
-              count={data.model.favorites.length}
-              className="bg-tonehunt-gray-darker"
-              favorited={!!data.favorite && data.favorite?.deleted !== true}
-              modelId={data.model.id}
-              disabledReason={data.user ? undefined : "You must be logged in"}
-            />
+          <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
+            Uploaded {timeago.format(data.model.createdAt)}
+          </time>
 
-            <DownloadButton
-              count={data.model.downloads.length}
-              className="bg-tonehunt-gray-darker"
-              modelId={data.model.id}
-              modelName={data.model.title}
-            />
-
-            <ShareButton
-              ref={shareButtonRef}
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(window.location.href);
-                  alert("Url copied to clipboard");
-                } catch (e) {}
-              }}
-              className="bg-tonehunt-gray-darker"
-            />
-          </div>
+          <ButtonLink
+            variant="link"
+            to={`/${data.model.profile.username}`}
+            className="inline-flex rounded-full items-center gap-5 mb-10 border-none hover:bg-tonehunt-gray-medium -translate-x-2 px-2 py-2"
+          >
+            <Avatar size={10} src={data.model.profile.avatar} border />
+            <h3 className="font-satoshi-bold pr-2">{data.model.profile.username}</h3>
+          </ButtonLink>
         </div>
 
-        <div className="block absolute top-0 left-0 w-full h-full leading-[88%] bg-tonehunt-gray-darker font-satoshi-bold z-0 uppercase text-[80px] overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker">
-          {textForBG}
+        <div className="block absolute top-0 left-0 w-full h-full leading-[88%] bg-tonehunt-gray-darker font-satoshi-bold z-0 uppercase text-[80px] overflow-hidden break-all text-shadow-bg text-tonehunt-gray-darker select-none">
+          <div style={{ width: "calc(100% + 30px)", transform: "translateX(-15px)" }}>{textForBG}</div>
         </div>
       </header>
 
-      <div className="pt-8 lg:pt-16 md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
+      <div className="md:flex md:flex-row-reverse gap-[40px] max-w-[990px] m-auto px-4">
         <div className="flex-grow">
           <div className="pb-10">
             <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Make and model</h5>
@@ -186,27 +212,22 @@ export default function ModelDetailPage() {
 
           <div className="pb-10">
             <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Description</h5>
-            <p className="text-[18px] lg:text-[22px]  whitespace-pre-line">{data.model.description}</p>
+            <p className="text-[18px] lg:text-[20px]  whitespace-pre-line">{data.model.description}</p>
           </div>
 
           {data.model.link ? (
             <div className="pb-10">
               <h5 className="text-xs font-satoshi-bold uppercase text-white/40 pb-2">Preview</h5>
               <iframe
-                width="420"
-                height="315"
+                width="100%"
+                height="400px"
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                frameBorder="0"
                 src={formatYoutubeLink(data.model.link)}
                 title={`Demonstration for ${data.model.title}`}
               />
             </div>
           ) : null}
-
-          <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
-            Uploaded {timeago.format(data.model.createdAt)}
-          </time>
 
           {data.model.tags.length > 0 ? (
             <div>
@@ -216,13 +237,13 @@ export default function ModelDetailPage() {
                 {data.model.tags?.map((tag) => {
                   return (
                     <li key={tag}>
-                      <Link
+                      <ButtonLink
                         to={`/?tags=${tag}`}
                         prefetch="intent"
-                        className="px-2 py-1 rounded-lg border border-white/20 inline-block"
+                        className="px-2 py-1 rounded-lg border border-white/20 inline-block font-satoshi-regular text-white/80"
                       >
                         #{tag}
-                      </Link>
+                      </ButtonLink>
                     </li>
                   );
                 })}
@@ -246,52 +267,6 @@ export default function ModelDetailPage() {
             >
               Report model
             </ButtonLink>
-          </div>
-        </div>
-
-        <div className="md:w-[270px] flex-none mb-5 lg:mb-0 w-full pt-10 md:pt-0">
-          <div className="border border-white/20 rounded-2xl p-4 text-center sticky top-5">
-            {isAvatar ? (
-              <img
-                className="h-[110px] w-[110px] rounded-full m-auto bg-tonehunt-gray-light mb-4 object-cover"
-                src={data.model.profile?.avatar ?? ""}
-                title={data.model.profile?.username ?? "avatar"}
-                alt={data.model.profile?.username ?? "avatar"}
-              />
-            ) : (
-              <UserIcon className="bg-tonehunt-gray-light h-[110px] w-[110px] m-auto mb-4 rounded-full p-4" />
-            )}
-
-            <h4 className="text-xl leading-[27px] opacity-50 mb-8">{data.model.profile.username}</h4>
-
-            <div className="flex items-center gap-4">
-              {data.user && data.model.profile.id !== data.user.id ? (
-                <div className="flex-1">
-                  <FollowButton
-                    isFollowing={
-                      !!data.profileWithFollows?.following.find(
-                        (following) => following.targetId === data.model.profile?.id
-                      )
-                    }
-                    showUsername={false}
-                    profileId={data.model.profile.id}
-                    profileUsername={data.model.profile.username ?? ""}
-                    className="block w-full hover:bg-tonehunt-gray-light text-sm text-white/70 py-3 px-5 bg-tonehunt-gray-medium active:bg-tonehunt-gray-light rounded-xl "
-                    formClassName="block"
-                  />
-                </div>
-              ) : null}
-
-              <div className="flex-1">
-                <Link
-                  to={`/${data.model.profile.username}`}
-                  prefetch="intent"
-                  className="block hover:bg-tonehunt-gray-light text-sm text-white/70 py-3 px-5 bg-tonehunt-gray-medium rounded-xl font-satoshi-bold"
-                >
-                  Profile
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </div>
