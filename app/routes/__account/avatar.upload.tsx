@@ -6,6 +6,7 @@ import { AVATAR_MAX_UPLOAD_SIZE } from "~/utils/constants";
 
 export type ActionData = {
   error?: string;
+  success?: boolean;
   path?: string;
 };
 
@@ -44,9 +45,9 @@ export const action: ActionFunction = async ({ request }) => {
       },
     });
 
-    return json<ActionData>({ path: data?.path });
+    return json<ActionData>({ success: true, path: data?.path });
   } catch (e: any) {
     console.error("ERROR:", e);
-    return json<ActionData>({ error: e.message }, { status: 500 });
+    return json<ActionData>({ success: false, error: e.message }, { status: 500 });
   }
 };
