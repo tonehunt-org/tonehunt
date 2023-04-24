@@ -14,12 +14,18 @@ export const getProfileByUsername = (username: string) => {
   });
 };
 
+export type Social = {
+  link: string;
+  social: string;
+};
+
 export type ProfileWithFollows = Prisma.ProfileGetPayload<{
   select: {
     id: true;
     username: true;
     bio: true;
     avatar: true;
+    socials: true;
     followers: {
       select: {
         id: true;
@@ -47,7 +53,7 @@ export type ProfileWithFollows = Prisma.ProfileGetPayload<{
       };
     };
   };
-}>;
+}> & { socials: Social[] | null };
 export const getProfileWithFollows = (username: string) => {
   return db.profile.findFirst({
     where: {
@@ -58,6 +64,7 @@ export const getProfileWithFollows = (username: string) => {
       username: true,
       bio: true,
       avatar: true,
+      socials: true,
       followers: {
         where: {
           deleted: false,
