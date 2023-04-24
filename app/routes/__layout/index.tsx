@@ -1,7 +1,7 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { startCase } from "lodash";
 import { getSession } from "~/auth.server";
 
@@ -102,8 +102,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const data = useLoaderData<LoaderData>();
+  const [searchParams] = useSearchParams();
 
-  return data.models.length === 0 ? (
+  return data.models.length === 0 && !searchParams.get("filter") ? (
     <EmptyFeed
       headline="You are not following anyone yet"
       buttonText="Find interesting users to follow"
@@ -118,6 +119,7 @@ export default function Index() {
       limit={MODELS_LIMIT}
       user={data.user}
       profile={data.profile}
+      emptyMessage="There are no models for this category"
     />
   );
 }

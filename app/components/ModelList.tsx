@@ -18,6 +18,7 @@ interface ModelListType {
   user?: User | null | undefined;
   profile: ProfileWithSocials | null;
   emptyMessage?: string;
+  emptyFilterMessage?: string;
   categories: Category[];
   hideSortOrder?: boolean;
 }
@@ -32,6 +33,7 @@ const ModelsListComponent = ({
   profile,
   hideSortOrder = false,
   emptyMessage = "No results",
+  emptyFilterMessage = "There are no models for this category yet",
 }: ModelListType) => {
   const location = useLocation();
 
@@ -57,19 +59,21 @@ const ModelsListComponent = ({
 
   const renderEmpty = () => {
     if (!searchParams.get("filter")) {
-      return <div className="text-lg text-center py-10">{emptyMessage}</div>;
+      // return <div className="text-lg text-center py-10">{emptyMessage}</div>;
+      return <EmptyFeed headline={emptyMessage} />;
     }
 
     if (searchParams.get("filter")) {
       return (
         <EmptyFeed
           headline={
-            profile ? (
+            profile && !emptyMessage ? (
               <>
-                <strong className="font-satoshi-bold">{profile.username}</strong> hasn't uploaded this model type yet
+                <strong className="font-satoshi-bold">{profile.username}</strong> hasn't uploaded this model category
+                yet
               </>
             ) : (
-              "These types of models haven't been uploaded yet"
+              emptyFilterMessage ?? "These types of models haven't been uploaded yet"
             )
           }
         />
