@@ -1,7 +1,7 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { getSession } from "~/auth.server";
 
 import type { User } from "@supabase/supabase-js";
@@ -72,8 +72,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
 export default function MyFavoritesPage() {
   const data = useLoaderData();
+  const [searchParams] = useSearchParams();
 
-  return data.models.length === 0 ? (
+  return data.models.length === 0 && !searchParams.get("filter") ? (
     <EmptyFeed
       headline="You have not favorited any models yet"
       buttonText="Find fantastic models to favorite"
@@ -88,6 +89,7 @@ export default function MyFavoritesPage() {
       limit={MODELS_LIMIT}
       user={data.user}
       profile={data.profile}
+      emptyMessage="You have no favorites for this category"
     />
   );
 }

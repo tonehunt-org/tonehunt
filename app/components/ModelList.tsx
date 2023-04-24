@@ -64,12 +64,12 @@ const ModelsListComponent = ({
       return (
         <EmptyFeed
           headline={
-            profile ? (
+            profile && !emptyMessage ? (
               <>
                 <strong className="font-satoshi-bold">{profile.username}</strong> hasn't uploaded this model type yet
               </>
             ) : (
-              "These types of models haven't been uploaded yet"
+              emptyMessage ?? "These types of models haven't been uploaded yet"
             )
           }
         />
