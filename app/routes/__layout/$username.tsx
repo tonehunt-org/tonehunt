@@ -16,6 +16,8 @@ import { getSortFilter } from "~/utils/loader";
 import ButtonLink from "~/components/ui/ButtonLink";
 import NotFound from "~/components/NotFound";
 import { twMerge } from "tailwind-merge";
+import { socialToIcon } from "~/utils/profile";
+import { groupBy } from "lodash";
 
 export const meta: MetaFunction<ProfileLoaderData> = ({ data, location }) => {
   const d = data as ProfileLoaderData;
@@ -224,11 +226,39 @@ export default function UserProfilePage() {
 
               <div className="flex-1 pt-5">
                 <div className="flex justify-start">
-                  <h1 className="text-5xl font-satoshi-bold mb-6">{data.profile?.username}</h1>
+                  <h1 className="text-5xl font-satoshi-bold mb-10">{data.profile?.username}</h1>
                 </div>
 
+                {data.profile?.socials && data.profile?.socials.length > 0 ? (
+                  <ul className="list-none p-0 m-0 mb-10 flex items-center gap-5 text-white">
+                    {data.profile?.socials
+                      ?.sort((a, b) => {
+                        // Website alreasy first
+                        if (a.social === "website") {
+                          return -1;
+                        }
+
+                        return 0;
+                      })
+                      .map((entry) => {
+                        return (
+                          <li className="w-6 h-6" key={entry.link}>
+                            <a
+                              href={entry.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="opacity-50 hover:opacity-90"
+                            >
+                              {socialToIcon(entry.social)}
+                            </a>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                ) : null}
+
                 {data.profile?.bio ? (
-                  <div className="flex mb-6 pt-5">
+                  <div className="flex mb-6">
                     <div className="max-h-[280px] overflow-hidden text-xl font-satoshi-regular text-tonehunt-gray-lighter whitespace-pre-wrap">
                       {data.profile.bio}
                     </div>

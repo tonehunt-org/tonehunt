@@ -1,0 +1,31 @@
+import { LinkIcon } from "@heroicons/react/24/solid";
+import FacebookIcon from "~/components/icons/Facebook";
+import GithubIcon from "~/components/icons/Github";
+import InstagramIcon from "~/components/icons/Instagram";
+import TwitterIcon from "~/components/icons/Twitter";
+import YoutubeIcon from "~/components/icons/Youtube";
+import type { Social } from "~/services/profile";
+
+export const socialToIcon = (social: Social["social"]) => {
+  switch (social) {
+    case "facebook": {
+      return <FacebookIcon />;
+    }
+    case "instagram": {
+      return <InstagramIcon />;
+    }
+    case "twitter": {
+      return <TwitterIcon />;
+    }
+    case "github": {
+      return <GithubIcon />;
+    }
+    case "youtube": {
+      return <YoutubeIcon />;
+    }
+
+    case "website": {
+      return <LinkIcon />;
+    }
+  }
+};
