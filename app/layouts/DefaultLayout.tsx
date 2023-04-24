@@ -22,7 +22,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
       <Header user={user} profile={profile} />
 
       <div className="flex p-3 h-fit">
-        <MainNav user={user} profile={profile} />
+        <MainNav user={user} profile={profile} className="lg:min-w-[220px] overflow-hidden lg:overflow-auto" />
 
         <div className="w-full max-w-3xl mb-8 mt-8 lg:mb-16 lg:mt-5 xl:mb-16 px-3">{props.children}</div>
 

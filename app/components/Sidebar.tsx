@@ -19,7 +19,7 @@ export const ArticlesBlock = () => {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
+        <h1 className="font-satoshi-bold text-xl mb-10">Tips &amp; Tricks</h1>
       </div>
 
       <div className="flex flex-col">

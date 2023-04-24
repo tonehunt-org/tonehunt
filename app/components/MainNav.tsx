@@ -44,12 +44,18 @@ const nav2 = [
 type MainNavProps = {
   user?: User | null;
   profile?: Profile | null;
+  className?: string;
 };
 
-export default function MainNav({ user, profile }: MainNavProps) {
+export default function MainNav({ user, profile, className }: MainNavProps) {
   return (
-    <nav className="flex-1 flex-grow flex justify-end mr-10 sticky top-2 h-fit pb-[84px] overflow-auto">
-      <ul className="list-none p-0 m-0 w-[220px] pt-5 font-satoshi-medium flex flex-col">
+    <nav
+      className={twMerge(
+        `flex-1 flex flex-grow justify-end min-w-[65px] md:min-w-[220px] mr-5 md:mr-10 sticky top-2 h-fit pb-[84px] overflow-auto`,
+        className
+      )}
+    >
+      <ul className="list-none p-0 m-0 w-full pt-5 font-satoshi-medium flex flex-col max-w-[220px]">
         {nav1
           .filter((item) => {
             if (item.requiresAuth && !user) {
@@ -73,8 +79,8 @@ export default function MainNav({ user, profile }: MainNavProps) {
                     );
                   }}
                 >
-                  <span className="flex items-center gap-3">
-                    <item.icon className="w-5 h-5" /> {item.title}
+                  <span className="md:flex items-center gap-3">
+                    <item.icon className="w-5 h-5" /> <span className="hidden md:inline">{item.title}</span>
                   </span>
                 </NavLink>
               </li>
@@ -98,8 +104,8 @@ export default function MainNav({ user, profile }: MainNavProps) {
                   );
                 }}
               >
-                <span className="flex items-center gap-3">
-                  <item.icon className="w-5 h-5" /> {item.title}
+                <span className="md:flex items-center gap-3">
+                  <item.icon className="w-5 h-5" /> <span className="hidden md:inline">{item.title}</span>
                 </span>
               </NavLink>
             </li>
