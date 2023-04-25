@@ -16,8 +16,8 @@ import { getSortFilter } from "~/utils/loader";
 import ButtonLink from "~/components/ui/ButtonLink";
 import NotFound from "~/components/NotFound";
 import { twMerge } from "tailwind-merge";
-import { socialToIcon } from "~/utils/profile";
-import { groupBy } from "lodash";
+import { socialToIcon, socialLinks } from "~/utils/profile";
+import { isValidUrl } from "~/utils/link";
 
 export const meta: MetaFunction<ProfileLoaderData> = ({ data, location }) => {
   const d = data as ProfileLoaderData;
@@ -174,6 +174,12 @@ export default function UserProfilePage() {
   const textForBG = [...new Array(arrayLength)].map(() => data.profile?.username ?? "");
   const isAvatar = data.profile?.avatar && data.profile?.avatar !== "";
 
+  const profileSocials =
+    data.profile?.socials && typeof data.profile?.socials === "object" && Array.isArray(data.profile?.socials)
+      ? data.profile.socials
+      : [];
+  const socials = profileSocials.map((social) => ({ ...social, link: `${socialLinks(social.social)}${social.link}` }));
+
   const renderActionButton = () => {
     if (data.user && data.profile?.username && data.profile?.id !== data.sessionProfile?.id) {
       return (
@@ -229,10 +235,10 @@ export default function UserProfilePage() {
                   <h1 className="text-5xl font-satoshi-bold mb-10">{data.profile?.username}</h1>
                 </div>
 
-                {data.profile?.socials && data.profile?.socials.length > 0 ? (
+                {socials.length > 0 ? (
                   <ul className="list-none p-0 m-0 mb-10 flex items-center gap-5 text-white">
-                    {data.profile?.socials
-                      ?.sort((a, b) => {
+                    {socials
+                      .sort((a, b) => {
                         // Website alreasy first
                         if (a.social === "website") {
                           return -1;
@@ -241,7 +247,7 @@ export default function UserProfilePage() {
                         return 0;
                       })
                       .map((entry) => {
-                        return (
+                        return isValidUrl(entry.link) ? (
                           <li className="w-6 h-6" key={entry.link}>
                             <a
                               href={entry.link}
@@ -252,7 +258,7 @@ export default function UserProfilePage() {
                               {socialToIcon(entry.social)}
                             </a>
                           </li>
-                        );
+                        ) : null;
                       })}
                   </ul>
                 ) : null}

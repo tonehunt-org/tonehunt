@@ -187,41 +187,95 @@ export default function ProfileInformationPage() {
                     <Input name="bio" label="Bio" style={{ height: "168px" }} multiline defaultValue={profile.bio} />
                   </div>
                   <div>
-                    <Input
-                      name="facebook"
-                      label="Facebook URL"
-                      defaultValue={defaultFacebook ? defaultFacebook.link : ""}
-                    />
+                    <span className="block pb-2 pl-1">Socials</span>
                   </div>
-                  <div>
-                    <Input
-                      name="twitter"
-                      label="Twitter URL"
-                      defaultValue={defaultTwitter ? defaultTwitter.link : ""}
-                    />
+
+                  {/* FACEBOOK */}
+                  <div className="w-full">
+                    <div className="flex flex-row">
+                      <div className="flex-grow-0 w-36">
+                        <span className="pr-5 py-4 font-satoshi-regular block text-right">facebook.com/</span>
+                      </div>
+                      <div className="flex-grow">
+                        <Input
+                          name="facebook"
+                          defaultValue={defaultFacebook ? defaultFacebook.link : ""}
+                          placeholder="username"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Input
-                      name="instagram"
-                      label="Instagram URL"
-                      defaultValue={defaultInstagram ? defaultInstagram.link : ""}
-                    />
+
+                  {/* TWITTER */}
+                  <div className="w-full">
+                    <div className="flex flex-row">
+                      <div className="flex-grow-0 w-36">
+                        <span className="pr-5 py-4 font-satoshi-regular block text-right">twitter.com/</span>
+                      </div>
+                      <div className="flex-grow">
+                        <Input
+                          name="twitter"
+                          defaultValue={defaultTwitter ? defaultTwitter.link : ""}
+                          placeholder="username"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Input
-                      name="youtube"
-                      label="YouTube URL"
-                      defaultValue={defaultYouTube ? defaultYouTube.link : ""}
-                    />
+
+                  {/* INSTAGRAM */}
+                  <div className="w-full">
+                    <div className="flex flex-row">
+                      <div className="flex-grow-0 w-36">
+                        <span className="pr-5 py-4 font-satoshi-regular block text-right">instagram.com/</span>
+                      </div>
+                      <div className="flex-grow">
+                        <Input
+                          name="instagram"
+                          defaultValue={defaultInstagram ? defaultInstagram.link : ""}
+                          placeholder="username"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Input name="github" label="Github URL" defaultValue={defaultGithub ? defaultGithub.link : ""} />
+
+                  {/* YOUTUBE */}
+                  <div className="w-full">
+                    <div className="flex flex-row">
+                      <div className="flex-grow-0 w-36">
+                        <span className="pr-5 py-4 font-satoshi-regular block text-right">youtube.com/</span>
+                      </div>
+                      <div className="flex-grow">
+                        <Input
+                          name="youtube"
+                          defaultValue={defaultYouTube ? defaultYouTube.link : ""}
+                          placeholder="username"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
+
+                  {/* GITHUB */}
+                  <div className="w-full">
+                    <div className="flex flex-row">
+                      <div className="flex-grow-0 w-36">
+                        <span className="pr-5 py-4 font-satoshi-regular block text-right">github.com/</span>
+                      </div>
+                      <div className="flex-grow">
+                        <Input
+                          name="github"
+                          defaultValue={defaultGithub ? defaultGithub.link : ""}
+                          placeholder="username"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full">
                     <Input
                       name="website"
-                      label="Website URL"
+                      label="Website"
                       defaultValue={defaultWebsite ? defaultWebsite.link : ""}
+                      placeholder="https://example.com"
                     />
                   </div>
                 </div>
