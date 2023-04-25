@@ -79,7 +79,7 @@ export default function MainNav({ user, profile, className }: MainNavProps) {
                     );
                   }}
                 >
-                  <span className="md:flex items-center gap-3">
+                  <span className="md:flex items-center gap-3 text-center md:text-left">
                     <item.icon className="w-5 h-5" /> <span className="hidden md:inline">{item.title}</span>
                   </span>
                 </NavLink>
