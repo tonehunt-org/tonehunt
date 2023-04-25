@@ -1,9 +1,9 @@
 import { StarIcon, UserCircleIcon, UserIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import imgArticle1 from "~/assets/articles/article_1.jpg";
-import imgArticle2 from "~/assets/articles/article_2.jpg";
-import imgArticle3 from "~/assets/articles/article_3.jpg";
+import imgArticle1 from "~/assets/articles/article_1a.jpg";
+import imgArticle2 from "~/assets/articles/article_2a.jpg";
+import imgArticle3 from "~/assets/articles/article_3a.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
