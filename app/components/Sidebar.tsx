@@ -24,6 +24,16 @@ export const ArticlesBlock = () => {
 
       <div className="flex flex-col">
         <div className="flex-1  pb-3 mb-3">
+          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin/releases" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Download the Neural Amp Modeling Plugin</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
           <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
             <div className="flex flex-row items-center">
               <div className="inline w-14 h-14 mr-2 bg-tonehunt-purple rounded-xl overflow-hidden flex-none">
@@ -50,16 +60,6 @@ export const ArticlesBlock = () => {
                 />
               </div>
               <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
-            </div>
-          </a>
-        </div>
-        <div className="flex-1  pb-3 mb-3">
-          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin" target="_new">
-            <div className="flex flex-row items-center">
-              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
-                <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
-              </div>
-              <span className="font-satoshi-bold text-sm hover:underline">Download the Neural Amp Modeling Plugin</span>
             </div>
           </a>
         </div>
