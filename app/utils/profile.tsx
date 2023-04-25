@@ -29,3 +29,25 @@ export const socialToIcon = (social: Social["social"]) => {
     }
   }
 };
+
+export const socialLinks = (social: Social["social"]) => {
+  switch (social) {
+    case "facebook": {
+      return "https://www.facebook.com/";
+    }
+    case "instagram": {
+      return "https://www.instagram.com/";
+    }
+    case "twitter": {
+      return "https://www.twitter.com/";
+    }
+    case "github": {
+      return "https://www.github.com/";
+    }
+    case "youtube": {
+      return "https://www.youtube.com/";
+    }
+    default:
+      return "";
+  }
+};

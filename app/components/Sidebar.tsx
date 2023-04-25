@@ -1,9 +1,9 @@
 import { StarIcon, UserCircleIcon, UserIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import { Link } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
-import imgArticle1 from "~/assets/articles/article_1.jpg";
-import imgArticle2 from "~/assets/articles/article_2.jpg";
-import imgArticle3 from "~/assets/articles/article_3.jpg";
+import imgArticle1 from "~/assets/articles/article_1a.jpg";
+import imgArticle2 from "~/assets/articles/article_2a.jpg";
+import imgArticle3 from "~/assets/articles/article_3a.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
@@ -23,6 +23,16 @@ export const ArticlesBlock = () => {
       </div>
 
       <div className="flex flex-col">
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin/releases" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Download the Neural Amp Modeling Plugin</span>
+            </div>
+          </a>
+        </div>
         <div className="flex-1  pb-3 mb-3">
           <a href="https://github.com/sdatkinson/neural-amp-modeler" target="_new">
             <div className="flex flex-row items-center">
@@ -50,16 +60,6 @@ export const ArticlesBlock = () => {
                 />
               </div>
               <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
-            </div>
-          </a>
-        </div>
-        <div className="flex-1  pb-3 mb-3">
-          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin" target="_new">
-            <div className="flex flex-row items-center">
-              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
-                <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
-              </div>
-              <span className="font-satoshi-bold text-sm hover:underline">Download the Neural Amp Modeling Plugin</span>
             </div>
           </a>
         </div>
