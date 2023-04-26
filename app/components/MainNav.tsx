@@ -9,6 +9,7 @@ import {
   UserIcon,
   HomeIcon,
   GlobeAltIcon,
+  QueueListIcon,
 } from "@heroicons/react/24/outline";
 import Button from "~/components/ui/Button";
 import RelatedDropdown from "~/components/RelatedDropdown";
@@ -36,7 +37,7 @@ const nav1 = [
 ];
 
 const nav2 = [
-  { title: "All Models", href: (profile?: Profile | null) => "/all", icon: GlobeAltIcon },
+  { title: "All Models", href: (profile?: Profile | null) => "/all", icon: QueueListIcon },
   { title: "Trending", href: (profile?: Profile | null) => "/trending", icon: ArrowTrendingUpIcon },
   { title: "Popular", href: (profile?: Profile | null) => "/popular", icon: ChartBarIcon },
 ];
@@ -51,11 +52,23 @@ export default function MainNav({ user, profile, className }: MainNavProps) {
   return (
     <nav
       className={twMerge(
-        `flex-1 hidden md:flex justify-end min-w-[65px] md:min-w-[220px] mr-5 md:mr-10 sticky top-2 h-fit pb-[84px] overflow-auto`,
+        `flex-1 fixed z-50 w-full mr-5 h-fit overflow-auto bg-tonehunt-gray-dark/80 shadow-lg`,
+        "md:sticky md:top-2 md:flex md:justify-end md:min-w-[220px] md:pb-[84px]",
         className
       )}
+      style={{
+        bottom: "env(safe-area-inset-bottom, 0)",
+        left: "env(safe-area-inset-left, 0)",
+        backdropFilter: "blur(16px) ",
+        WebkitBackdropFilter: "blur(16px)",
+      }}
     >
-      <ul className="list-none p-0 m-0 pt-5 font-satoshi-medium flex flex-col w-full max-w-[220px]">
+      <ul
+        className={twMerge(
+          "list-none flex justify-center p-1 m-0 font-satoshi-medium w-full gap-8",
+          "md:flex-col md:pt-5 md:max-w-[220px] md:gap-0 md:px-3 md:py-2"
+        )}
+      >
         {nav1
           .filter((item) => {
             if (item.requiresAuth && !user) {
@@ -66,21 +79,22 @@ export default function MainNav({ user, profile, className }: MainNavProps) {
           })
           .map((item) => {
             return (
-              <li key={item.href(profile)} className="my-1">
+              <li key={item.href(profile)} className="md: my-1">
                 <NavLink
                   to={item.href(profile)}
                   prefetch="intent"
                   className={({ isActive }) => {
                     return twMerge(
-                      "block px-5 py-2 rounded-full text-lg",
+                      "block px-3 md:px-5 py-2 rounded-full text-lg",
                       isActive
-                        ? "text-tonehunt-purple bg-tonehunt-gray-medium"
+                        ? "text-tonehunt-purple md:bg-tonehunt-gray-medium"
                         : "hover:text-white text-white/80 hover:bg-tonehunt-gray-medium"
                     );
                   }}
                 >
-                  <span className="md:flex items-center gap-3 text-center md:text-left">
-                    <item.icon className="w-5 h-5" /> <span className="hidden md:inline">{item.title}</span>
+                  <span className="block md:flex items-center gap-3 text-center md:text-left">
+                    <item.icon className="w-7 h-7 md:w-5 md:h-5" />{" "}
+                    <span className="hidden md:inline">{item.title}</span>
                   </span>
                 </NavLink>
               </li>
@@ -97,15 +111,15 @@ export default function MainNav({ user, profile, className }: MainNavProps) {
                 prefetch="intent"
                 className={({ isActive }) => {
                   return twMerge(
-                    "block px-5 py-2 rounded-full text-lg",
+                    "block px-3 md:px-5 py-2 rounded-full text-lg",
                     isActive
-                      ? "text-tonehunt-purple bg-tonehunt-gray-medium"
+                      ? "text-tonehunt-purple md:bg-tonehunt-gray-medium"
                       : "hover:text-white text-white/80 hover:bg-tonehunt-gray-medium"
                   );
                 }}
               >
                 <span className="md:flex items-center gap-3">
-                  <item.icon className="w-5 h-5" /> <span className="hidden md:inline">{item.title}</span>
+                  <item.icon className="w-7 h-7 md:w-5 md:h-5" /> <span className="hidden md:inline">{item.title}</span>
                 </span>
               </NavLink>
             </li>
