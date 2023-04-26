@@ -51,11 +51,11 @@ export default function MainNav({ user, profile, className }: MainNavProps) {
   return (
     <nav
       className={twMerge(
-        `flex-1 flex flex-grow justify-end min-w-[65px] md:min-w-[220px] mr-5 md:mr-10 sticky top-2 h-fit pb-[84px] overflow-auto`,
+        `flex-1 hidden md:flex justify-end min-w-[65px] md:min-w-[220px] mr-5 md:mr-10 sticky top-2 h-fit pb-[84px] overflow-auto`,
         className
       )}
     >
-      <ul className="list-none p-0 m-0 w-full pt-5 font-satoshi-medium flex flex-col max-w-[220px]">
+      <ul className="list-none p-0 m-0 pt-5 font-satoshi-medium flex flex-col w-full max-w-[220px]">
         {nav1
           .filter((item) => {
             if (item.requiresAuth && !user) {
