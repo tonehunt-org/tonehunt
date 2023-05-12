@@ -213,7 +213,7 @@ export default function UserProfilePage() {
 
           <div className="w-full px-3 py-10 xl:max-w-3xl xl:m-auto">
             <div className="flex flex-col z-1 px-10">
-              <div className="flex-1 flex items-center">
+              <div className="flex-1 flex flex-col lg:flex-row items-center">
                 <div className="flex justify-start flex-grow">
                   {isAvatar ? (
                     <img
