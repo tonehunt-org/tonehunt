@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "@remix-run/react";
 import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
@@ -6,6 +7,8 @@ import Searchbar from "./Searchbar";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
+import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Drawer } from "./ui/Drawer";
 
 interface HeaderType {
   user?: User | undefined | null;
@@ -13,6 +16,7 @@ interface HeaderType {
 }
 
 const Header = ({ user, profile }: HeaderType) => {
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
@@ -67,18 +71,37 @@ const Header = ({ user, profile }: HeaderType) => {
               <UserActions user={user} username={profile?.username ?? undefined} />
             </div>
             {user ? (
-              <div className="hidden lg:block">
+              <div className="hidden xl:block">
                 <ButtonLink variant="button-primary" to="/models/new">
                   Upload Model
                 </ButtonLink>
               </div>
             ) : null}
+            <div className="block xl:hidden">
+              <Button
+                variant="secondary"
+                onClick={() => setShowMenu(!showMenu)}
+                className={menuItemsStyle}
+                style={menuItemsInlineStyle}
+              >
+                <Bars3Icon className="w-7 h-7" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
       <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
         <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
       </div>
+      <Drawer
+        setShowDrawer={() => setShowMenu(!showMenu)}
+        showDrawer={showMenu}
+        placement="right"
+        titleBg="bg-tonehunt-gray-dark"
+        title={<div className="uppercase h-20 flex items-center font-satoshi-bold">Menu</div>}
+      >
+        <div className="bg-tonehunt-gray-dark text-white h-full p-6">MAIN Menu</div>
+      </Drawer>
     </header>
   );
 };
