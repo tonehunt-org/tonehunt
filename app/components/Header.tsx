@@ -9,6 +9,7 @@ import type { Profile } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { Drawer } from "./ui/Drawer";
+import MainNav from "~/components/MainNav";
 
 interface HeaderType {
   user?: User | undefined | null;
@@ -98,9 +99,11 @@ const Header = ({ user, profile }: HeaderType) => {
         showDrawer={showMenu}
         placement="right"
         titleBg="bg-tonehunt-gray-dark"
-        title={<div className="uppercase h-20 flex items-center font-satoshi-bold">Menu</div>}
+        title={<div className="uppercase h-20 flex items-center font-satoshi-bold ml-6">Menu</div>}
       >
-        <div className="bg-tonehunt-gray-dark text-white h-full p-6">MAIN Menu</div>
+        <div className="bg-tonehunt-gray-dark text-white h-full p-6">
+          <MainNav user={user} profile={profile} isMobile={true} setShowMenu={setShowMenu} />
+        </div>
       </Drawer>
     </header>
   );
