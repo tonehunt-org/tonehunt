@@ -48,7 +48,7 @@ type MainNavProps = {
 
 export default function MainNav({ user, profile }: MainNavProps) {
   return (
-    <nav className="flex-1 flex-grow flex justify-end mr-10 sticky top-2 h-fit pb-[84px] overflow-auto">
+    <nav className="hidden lg:flex lg:flex-1 lg:flex-grow  justify-end mr-10 sticky top-2 h-fit pb-[84px] overflow-auto">
       <ul className="list-none p-0 m-0 w-[220px] pt-5 font-satoshi-medium flex flex-col">
         {nav1
           .filter((item) => {

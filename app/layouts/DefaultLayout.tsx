@@ -21,10 +21,10 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
     <div className="">
       <Header user={user} profile={profile} />
 
-      <div className="flex p-3 h-fit">
+      <div className="flex flex-col lg:flex-row p-3 h-fit">
         <MainNav user={user} profile={profile} />
 
-        <div className="w-full max-w-3xl mb-8 mt-8 lg:mb-16 lg:mt-5 xl:mb-16 px-3">{props.children}</div>
+        <div className="w-full lg:max-w-3xl mb-8 mt-8 lg:mb-16 lg:mt-5 xl:mb-16 px-3">{props.children}</div>
 
         {props.hideAsidebar ? <div className="flex-1 ml-10 flex-grow" /> : <Asidebar counts={props.counts} />}
       </div>
