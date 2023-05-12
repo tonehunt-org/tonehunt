@@ -231,7 +231,7 @@ export default function UserProfilePage() {
               </div>
 
               <div className="flex-1 pt-5">
-                <div className="flex justify-start">
+                <div className="flex justify-center lg:justify-start">
                   <h1 className="text-5xl font-satoshi-bold mb-10">{data.profile?.username}</h1>
                 </div>
 
