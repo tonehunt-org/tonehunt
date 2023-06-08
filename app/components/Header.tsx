@@ -33,7 +33,7 @@ const Header = ({ user, profile }: HeaderType) => {
         <div className="hidden lg:block flex-grow">
           <div className="flex justify-center align-middle content-center">
             <div className="block w-full">
-              <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+              <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@ const Header = ({ user, profile }: HeaderType) => {
         </div>
       </div>
       <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
-        <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+        <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
       </div>
     </header>
   );
