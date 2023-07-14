@@ -16,7 +16,7 @@ export default function UserActions({ user, username }: UserActionsProps) {
   return user ? (
     <></>
   ) : (
-    <Popover className="relative">
+    <Popover className="hidden relative xl:block">
       <Popover.Button as={Button} variant="primary">
         Login or Sign Up
       </Popover.Button>
