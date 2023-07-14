@@ -19,12 +19,12 @@ export const ArticlesBlock = () => {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
+        <h1 className="font-satoshi-bold text-xl mb-4">Useful Links</h1>
       </div>
 
       <div className="flex flex-col">
         <div className="flex-1  pb-3 mb-3">
-          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin/releases" target="_new">
+          <a href="https://www.neuralampmodeler.com/" target="_new">
             <div className="flex flex-row items-center">
               <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
                 <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
