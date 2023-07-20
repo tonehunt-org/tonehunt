@@ -127,7 +127,7 @@ export default function MainNav({ user, profile, isMobile = false, setShowMenu }
                 className="flex items-center hover:bg-tonehunt-gray-medium rounded-full pr-2 pl-2 relative -left-2 py-2"
               >
                 <div>
-                  <Avatar src={profile.avatar} size={8} className="w-8 mr-4 bg-tonehunt-purple" />
+                  <Avatar src={profile.avatar} size={8} className="w-8 h-8 mr-4 bg-tonehunt-purple" />
                 </div>
                 <div className="flex-grow truncate max-w-[120px] pr-2">@{profile.username}</div>
               </Link>
