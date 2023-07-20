@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import { getModels } from "~/services/models";
@@ -88,7 +88,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 export default function SearchResults() {
   const data = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <div className="w-full">
