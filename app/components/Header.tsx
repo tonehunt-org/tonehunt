@@ -23,6 +23,8 @@ const Header = ({ user, profile }: HeaderType) => {
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
 
+  const mobileMenuIconStyle = { paddingLeft: "15px", paddingRight: "15px", marginRight: "-15px" };
+
   return (
     <header>
       <div className="flex items-center bg-black p-4 lg:p-0">
@@ -83,7 +85,7 @@ const Header = ({ user, profile }: HeaderType) => {
                 variant="secondary"
                 onClick={() => setShowMenu(!showMenu)}
                 className={menuItemsStyle}
-                style={menuItemsInlineStyle}
+                style={mobileMenuIconStyle}
               >
                 <Bars3Icon className="w-7 h-7" />
               </Button>
