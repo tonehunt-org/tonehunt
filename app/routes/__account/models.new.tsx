@@ -203,7 +203,7 @@ export default function ModelsNewPage() {
       let { files: filesBeingUploaded } = toJSON<{ files: File[] }>(formData);
       const _files = asArray(filesBeingUploaded);
 
-      const hasInvalidFiles = _files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
+      const hasInvalidFiles = _files.some((file) => !file.type.match(/audio.*wav/) && !file.name.includes(".nam"));
 
       if (hasInvalidFiles) {
         alert("Only NAM models and IR wav files are allowed");
