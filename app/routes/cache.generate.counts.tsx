@@ -51,11 +51,24 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   });
 
-  const [ampCount, pedalCount, outboardCount, fullRigCount] = await Promise.all([
+  const irCountReq = db.model.aggregate({
+    _sum: {
+      filecount: true,
+    },
+    where: {
+      OR: [{ categoryId: 4 }, { categoryId: 8 }],
+      deleted: false,
+      private: false,
+      active: true,
+    },
+  });
+
+  const [ampCount, pedalCount, outboardCount, fullRigCount, irCount] = await Promise.all([
     ampCountReq,
     pedalCountReq,
     outboardCountReq,
     fullRigCountReq,
+    irCountReq,
   ]);
 
   await db.$transaction([
@@ -91,6 +104,14 @@ export const loader: LoaderFunction = async ({ request }) => {
         count: outboardCount._sum.filecount ?? 0,
       },
     }),
+    db.counts.update({
+      where: {
+        name: "irs",
+      },
+      data: {
+        count: irCount._sum.filecount ?? 0,
+      },
+    }),
   ]);
 
   return json({
@@ -99,6 +120,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       pedalCount,
       outboardCount,
       fullRigCount,
+      irCount,
     },
   });
 };

@@ -22,7 +22,6 @@ const Header = ({ user, profile }: HeaderType) => {
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
-
   const mobileMenuIconStyle = { paddingLeft: "15px", paddingRight: "15px", marginRight: "-15px" };
 
   return (
