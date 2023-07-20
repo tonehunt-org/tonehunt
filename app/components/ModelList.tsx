@@ -21,6 +21,9 @@ interface ModelListType {
   emptyFilterMessage?: string;
   categories: Category[];
   hideSortOrder?: boolean;
+  title?: string;
+  showTitle?: boolean;
+  hideCategories?: boolean;
 }
 
 const ModelsListComponent = ({
@@ -34,6 +37,9 @@ const ModelsListComponent = ({
   hideSortOrder = false,
   emptyMessage = "No results",
   emptyFilterMessage = "There are no models for this category yet",
+  title = "",
+  showTitle = false,
+  hideCategories = false,
 }: ModelListType) => {
   const location = useLocation();
 
@@ -83,34 +89,41 @@ const ModelsListComponent = ({
 
   return (
     <div>
-      {pageIsEmpty && !searchParams.get("filter") ? null : (
-        <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
-          {hideSortOrder ? null : (
-            <li>
-              <ModelSortDropdown
-                icon={<ArrowsUpDownIcon className="w-4- h-4" />}
-                renderItem={(item) => item.title}
-                items={[
-                  {
-                    title: "Newest",
-                    href: `${location.pathname}?${newestParams}`,
-                    default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
-                  },
-                  {
-                    title: "Oldest",
-                    href: `${location.pathname}?${oldestParams}`,
-                    default: searchParams.get("sortDirection") === "asc",
-                  },
-                ]}
-              />
-            </li>
-          )}
+      <div className="flex flex-col md:flex-row items-center justify-center">
+        <div className="w-full md:w-1/2">
+          <h1 className="text-xl text-white font-satoshi-bold mb-1 text-center md:text-left md:mb-5">
+            {showTitle ? title : ""}
+          </h1>
+        </div>
+        <div className="w-full md:w-1/2">
+          {pageIsEmpty && !searchParams.get("filter") ? null : (
+            <ul className="list-none p-0 m-0 flex gap-3 items-center justify-center md:justify-end mb-5">
+              {hideSortOrder ? null : (
+                <li>
+                  <ModelSortDropdown
+                    icon={<ArrowsUpDownIcon className="w-4- h-4" />}
+                    renderItem={(item) => item.title}
+                    items={[
+                      {
+                        title: "Newest",
+                        href: `${location.pathname}?${newestParams}`,
+                        default: !searchParams.get("sortDirection") || searchParams.get("sortDirection") === "desc",
+                      },
+                      {
+                        title: "Oldest",
+                        href: `${location.pathname}?${oldestParams}`,
+                        default: searchParams.get("sortDirection") === "asc",
+                      },
+                    ]}
+                  />
+                </li>
+              )}
 
-          <li>
-            <CategoryDropdown categories={categories} />
-          </li>
-        </ul>
-      )}
+              <li>{hideCategories ? null : <CategoryDropdown categories={categories} />}</li>
+            </ul>
+          )}
+        </div>
+      </div>
 
       {/* MODELS LIST */}
       <div className="flex flex-col">

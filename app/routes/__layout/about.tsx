@@ -88,7 +88,7 @@ export default function AboutPage() {
       <p className="pb-10">
         Since ToneHunt is an open initiative, you can find all the technology used to build the platform in our{" "}
         <a
-          href="https://github.com/scottcorgan/tonehunt"
+          href="https://github.com/tonehunt-org/tonehunt"
           className="hover:underline text-tonehunt-blue-light font-satoshi-bold"
           target="_blank"
           rel="noopener noreferrer"

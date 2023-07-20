@@ -104,6 +104,8 @@ export default function Index() {
       limit={MODELS_LIMIT}
       user={data.user}
       profile={data.profile}
+      title="All Models"
+      showTitle={true}
     />
   );
 }

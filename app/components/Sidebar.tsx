@@ -5,6 +5,7 @@ import imgArticle1 from "~/assets/articles/article_1a.jpg";
 import imgArticle2 from "~/assets/articles/article_2a.jpg";
 import imgArticle3 from "~/assets/articles/article_3a.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
+import imgFacebook from "~/assets/articles/icon_facebook.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
 import type { Profile } from "@prisma/client";
@@ -19,12 +20,12 @@ export const ArticlesBlock = () => {
   return (
     <div className="w-full">
       <div className="flex">
-        <h1 className="font-satoshi-bold text-xl mb-4">Tips &amp; Tricks</h1>
+        <h1 className="font-satoshi-bold text-xl mb-4">Useful Links</h1>
       </div>
 
       <div className="flex flex-col">
         <div className="flex-1  pb-3 mb-3">
-          <a href="https://github.com/sdatkinson/NeuralAmpModelerPlugin/releases" target="_new">
+          <a href="https://www.neuralampmodeler.com/" target="_new">
             <div className="flex flex-row items-center">
               <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
                 <img className="object-cover w-14 h-14" src={imgArticle3} alt="nam_image" title="Download NAM" />
@@ -70,6 +71,21 @@ export const ArticlesBlock = () => {
                 <img className="object-cover w-14 h-14" src={imgDiscord} alt="discord" title="Join our Discord" />
               </div>
               <span className="font-satoshi-bold text-sm hover:underline">Join the ToneHunt Discord</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://www.facebook.com/tonehunt.org" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img
+                  className="object-cover w-14 h-14"
+                  src={imgFacebook}
+                  alt="facebook"
+                  title="Join our Facebook Page"
+                />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Join our Facebook Page</span>
             </div>
           </a>
         </div>

@@ -90,6 +90,8 @@ export default function MyFavoritesPage() {
       user={data.user}
       profile={data.profile}
       emptyMessage="You have no favorites for this category"
+      showTitle={true}
+      title="Favorites"
     />
   );
 }

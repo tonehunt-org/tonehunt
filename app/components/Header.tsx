@@ -22,6 +22,7 @@ const Header = ({ user, profile }: HeaderType) => {
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
+  const mobileMenuIconStyle = { paddingLeft: "15px", paddingRight: "15px", marginRight: "-15px" };
 
   return (
     <header>
@@ -38,7 +39,7 @@ const Header = ({ user, profile }: HeaderType) => {
         <div className="hidden lg:block flex-grow">
           <div className="flex justify-center align-middle content-center">
             <div className="block w-full">
-              <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+              <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
             </div>
           </div>
         </div>
@@ -83,7 +84,7 @@ const Header = ({ user, profile }: HeaderType) => {
                 variant="secondary"
                 onClick={() => setShowMenu(!showMenu)}
                 className={menuItemsStyle}
-                style={menuItemsInlineStyle}
+                style={mobileMenuIconStyle}
               >
                 <Bars3Icon className="w-7 h-7" />
               </Button>
@@ -92,7 +93,7 @@ const Header = ({ user, profile }: HeaderType) => {
         </div>
       </div>
       <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
-        <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+        <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
       </div>
       <Drawer
         setShowDrawer={() => setShowMenu(!showMenu)}

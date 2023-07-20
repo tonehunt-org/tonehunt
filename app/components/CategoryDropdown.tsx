@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ModelSortDropdown from "./ModelSortDropdown";
-import { getCategoryProfile } from "~/services/categories";
+import { getCategoryIcon } from "~/services/categories";
 import type { Category } from "@prisma/client";
 import { useLocation, useSearchParams } from "@remix-run/react";
 
@@ -35,7 +35,7 @@ export default function CategoryDropdown({ categories }: CategoryDropdownProps) 
       renderItem={(item) => {
         return (
           <span className="flex items-center gap-3 py-1">
-            <img className="w-6 h-6" src={getCategoryProfile(item.slug ?? "").icon} alt={item.title ?? ""} />
+            <img className="w-6 h-6" src={getCategoryIcon(item.slug ?? "")} alt={item.title ?? ""} />
             <span className="truncate">{item.title} </span>
           </span>
         );
