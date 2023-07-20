@@ -22,7 +22,8 @@ interface ModelListType {
   categories: Category[];
   hideSortOrder?: boolean;
   title?: string;
-  showTitle: boolean;
+  showTitle?: boolean;
+  hideCategories?: boolean;
 }
 
 const ModelsListComponent = ({
@@ -38,6 +39,7 @@ const ModelsListComponent = ({
   emptyFilterMessage = "There are no models for this category yet",
   title = "",
   showTitle = false,
+  hideCategories = false,
 }: ModelListType) => {
   const location = useLocation();
 
@@ -117,9 +119,7 @@ const ModelsListComponent = ({
                 </li>
               )}
 
-              <li>
-                <CategoryDropdown categories={categories} />
-              </li>
+              <li>{hideCategories ? null : <CategoryDropdown categories={categories} />}</li>
             </ul>
           )}
         </div>
