@@ -166,6 +166,8 @@ export default function Index() {
       user={data.user}
       profile={data.profile}
       hideSortOrder
+      title="Trending"
+      showTitle={true}
     />
   );
 }

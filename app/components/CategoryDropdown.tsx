@@ -9,7 +9,6 @@ type CategoryDropdownProps = {
 };
 
 export default function CategoryDropdown({ categories }: CategoryDropdownProps) {
-  console.log(categories);
   const location = useLocation();
   const [filterParams] = useSearchParams();
 

@@ -120,6 +120,8 @@ export default function Index() {
       user={data.user}
       profile={data.profile}
       emptyMessage="There are no models for this category"
+      showTitle={true}
+      title="Following"
     />
   );
 }
