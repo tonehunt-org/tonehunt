@@ -71,3 +71,26 @@ html {
     opacity: 0;
   }
 }
+
+* {
+  scrollbar-color: #8885 #eee;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+}
+*::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 1px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #8885;
+  border-radius: 1px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #8886;
+}

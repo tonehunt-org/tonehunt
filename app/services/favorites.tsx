@@ -5,21 +5,42 @@ interface getFavoritesType {
   limit?: number;
   next?: number;
   profileId: string;
+  sortDirection?: string;
+  categoryId?: string | null;
 }
 
 export const getFavorites = async (params: getFavoritesType) => {
+  const categoryFilter = params.categoryId
+    ? {
+        model: {
+          category: {
+            id: +params.categoryId,
+          },
+        },
+      }
+    : undefined;
+
+  const pagination = {
+    skip: params.next ?? 0,
+    take: params.limit ?? 10,
+  };
+
+  const where = {
+    deleted: false,
+    profileId: params.profileId,
+    model: {
+      active: true,
+      deleted: false,
+    },
+    ...categoryFilter,
+  };
+
   const favorites = await db.$transaction([
     db.favorite.count({
-      where: {
-        deleted: false,
-        profileId: params.profileId,
-      },
+      where,
     }),
     db.favorite.findMany({
-      where: {
-        deleted: false,
-        profileId: params.profileId,
-      },
+      where,
       select: {
         id: true,
         model: {
@@ -62,13 +83,11 @@ export const getFavorites = async (params: getFavoritesType) => {
           },
         },
       },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-      ],
-      skip: params.next ?? 0,
-      take: params.limit ?? 10,
+      // @ts-ignore
+      orderBy: {
+        createdAt: params.sortDirection ?? "desc",
+      },
+      ...pagination,
     }),
   ]);
 

@@ -11,7 +11,7 @@ import { Form, useFetcher, useLoaderData, useNavigate, useNavigation } from "@re
 import Input from "~/components/ui/Input";
 import Select from "~/components/ui/Select";
 import Loading from "~/components/ui/Loading";
-import type { ActionData as ModelCreateActionData } from "~/routes/__layout/models.new";
+import type { ActionData as ModelCreateActionData } from "~/routes/__account/models.new";
 import { twMerge } from "tailwind-merge";
 import { asArray } from "~/utils/array";
 import type { MultiSelectOption } from "~/components/ui/MultiSelect";
@@ -203,7 +203,7 @@ export default function ModelsNewPage() {
       let { files: filesBeingUploaded } = toJSON<{ files: File[] }>(formData);
       const _files = asArray(filesBeingUploaded);
 
-      const hasInvalidFiles = _files.some((file) => file.type !== "audio/wav" && !file.name.includes(".nam"));
+      const hasInvalidFiles = _files.some((file) => !file.type.match(/audio.*wav/) && !file.name.includes(".nam"));
 
       if (hasInvalidFiles) {
         alert("Only NAM models and IR wav files are allowed");

@@ -27,10 +27,13 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
+  // TODO: figure out how to show you can edit this model
+  const isOwn = model.profile.id === profile?.id;
+
   return (
     <div
       key={model.id}
-      className="transition ease-in-out flex-1 p-3 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to"
+      className={`transition ease-in-out flex-1 bg-tonehunt-gray-medium text-white mb-5 rounded-xl text-to p-3`}
     >
       <div className="sm:flex flex-row">
         <div className="flex-1 lg:flex-grow">
@@ -110,7 +113,7 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
         <div className="flex-1 lg:flex-none lg:pl-4 block">
           <div className="flex items-center h-full">
             <div className="flex-1">
-              <div className="flex ml-[56px] sm:ml-0 sm:justify-end mt-2 lg:mt-0 gap-2">
+              <div className="flex ml-0 lg:ml-[56px] justify-center md:justify-end mt-2 lg:mt-0 gap-2">
                 <FavoriteButton
                   count={model._count?.favorites}
                   favorited={!!profile?.favorites.find((fav) => fav.modelId === model.id)}
@@ -124,6 +127,24 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                   modelName={model.title}
                   className="px-4 py-[4px] sm:px-5 sm:py-3"
                 />
+
+                {/* {isOwn ? (
+                  <>
+                    <ButtonLink
+                      to={`/account/my-models/${model.id}`}
+                      className="items-center justify-center bg-white/80 text-black hover:bg-white hover:text-black"
+                      variant="button-primary"
+                    >
+                      Edit
+                    </ButtonLink>
+                    <Button
+                      className="border-red-500/40 hover:border-red-500/60 bg-red-500/40 hover:bg-red-500/60"
+                      variant="secondary"
+                    >
+                      Delete
+                    </Button>
+                  </>
+                ) : null} */}
               </div>
             </div>
           </div>

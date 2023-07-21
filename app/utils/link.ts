@@ -10,3 +10,11 @@ export const formatYoutubeLink = (url?: string) => {
     return `https://www.youtube.com/embed/${id}`;
   }
 };
+
+export const isValidUrl = (url: string) => {
+  try {
+    return Boolean(new URL(url));
+  } catch (e) {
+    return false;
+  }
+};

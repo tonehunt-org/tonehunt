@@ -10,6 +10,7 @@ import Alert from "~/components/ui/Alert";
 import { Link } from "@remix-run/react";
 import type { Counts } from "@prisma/client";
 import { ModelListCountTitle } from "~/components/routes/ModelListPage";
+import { isNotAllowed } from "~/utils/username";
 
 export const meta: MetaFunction = ({ location }) => ({
   title: "Sign Up | ToneHunt",
@@ -52,7 +53,13 @@ export const action: ActionFunction = async ({ request, context }) => {
     return json<ActionData>({ error: "Invalid username" });
   }
 
+  const usernameErrorMessage = "Username already exist. Please try a new one.";
+
   try {
+    if (isNotAllowed(username)) {
+      return json<ActionData>({ error: usernameErrorMessage }, { status: 500 });
+    }
+
     const usernameFlag = await db.profile.findUnique({
       where: {
         username: username,
@@ -60,7 +67,6 @@ export const action: ActionFunction = async ({ request, context }) => {
     });
 
     if (usernameFlag) {
-      const usernameErrorMessage = "Username already exist. Please try a new one.";
       return json<ActionData>({ error: usernameErrorMessage }, { status: 500 });
     }
 

@@ -1,35 +1,32 @@
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
-import Sidebar from "~/components/Sidebar";
 import type { User } from "@supabase/supabase-js";
-import type { Profile } from "@prisma/client";
+import type { Counts, Profile } from "@prisma/client";
 import type { PropsWithChildren } from "react";
-import { getSampleTags } from "~/services/tags";
+import Asidebar from "~/components/Asidebar";
+import MainNav from "~/components/MainNav";
 
 interface DefaultLayoutType {
   user?: User | null | undefined;
   profile?: Profile | null | undefined;
   className?: string | null;
+  counts: Counts[];
+  hideAsidebar?: boolean;
 }
 
 const DefaultLayout = (props: PropsWithChildren<DefaultLayoutType>) => {
   const { user, profile } = props;
 
   return (
-    <div className="relative">
+    <div className="">
       <Header user={user} profile={profile} />
-      <div className="flex flex-col p-3 lg:flex-row relative">
-        <div className="w-full lg:w-3/4 xl:max-w-3xl xl:m-auto mb-8 mt-8 lg:mb-16 lg:mt-16 xl:mt-16 xl:mb-16 px-3">
-          {props.children}
-        </div>
-        <div className="w-full lg:w-1/4 xl:hidden">
-          <Sidebar user={user} profile={profile} tags={getSampleTags()} />
-        </div>
-      </div>
 
-      {/* FIXED DESKTOP SIDEBAR */}
-      <div className="hidden xl:block absolute top-20 right-0 w-72 min-h-full mb-20">
-        <Sidebar user={user} profile={profile} tags={getSampleTags()} />
+      <div className="flex flex-col xl:flex-row p-3 h-fit">
+        <MainNav user={user} profile={profile} />
+
+        <div className="w-full xl:max-w-3xl mb-8 mt-8 xl:mb-16 xl:mt-5 px-3">{props.children}</div>
+
+        {props.hideAsidebar ? <div className="flex-1 ml-10 flex-grow" /> : <Asidebar counts={props.counts} />}
       </div>
 
       <Footer />

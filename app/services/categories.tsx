@@ -13,7 +13,7 @@ import iconIr from "~/assets/categories_icons/icon-ir.svg";
 import iconIrCollection from "~/assets/categories_icons/icon-ir-pack.svg";
 
 import iconOutboard from "~/assets/categories_icons/icon-outboard.svg";
-import iconOutboardCollection from "~/assets/categories_icons/icon-outboard.svg";
+import iconOutboardCollection from "~/assets/categories_icons/icon-outboard-pack.svg";
 
 import iconGeneric from "~/assets/categories_icons/icon-generic.svg";
 import type { Category } from "@prisma/client";
@@ -22,6 +22,7 @@ export const getCategories = async () => {
   const categories = await db.category.findMany({
     where: {
       active: true,
+      deleted: false,
     },
     select: {
       id: true,
@@ -71,5 +72,42 @@ export const getCategoryProfile = (catSlug: string, count = 1) => {
         icon: iconGeneric,
         color: "text-tonehunt-purple",
       };
+  }
+};
+
+export const getCategoryIcon = (slug: string) => {
+  switch (slug) {
+    case "amp":
+      return iconCab;
+
+    case "amp-collection":
+      return iconCabCollection;
+
+    case "full-rig":
+      return iconFullrig;
+
+    case "fullrig-collection":
+      return iconFullrigCollection;
+
+    case "pedal":
+      return iconPedal;
+
+    case "pedal-collection":
+      return iconPedalCollection;
+
+    case "ir":
+      return iconIr;
+
+    case "ir-collection":
+      return iconIrCollection;
+
+    case "outboard":
+      return iconOutboard;
+
+    case "outboard-collection":
+      return iconOutboardCollection;
+
+    default:
+      return iconGeneric;
   }
 };

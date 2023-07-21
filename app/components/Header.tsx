@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "@remix-run/react";
 import Logo from "~/components/Logo";
 import Button from "~/components/ui/Button";
@@ -6,6 +7,9 @@ import Searchbar from "./Searchbar";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@prisma/client";
 import ButtonLink from "./ui/ButtonLink";
+import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Drawer } from "./ui/Drawer";
+import MainNav from "~/components/MainNav";
 
 interface HeaderType {
   user?: User | undefined | null;
@@ -13,10 +17,12 @@ interface HeaderType {
 }
 
 const Header = ({ user, profile }: HeaderType) => {
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const menuItemsStyle = "border-0 hover:bg-transparent hover:text-gray-300";
   const menuItemsInlineStyle = { paddingLeft: "15px", paddingRight: "15px" };
+  const mobileMenuIconStyle = { paddingLeft: "15px", paddingRight: "15px", marginRight: "-15px" };
 
   return (
     <header>
@@ -33,7 +39,7 @@ const Header = ({ user, profile }: HeaderType) => {
         <div className="hidden lg:block flex-grow">
           <div className="flex justify-center align-middle content-center">
             <div className="block w-full">
-              <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+              <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
             </div>
           </div>
         </div>
@@ -67,18 +73,39 @@ const Header = ({ user, profile }: HeaderType) => {
               <UserActions user={user} username={profile?.username ?? undefined} />
             </div>
             {user ? (
-              <div className="hidden lg:block">
+              <div className="hidden xl:block">
                 <ButtonLink variant="button-primary" to="/models/new">
-                  New Model
+                  Upload Model
                 </ButtonLink>
               </div>
             ) : null}
+            <div className="block xl:hidden">
+              <Button
+                variant="secondary"
+                onClick={() => setShowMenu(!showMenu)}
+                className={menuItemsStyle}
+                style={mobileMenuIconStyle}
+              >
+                <Bars3Icon className="w-7 h-7" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
       <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
-        <Searchbar name="search" placeholder="Search for amps, packs, pedals ..." className="my-4" />
+        <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
       </div>
+      <Drawer
+        setShowDrawer={() => setShowMenu(!showMenu)}
+        showDrawer={showMenu}
+        placement="right"
+        titleBg="bg-tonehunt-gray-dark"
+        title={<div className="uppercase h-20 flex items-center font-satoshi-bold ml-6">Menu</div>}
+      >
+        <div className="bg-tonehunt-gray-dark text-white h-full p-6">
+          <MainNav user={user} profile={profile} isMobile={true} setShowMenu={setShowMenu} />
+        </div>
+      </Drawer>
     </header>
   );
 };

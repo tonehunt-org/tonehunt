@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
 import { getModels } from "~/services/models";
@@ -11,6 +11,7 @@ import Loading from "~/components/ui/Loading";
 import { MODELS_LIMIT } from "~/utils/constants";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
+import { getSortFilter } from "~/utils/loader";
 
 export const meta: MetaFunction = ({ data, location }) => {
   const d = data as LoaderData;
@@ -40,25 +41,32 @@ type LoaderData = {
   page: number;
   search: string | null;
   profileWithSocials: ProfileWithSocials | null;
+  categories: any;
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const { session } = await getSession(request);
+
   const user = session?.user;
   const url = new URL(request.url);
-
-  // GET PAGE
-  let page = Number(url.searchParams.get("page")) ?? 1;
-  if (!page || page === 0) page = 1;
-  const offset = (page - 1) * MODELS_LIMIT;
 
   // GET SEARCH VALUE
   const searchParam = url.searchParams.get("search") ?? null;
 
+  const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
+
   // GET MODELS
   const modelsReq =
     searchParam && searchParam !== ""
-      ? getModels({ limit: MODELS_LIMIT, next: offset, search: searchParam, user })
+      ? getModels({
+          limit: MODELS_LIMIT,
+          next: offset,
+          search: searchParam,
+          user,
+          categoryId,
+          sortBy: "createdAt",
+          sortDirection,
+        })
       : Promise.resolve({
           data: [],
           total: 0,
@@ -70,22 +78,16 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     models: models.data,
     total: models.total,
     user,
-    page: page - 1,
+    page,
     search: searchParam,
     profileWithSocials,
+    categories,
   });
 };
 
 export default function SearchResults() {
   const data = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const handlePageClick = (selectedPage: number) => {
-    setLoading(true);
-    searchParams.set("page", String(selectedPage + 1));
-    setSearchParams(searchParams);
-  };
 
   return (
     <div className="w-full">
@@ -107,11 +109,12 @@ export default function SearchResults() {
               total={data.total}
               currentPage={data.page}
               limit={MODELS_LIMIT}
-              handlePageClick={handlePageClick}
-              showMenu={false}
-              showFilters={false}
               user={data.user}
               profile={data.profileWithSocials}
+              categories={data.categories}
+              showTitle={false}
+              hideSortOrder={true}
+              hideCategories={true}
             />
           ) : null}
         </div>

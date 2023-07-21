@@ -16,7 +16,10 @@ export const primaryClassNames = twMerge(
   base,
   "bg-tonehunt-blue-dark  text-center focus:bg-tonehunt-blue-medium hover:bg-tonehunt-blue-medium"
 );
-export const primaryAltClassNames = twMerge(base, "bg-white/95 text-black hover:bg-white active:bg-white/90 ");
+export const primaryAltClassNames = twMerge(
+  base,
+  "bg-white/90 text-black hover:text-black hover:bg-white active:bg-white/90 "
+);
 export const secondaryClassNames = twMerge(
   base,
   "hover:border-white hover:bg-transparent hover:text-white border border-white/10"
@@ -71,7 +74,7 @@ const Button = forwardRef(
           className
         )}
       >
-        <span className={loading ? "invisible" : ""}>{children}</span>
+        <span className={loading ? "invisible block" : "block"}>{children}</span>
         {loading ? (
           <span style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
             <Loading size="16" />

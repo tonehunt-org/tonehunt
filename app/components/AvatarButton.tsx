@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Resizer from "react-image-file-resizer";
 import { useFetcher } from "@remix-run/react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
@@ -10,11 +10,19 @@ import Loading from "~/components/ui/Loading";
 const AvatarButton = ({ profile }: any) => {
   const [error, setError] = useState<string>();
   const [drag, setDrag] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const dropRef = useRef<HTMLInputElement>(null);
 
   const avatarFetcher = useFetcher();
   const isFileUploading = avatarFetcher.state === "submitting";
+
+  useEffect(() => {
+    if (avatarFetcher.state === "idle" && avatarFetcher.data?.success) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3500);
+    }
+  }, [avatarFetcher]);
 
   const fileChangedHandler = (event: any) => {
     setError(undefined);
@@ -65,6 +73,13 @@ const AvatarButton = ({ profile }: any) => {
 
   return (
     <>
+      {showSuccess && !isFileUploading ? (
+        <div className="w-full">
+          <div className="flex flex-col items-center justify-center">
+            <Alert title="Avatar:" description="Image uploaded successfully." variant="success" />
+          </div>
+        </div>
+      ) : null}
       {error && !isFileUploading ? (
         <div className="w-full">
           <div className="flex flex-col items-center justify-center">

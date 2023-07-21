@@ -38,6 +38,7 @@
     "react-dom": "^18.2.0",
     "react-image-file-resizer": "^0.4.8",
     "react-paginate": "^8.1.4",
+    "react-popper": "^2.3.0",
     "react-select": "^5.7.2",
     "supabase": "^1.42.7",
     "tailwind-merge": "^1.11.0",

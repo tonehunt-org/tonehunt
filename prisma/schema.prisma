@@ -27,6 +27,7 @@ model Profile {
   license     License?    @relation(fields: [licenseId], references: [id])
   following   Follow[]    @relation("UserFollow")
   followers   Follow[]    @relation("TargetFollow")
+  socials     Json?
 }
 
 model Category {
