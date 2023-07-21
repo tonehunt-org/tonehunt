@@ -120,7 +120,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           downloads: {
             every: {
               createdAt: {
-                gte: sub(Date.now(), { days: 1 }),
+                gte: sub(Date.now(), { days: 14 }),
               },
             },
           },
@@ -129,7 +129,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           favorites: {
             every: {
               createdAt: {
-                gte: sub(Date.now(), { days: 1 }),
+                gte: sub(Date.now(), { days: 14 }),
               },
             },
           },
