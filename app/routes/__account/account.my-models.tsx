@@ -68,6 +68,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const MyModelsPage = () => {
   const data = useLoaderData<LoaderData>();
+
   // const submit = useSubmit();
   // const profile = useProfile();
 
@@ -80,13 +81,15 @@ const MyModelsPage = () => {
   //   }
   // };
 
-  return (
-    <EmptyFeed
-      headline="You haven't uploaded any models yet"
-      buttonHref="/models/new"
-      buttonText="Start uploading your models"
-    />
-  );
+  // if (data.models.length === 0) {
+  //   return (
+  //     <EmptyFeed
+  //       headline="You haven't uploaded any models yet"
+  //       buttonHref="/models/new"
+  //       buttonText="Start uploading your models"
+  //     />
+  //   );
+  // }
 
   return (
     <ModelList

@@ -27,7 +27,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  // TODO: figure out how to show you can edit this model
   const isOwn = model.profile.id === profile?.id;
 
   return (
@@ -86,7 +85,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.filecount} {getGategoryPluralType(model.category)}
                     </Link>
                   ) : null}
-
                   <Link
                     to={`/${model.profile.username}`}
                     prefetch="intent"
@@ -96,7 +94,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.profile.username}
                     </span>
                   </Link>
-
                   <time
                     // @ts-ignore
                     dateTime={model?.createdAt as string}
@@ -105,6 +102,26 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                     {timeago.format(new Date(model?.createdAt!))}
                   </time>
                 </div>
+
+                {isOwn ? (
+                  <div className="flex-1 flex gap-4 items-center flex-wrap mt-1">
+                    <Link
+                      to={`/account/my-models/${model.id}`}
+                      className={`font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none hover:underline text-tonehunt-blue-light`}
+                    >
+                      Edit
+                    </Link>
+                    <Link
+                      to={`/account/my-models/${model.id}`}
+                      className={`font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none hover:underline text-red-500`}
+                    >
+                      Delete
+                    </Link>
+                    <div className="font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none text-white">
+                      Status: <span>{model.active ? "Active" : "Hidden"}</span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

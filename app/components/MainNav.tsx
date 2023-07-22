@@ -13,6 +13,7 @@ import {
   WrenchScrewdriverIcon,
   ArrowRightOnRectangleIcon,
   ArrowUpTrayIcon,
+  RectangleStackIcon,
 } from "@heroicons/react/24/outline";
 import Button from "~/components/ui/Button";
 import RelatedDropdown from "~/components/RelatedDropdown";
@@ -36,6 +37,12 @@ const nav1 = [
     href: (profile?: Profile | null) => `/${profile?.username}`,
     requiresAuth: true,
     icon: UserIcon,
+  },
+  {
+    title: "My Models",
+    href: (profile?: Profile | null) => "account/my-models",
+    requiresAuth: true,
+    icon: RectangleStackIcon,
   },
 ];
 
