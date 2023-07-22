@@ -129,8 +129,8 @@ export default function ModelDetailPage() {
       <header className=" relative rounded-xl overflow-hidden px-3 border border-white/5 mb-10 pt-2">
         <div className="relative z-10 px-10 pt-10">
           <div className="pb-[20px] ">
-            <div className="flex items-center justify-between">
-              <figure className="flex-grow">
+            <div className="flex items-center justify-between flex-col md:flex-row">
+              <figure className="flex-1 md:flex-grow">
                 <div className="inline-block text-center">
                   <img
                     className=" w-20 h-20 lg:w-32 lg:h-32"
@@ -180,11 +180,14 @@ export default function ModelDetailPage() {
             </div>
           </div>
 
-          <h3 className="font-satoshi-bold text-2xl lg:text-[38px] leading-tight mb-5">
+          <h3 className="font-satoshi-bold text-2xl lg:text-[38px] leading-tight mb-5 text-center md:text-left">
             <span className="relative z-10 shadow-sm">{data.model.title}</span>
           </h3>
 
-          <time dateTime={data.model.createdAt} className="block pb-10 opacity-60 text-sm leading-[19px]">
+          <time
+            dateTime={data.model.createdAt}
+            className="block pb-10 opacity-60 text-sm leading-[19px] text-center md:text-left"
+          >
             Uploaded {timeago.format(data.model.createdAt)}
           </time>
 

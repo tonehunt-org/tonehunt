@@ -27,7 +27,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  // TODO: figure out how to show you can edit this model
   const isOwn = model.profile.id === profile?.id;
 
   return (
@@ -86,7 +85,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.filecount} {getGategoryPluralType(model.category)}
                     </Link>
                   ) : null}
-
                   <Link
                     to={`/${model.profile.username}`}
                     prefetch="intent"
@@ -96,7 +94,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                       {model.profile.username}
                     </span>
                   </Link>
-
                   <time
                     // @ts-ignore
                     dateTime={model?.createdAt as string}
