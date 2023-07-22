@@ -102,26 +102,6 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                     {timeago.format(new Date(model?.createdAt!))}
                   </time>
                 </div>
-
-                {isOwn ? (
-                  <div className="flex-1 flex gap-4 items-center flex-wrap mt-1">
-                    <Link
-                      to={`/account/my-models/${model.id}`}
-                      className={`font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none hover:underline text-tonehunt-blue-light`}
-                    >
-                      Edit
-                    </Link>
-                    <Link
-                      to={`/account/my-models/${model.id}`}
-                      className={`font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none hover:underline text-red-500`}
-                    >
-                      Delete
-                    </Link>
-                    <div className="font-satoshi-bold uppercase text-xs whitespace-nowrapleading-none text-white">
-                      Status: <span>{model.active ? "Active" : "Hidden"}</span>
-                    </div>
-                  </div>
-                ) : null}
               </div>
             </div>
           </div>
