@@ -22,6 +22,7 @@ import { Link } from "@remix-run/react";
 import type { GenerateUploadUrlLoaderData } from "../models.new.generateUploadUrl";
 import { generateUplaodUrlPath } from "../models.new.generateUploadUrl";
 import { zipFiles } from "~/utils/file";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 export const meta: MetaFunction<LoaderData> = ({ data }) => {
   return {
@@ -234,6 +235,10 @@ export default function ModelsNewPage() {
             <br />
             or a NAM file and an IR to create a complete rig.
           </h3>
+          <div className="flex items-center gap-2 justify-center bg-orange-200 text-orange-600 text-center rounded-lg border border-orange-600 mb-10 px-2 py-3">
+            <ExclamationCircleIcon className="w-6 h-6" /> Uploads that go against the EULA of patented software or
+            digital equipment will be removed.
+          </div>
           <div
             className={twMerge(
               "border-2 border-white rounded-lg px-32 py-16 border-dashed overflow-hidden relative",
