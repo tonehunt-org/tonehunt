@@ -1,12 +1,15 @@
-import type { Profile } from "@prisma/client";
+import type { Model, Profile } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import type { SortDirection } from "~/types/custom";
 
 interface getFavoritesType {
   limit?: number;
   next?: number;
   profileId: string;
-  sortDirection?: string;
-  categoryId?: string | null;
+  sortDirection?: SortDirection;
+  categoryId?: number | null;
+  tags?: string[];
+  sortBy?: keyof Model;
 }
 
 export const getFavorites = async (params: getFavoritesType) => {
@@ -33,6 +36,13 @@ export const getFavorites = async (params: getFavoritesType) => {
       deleted: false,
     },
     ...categoryFilter,
+    ...params.tags && params.tags.length > 0 && {
+      model: {
+        tags: {
+          hasSome: params.tags
+        }
+      }
+    },
   };
 
   const favorites = await db.$transaction([
@@ -83,7 +93,6 @@ export const getFavorites = async (params: getFavoritesType) => {
           },
         },
       },
-      // @ts-ignore
       orderBy: {
         createdAt: params.sortDirection ?? "desc",
       },

@@ -12,6 +12,9 @@ node_modules
 .vercel
 .output
 .vscode
+.idea
+
+/supabase/.temp
 
 /build/
 /public/build

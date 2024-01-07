@@ -60,7 +60,11 @@ const ModelListItem = ({ model, profile }: ModelListItemType) => {
                 <ul className="list-none m-0 p-0 text-[10px] text-tonehunt-gray-lighter hidden lg:flex lg:max-w-[500px] items-center flex-wrap gap-2 uppercase font-satoshi-medium my-1.5">
                   {model.tags.map((tag) => {
                     const params = new URLSearchParams(searchParams);
-                    params.set("tags", tag);
+                    params.delete("page")
+
+                    const tags = params.get("tags")?.split(",") ?? [];
+                    //filter out duplicates
+                    params.set("tags", Array.from(new Set([...tags, tag])).join(","));
                     return (
                       <li key={tag}>
                         <Link

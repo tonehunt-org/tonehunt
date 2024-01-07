@@ -5,14 +5,16 @@ import { startCase } from "lodash";
 import { getSession } from "~/auth.server";
 
 import type { User } from "@supabase/supabase-js";
+import type { GetModelsAwaitedReturnType } from "~/services/models";
 import { getModels } from "~/services/models";
 import type { ProfileWithSocials } from "~/services/profile";
 import { getProfileWithSocials } from "~/services/profile";
-import type { Category, Counts, Model } from "@prisma/client";
+import type { Counts } from "@prisma/client";
 import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
 import { getSortFilter } from "~/utils/loader";
+import type { PartialCategory } from "~/services/categories";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -51,12 +53,12 @@ export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
 
 export type LoaderData = {
   user?: User | null;
-  models: Model[];
+  models: GetModelsAwaitedReturnType["data"];
   profile: ProfileWithSocials | null;
   counts: Counts[];
   total: number;
   page: number;
-  categories: Category[];
+  categories: PartialCategory[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -67,7 +69,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const profile = await getProfileWithSocials(session);
 
-  const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
+  const { offset, sortDirection, page, categoryId, categories, tags } = await getSortFilter(url);
 
   const countsReq = await db.counts.findMany();
 
@@ -75,17 +77,18 @@ export const loader: LoaderFunction = async ({ request }) => {
     limit: MODELS_LIMIT,
     next: offset,
     categoryId,
+    tags,
     sortBy: "createdAt",
     sortDirection,
   });
 
-  const [counts, models] = await Promise.all([countsReq, modelsReq]);
+  const [counts, { data: models, total }] = await Promise.all([countsReq, modelsReq]);
 
   return json<LoaderData>({
     counts,
     user,
-    models: models.data,
-    total: models.total,
+    models,
+    total,
     profile,
     page,
     categories,
