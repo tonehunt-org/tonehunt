@@ -1,27 +1,27 @@
 import { db } from "~/utils/db.server";
 import type { User } from "@supabase/supabase-js";
-import { split } from "lodash";
 import { sub } from "date-fns";
+import { Model, Prisma } from "@prisma/client";
 
 interface getModelsType {
   limit?: number;
   next?: number;
   categoryId?: number | null;
-  sortBy?: string;
-  sortDirection?: string;
+  sortBy?: keyof Model | "popular";
+  sortDirection?: 'asc' | 'desc';
   username?: string | null;
   user?: User | null | undefined;
   search?: string | null | undefined;
   profileId?: string | null | undefined;
-  tags?: string | null | undefined;
+  tags?: string[] | null | undefined;
   following?: boolean;
   lastNDays?: number;
   all?: boolean;
 }
 
-export const getModels = async (params: getModelsType) => {
-  const tagsScala = params.tags && params.tags !== "" ? split(params.tags, ",") : null;
+export type GetModelsAwaitedReturnType = Awaited<ReturnType<typeof getModels>>;
 
+export const getModels = async (params: getModelsType) => {
   const tsquerySpecialChars = /[()|&:*!]/g;
 
   const sortParam = params.sortBy ?? "createdAt";
@@ -55,7 +55,7 @@ export const getModels = async (params: getModelsType) => {
       return {
         title: {
           contains: term,
-          mode: "insensitive",
+          mode: "insensitive" as const,
         },
       };
     }) ?? [];
@@ -66,73 +66,50 @@ export const getModels = async (params: getModelsType) => {
         profile: {
           username: {
             contains: term,
-            mode: "insensitive",
+            mode: "insensitive" as const,
           },
         },
       };
     }) ?? [];
 
-  const models = await db.$transaction([
-    db.model.count({
-      // @ts-ignore - TODO: fix
-      where: {
-        private: false,
-        ...(params.all ? { deleted: false } : { active: true, deleted: false }),
-        ...(params.categoryId && {
-          categoryId: params.categoryId,
-        }),
-        ...(params.username && {
-          profile: {
-            username: params.username,
-          },
-        }),
-        ...(params.profileId && {
-          profileId: params.profileId,
-        }),
-        ...(params.search && {
-          OR: [...usernameSearch, ...titleSearch, { description: { search } }],
-        }),
-        ...(tagsScala && {
-          tags: {
-            hasSome: tagsScala,
-          },
-        }),
-        ...(params.following && followingQuery),
+  const where: Prisma.ModelWhereInput = {
+    private: false,
+    ...(params.all ? { deleted: false } : { active: true, deleted: false }),
+    ...(params.categoryId && {
+      categoryId: params.categoryId,
+    }),
+    ...(params.username && {
+      profile: {
+        username: params.username,
       },
     }),
-    db.model.findMany({
-      // @ts-ignore - TODO: fix
-      where: {
-        private: false,
-        ...(params.all ? { deleted: false } : { active: true, deleted: false }),
-        ...(params.categoryId && {
-          categoryId: params.categoryId,
-        }),
-        ...(params.username && {
-          profile: {
-            username: params.username,
-          },
-        }),
-        ...(params.profileId && {
-          profileId: params.profileId,
-        }),
-        ...(params.search && {
-          OR: [...usernameSearch, ...titleSearch, { description: { search } }],
-        }),
-        ...(tagsScala && {
-          tags: {
-            hasSome: tagsScala,
-          },
-        }),
-        ...(params.following && followingQuery),
-        ...(params.lastNDays
-          ? {
-              createdAt: {
-                gte: sub(Date.now(), { days: params.lastNDays }),
-              },
-            }
-          : undefined),
+    ...(params.profileId && {
+      profileId: params.profileId,
+    }),
+    ...(params.search && {
+      OR: [...usernameSearch, ...titleSearch, { description: { search } }],
+    }),
+    ...(params.tags && params.tags.length > 0 && {
+      tags: {
+        hasSome: params.tags,
       },
+    }),
+    ...(params.following && followingQuery),
+    ...(params.lastNDays
+      ? {
+        createdAt: {
+          gte: sub(Date.now(), { days: params.lastNDays }),
+        },
+      }
+      : undefined),
+  }
+
+  const models = await db.$transaction([
+    db.model.count({
+      where,
+    }),
+    db.model.findMany({
+      where,
       select: {
         _count: {
           select: {
@@ -174,7 +151,6 @@ export const getModels = async (params: getModelsType) => {
           },
         },
       },
-      // @ts-ignore - TODO: fix
       orderBy: sort,
       skip: params.next ?? 0,
       take: params.limit ?? 10,

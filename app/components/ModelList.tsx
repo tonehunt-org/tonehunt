@@ -9,6 +9,7 @@ import ModelSortDropdown from "./ModelSortDropdown";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import CategoryDropdown from "./CategoryDropdown";
 import EmptyFeed from "./EmptyFeed";
+import TagsFilter from "~/components/TagsFilter";
 
 interface ModelListType {
   data: Model[];
@@ -125,6 +126,7 @@ const ModelsListComponent = ({
         </div>
       </div>
 
+      <TagsFilter />
       {/* MODELS LIST */}
       <div className="flex flex-col">
         {pageIsEmpty ? renderEmpty() : null}

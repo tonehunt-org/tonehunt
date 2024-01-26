@@ -67,7 +67,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const profile = await getProfileWithSocials(session);
 
-  const { offset, sortDirection, page, categoryId, categories } = await getSortFilter(url);
+  const { offset, sortDirection, page, categoryId, categories, tags } = await getSortFilter(url);
 
   const countsReq = await db.counts.findMany();
 
@@ -75,6 +75,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     limit: MODELS_LIMIT,
     next: offset,
     categoryId,
+    tags,
     sortBy: "popular",
     sortDirection,
   });

@@ -68,7 +68,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const profile = await getProfileWithSocials(session);
 
-  const { page, categoryId, categories } = await getSortFilter(url);
+  const { page, categoryId, categories, tags } = await getSortFilter(url);
 
   const countsReq = await db.counts.findMany();
 
@@ -111,6 +111,14 @@ export const loader: LoaderFunction = async ({ request }) => {
         ? {
             category: {
               id: categoryId,
+            },
+          }
+        : undefined),
+      // Filter by tags
+      ...(tags && tags.length > 0
+        ? {
+            tags: {
+              hasSome: tags,
             },
           }
         : undefined),

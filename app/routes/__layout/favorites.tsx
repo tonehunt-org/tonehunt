@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
   const url = new URL(request.url);
   const profile = await getProfileWithSocials(session);
-  const { offset, sortDirection, categoryId, page, categories } = await getSortFilter(url);
+  const { offset, sortDirection, categoryId, page, categories, tags } = await getSortFilter(url);
 
   // GET MODELS
   const favorites = profile
@@ -51,6 +51,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
         profileId: profile?.id,
         sortDirection,
         categoryId,
+        tags,
         sortBy: "createdAt",
       })
     : {
