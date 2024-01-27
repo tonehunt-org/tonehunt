@@ -23,7 +23,14 @@ const NamPlayerButton = memo(({ link, className, modelId, modelName }: NamPlayer
       fetch(downloadFetcher.data.downloadUrl)
         .then((res) => {
           const url = `${link}/?profileUrl=${res.url}`;
-          window.open(url, "_blank");
+          const is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent);
+          const is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+
+          if (is_ios && is_safari) {
+            window.location.href = url;
+          } else {
+            window.open(url, "_blank");
+          }
         })
         .finally(() => {
           setDownloading(false);
