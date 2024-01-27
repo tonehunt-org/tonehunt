@@ -257,7 +257,7 @@ export default function ModelDetailPage() {
                   return (
                     <li key={tag}>
                       <ButtonLink
-                        to={`/?tags=${tag}`}
+                        to={`/all/?tags=${tag}`}
                         prefetch="intent"
                         className="px-2 py-1 rounded-lg border border-white/20 inline-block font-satoshi-regular text-white/80"
                       >
