@@ -182,7 +182,7 @@ export default function ModelDetailPage() {
                     className="bg-tonehunt-gray-darker"
                   />
                 </div>
-                {data.model.category.slug !== "ir" && (
+                {(data.model.category.slug === "amp" || data.model.category.slug === "full-rig") && (
                   <div className="flex items-center justify-center">
                     <NamPlayerButton
                       link={data.namOnlineUrl}
