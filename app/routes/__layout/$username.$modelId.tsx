@@ -289,7 +289,7 @@ export default function ModelDetailPage() {
           </div>
           <div className="mb-4">
             <p className="font-satoshi-light text-sm text-white/40">
-              * NAMOnline is an external 3rd party service/website not related with Tonehunt. For support, please visit
+              * NAM Online is an external 3rd party service/website not related with Tonehunt. For support, please visit
               their website at{" "}
               <a href={data.namOnlineUrl} target="_blank" rel="noreferrer">
                 {data.namOnlineUrl}
