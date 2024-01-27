@@ -2,6 +2,7 @@ import * as timeago from "timeago.js";
 import FavoriteButton from "~/components/FavoriteButton";
 import DownloadButton from "~/components/DownloadButton";
 import ShareButton from "~/components/ShareButton";
+import NamPlayerButton from "~/components/NamPlayerButton";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -56,6 +57,7 @@ type LoaderData = {
   favorite: Favorite | null;
   user?: User;
   profileWithFollows: ProfileWithFollows | null;
+  namOnlineUrl: string;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -109,7 +111,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     model.profile.avatar = data.publicUrl ?? null;
   }
 
-  return json<LoaderData>({ model, favorite, user: session?.user, profileWithFollows });
+  const namOnlineUrl = process.env.NAM_ONLINE_URL ?? "";
+
+  return json<LoaderData>({ model, favorite, user: session?.user, profileWithFollows, namOnlineUrl });
 };
 
 export default function ModelDetailPage() {
@@ -150,32 +154,44 @@ export default function ModelDetailPage() {
                 </div>
               </figure>
 
-              <div className="flex gap-[12px] pb-[59px]">
-                <FavoriteButton
-                  count={data.model.favorites.length}
-                  className="bg-tonehunt-gray-darker"
-                  favorited={!!data.favorite && data.favorite?.deleted !== true}
-                  modelId={data.model.id}
-                  disabledReason={data.user ? undefined : "You must be logged in"}
-                />
+              <div className="flex flex-col mb-[30px]">
+                <div className="flex gap-[12px] pb-[20px]">
+                  <FavoriteButton
+                    count={data.model.favorites.length}
+                    className="bg-tonehunt-gray-darker"
+                    favorited={!!data.favorite && data.favorite?.deleted !== true}
+                    modelId={data.model.id}
+                    disabledReason={data.user ? undefined : "You must be logged in"}
+                  />
 
-                <DownloadButton
-                  count={data.model.downloads.length}
-                  className="bg-tonehunt-gray-darker"
-                  modelId={data.model.id}
-                  modelName={data.model.title}
-                />
+                  <DownloadButton
+                    count={data.model.downloads.length}
+                    className="bg-tonehunt-gray-darker"
+                    modelId={data.model.id}
+                    modelName={data.model.title}
+                  />
 
-                <ShareButton
-                  ref={shareButtonRef}
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(window.location.href);
-                      alert("Url copied to clipboard");
-                    } catch (e) {}
-                  }}
-                  className="bg-tonehunt-gray-darker"
-                />
+                  <ShareButton
+                    ref={shareButtonRef}
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        alert("Url copied to clipboard");
+                      } catch (e) {}
+                    }}
+                    className="bg-tonehunt-gray-darker"
+                  />
+                </div>
+                {data.model.category.slug !== "ir" && (
+                  <div className="flex items-center justify-center">
+                    <NamPlayerButton
+                      link={data.namOnlineUrl}
+                      className="bg-tonehunt-gray-darker"
+                      modelId={data.model.id}
+                      modelName={data.model.title}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -270,6 +286,15 @@ export default function ModelDetailPage() {
             >
               Report model
             </ButtonLink>
+          </div>
+          <div className="mb-4">
+            <p className="font-satoshi-light text-sm text-white/40">
+              * NAMOnline is an external 3rd party service/website not related with Tonehunt. For support, please visit
+              their website at{" "}
+              <a href={data.namOnlineUrl} target="_blank" rel="noreferrer">
+                {data.namOnlineUrl}
+              </a>
+            </p>
           </div>
         </div>
       </div>
