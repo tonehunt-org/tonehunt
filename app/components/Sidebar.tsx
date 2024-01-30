@@ -6,6 +6,7 @@ import imgArticle2 from "~/assets/articles/article_2a.jpg";
 import imgArticle3 from "~/assets/articles/article_3a.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import imgFacebook from "~/assets/articles/icon_facebook.jpg";
+import imgNAMOnline from "~/assets/articles/icon_namonline.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
 import type { Profile } from "@prisma/client";
@@ -61,6 +62,21 @@ export const ArticlesBlock = () => {
                 />
               </div>
               <span className="font-satoshi-bold text-sm hover:underline">How to train a model</span>
+            </div>
+          </a>
+        </div>
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://www.thenam.online/" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img
+                  className="object-cover w-14 h-14"
+                  src={imgNAMOnline}
+                  alt="namonline"
+                  title="Play NAM Profiles Online"
+                />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">Play NAM Profiles Online</span>
             </div>
           </a>
         </div>
