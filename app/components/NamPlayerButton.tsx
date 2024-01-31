@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 import { useFetcher } from "@remix-run/react";
 import Button from "./ui/Button";
 import { memo, useEffect, useState } from "react";
+import qs from "qs";
+
 import type { ModelDownloadLoaderData } from "~/routes/__layout/models.$Id.download";
 
 type NamPlayerButtonProps = {
@@ -22,7 +24,12 @@ const NamPlayerButton = memo(({ link, className, modelId, modelName }: NamPlayer
 
       fetch(downloadFetcher.data.downloadUrl)
         .then((res) => {
-          const url = encodeURI(`${link}/?profileUrl=${res.url}&title=${modelName}`);
+          const query = qs.stringify({
+            title: modelName,
+            profileUrl: res.url,
+          });
+
+          const url = `${link}/?${query}`;
           const is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent);
           const is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
 
