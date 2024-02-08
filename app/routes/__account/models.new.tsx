@@ -51,6 +51,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/login?redirecTo=/models/new");
   }
 
+  if (profile.active === false) {
+    return redirect("/");
+  }
+
   const [tags, categories, licenses] = await Promise.all([
     getTags(),
     db.category.findMany(),
