@@ -11,6 +11,9 @@ import { Link } from "@remix-run/react";
 import type { Counts } from "@prisma/client";
 import { ModelListCountTitle } from "~/components/routes/ModelListPage";
 import { isNotAllowed } from "~/utils/username";
+import { useCallback, useEffect, useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { getRecaptchaScore } from "~/utils/recaptcha";
 
 export const meta: MetaFunction = ({ location }) => ({
   title: "Sign Up | ToneHunt",
@@ -70,6 +73,14 @@ export const action: ActionFunction = async ({ request, context }) => {
       return json<ActionData>({ error: usernameErrorMessage }, { status: 500 });
     }
 
+    //RECAPTCHA
+    const token = formData.get("_captcha") as string;
+    const key = process.env.RECAPTCHA_SECRET_KEY as string;
+    const recaptchaResult = await getRecaptchaScore(token, key);
+    if (!recaptchaResult) {
+      throw new Error("recaptcha failed");
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email: formData.get("email") as string,
       password: formData.get("password") as string,
@@ -101,6 +112,22 @@ export default function SignUpPage() {
   const data = useLoaderData<LoaderData>();
   const navigation = useNavigation();
 
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      return;
+    }
+
+    const token = await executeRecaptcha("SignUp");
+    setCaptchaToken(token);
+  }, [executeRecaptcha]);
+
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
+
   return (
     <div className="flex flex-col lg:flex-row h-auto lg:h-screen p-4">
       {/* LEFT PANEL */}
@@ -113,12 +140,10 @@ export default function SignUpPage() {
         {/* LOGO AREA */}
         <div className="flex items-center justify-center align-middle h-full">
           <div className=" bg-black/30 backdrop-blur-md w-4/5 p-10 m-10 lg:p-20 lg:m-0 rounded-lg">
-            <h2 className="">
-              <div className="mb-24">
-                <Logo className="w-full" />
-              </div>
-              <ModelListCountTitle className="lg:text-4xl font-satoshi-regular lg:leading-[1.4]" counts={data.counts} />
-            </h2>
+            <div className="mb-24">
+              <Logo className="w-full" />
+            </div>
+            <ModelListCountTitle className="lg:text-4xl font-satoshi-regular lg:leading-[1.4]" counts={data.counts} />
           </div>
         </div>
       </div>
@@ -168,8 +193,15 @@ export default function SignUpPage() {
 
                 <Input name="password" autoComplete="password" type="password" label="Password" required />
 
+                {captchaToken ? <input type="hidden" name="_captcha" value={captchaToken}></input> : null}
+
                 <div className="pt-5">
-                  <Button type="submit" className="w-full" loading={navigation.state === "submitting"}>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    loading={navigation.state === "submitting"}
+                    onSubmit={() => handleReCaptchaVerify}
+                  >
                     Sign Up
                   </Button>
 

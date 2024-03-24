@@ -6,6 +6,7 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderD
 import { Provider } from "jotai";
 import { getSession } from "./auth.server";
 import { getProfile } from "./services/profile";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 import styles from "./tailwind.css";
 
@@ -38,6 +39,7 @@ export type RootLoaderData = {
   profile?: Profile;
   ENV: {
     ORIGIN: string;
+    RECAPTCHA_SITE_KEY: string;
   };
 };
 
@@ -46,6 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const ENV = {
     ORIGIN: process.env.ORIGIN as string,
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY as string,
   };
 
   if (!session) {
@@ -73,23 +76,33 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-[#141414] text-white min-h-screen">
-        <Provider>
-          <div className="absolute w-full top-0 left-0">
-            <Outlet />
-            <ScrollRestoration />
+        <GoogleReCaptchaProvider
+          reCaptchaKey={data.ENV.RECAPTCHA_SITE_KEY}
+          scriptProps={{
+            async: false,
+            defer: true,
+            appendTo: "head",
+            nonce: undefined,
+          }}
+        >
+          <Provider>
+            <div className="absolute w-full top-0 left-0">
+              <Outlet />
+              <ScrollRestoration />
 
-            <Analytics />
+              <Analytics />
 
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
-              }}
-            />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+                }}
+              />
 
-            <Scripts />
-            <LiveReload />
-          </div>
-        </Provider>
+              <Scripts />
+              <LiveReload />
+            </div>
+          </Provider>
+        </GoogleReCaptchaProvider>
       </body>
     </html>
   );
