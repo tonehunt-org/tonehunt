@@ -7,6 +7,7 @@ import imgArticle3 from "~/assets/articles/article_3a.jpg";
 import imgDiscord from "~/assets/articles/icon_discord.jpg";
 import imgFacebook from "~/assets/articles/icon_facebook.jpg";
 import imgNAMOnline from "~/assets/articles/icon_namonline.jpg";
+import imgBMC from "~/assets/articles/icon_bmc.jpg";
 import ButtonLink from "./ui/ButtonLink";
 import type { SampleTag } from "~/services/tags";
 import type { Profile } from "@prisma/client";
@@ -25,6 +26,18 @@ export const ArticlesBlock = () => {
       </div>
 
       <div className="flex flex-col">
+        <div className="flex-1  pb-3 mb-3">
+          <a href="https://www.buymeacoffee.com/tonehunt" target="_new">
+            <div className="flex flex-row items-center">
+              <div className="inline w-14 h-14 mr-2 bg-tonehunt-green rounded-xl overflow-hidden flex-none">
+                <img className="object-cover w-14 h-14" src={imgBMC} alt="bmc_image" title="BuyMeACoffee" />
+              </div>
+              <span className="font-satoshi-bold text-sm hover:underline">
+                Support ToneHunt by donating on BuyMeACoffee
+              </span>
+            </div>
+          </a>
+        </div>
         <div className="flex-1  pb-3 mb-3">
           <a href="https://www.neuralampmodeler.com/" target="_new">
             <div className="flex flex-row items-center">
