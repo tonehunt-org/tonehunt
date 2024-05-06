@@ -38,8 +38,8 @@ const Header = ({ user, profile }: HeaderType) => {
 
         <div className="hidden lg:block flex-grow">
           <div className="flex justify-center align-middle content-center">
-            <div className="block w-full">
-              <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
+            <div className="block w-full py-8">
+              {/* <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" /> */}
             </div>
           </div>
         </div>
@@ -92,9 +92,9 @@ const Header = ({ user, profile }: HeaderType) => {
           </div>
         </div>
       </div>
-      <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
+      {/* <div className="flex lg:hidden bg-[#222222] px-5 justify-center">
         <Searchbar name="search" placeholder="Search for amps, packs, pedals..." className="my-4" />
-      </div>
+      </div> */}
       <Drawer
         setShowDrawer={() => setShowMenu(!showMenu)}
         showDrawer={showMenu}

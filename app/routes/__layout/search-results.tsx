@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { User } from "@supabase/supabase-js";
 import { getSession } from "~/auth.server";
@@ -45,6 +45,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, context }) => {
+  return redirect("/");
+  /*
   const { session } = await getSession(request);
 
   const user = session?.user;
@@ -83,6 +85,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     profileWithSocials,
     categories,
   });
+  */
 };
 
 export default function SearchResults() {

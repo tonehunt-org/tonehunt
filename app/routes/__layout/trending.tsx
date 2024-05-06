@@ -1,19 +1,19 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { startCase } from "lodash";
-import { getSession } from "~/auth.server";
+//import { getSession } from "~/auth.server";
 
 import type { User } from "@supabase/supabase-js";
-import { getModels } from "~/services/models";
+//import { getModels } from "~/services/models";
 import type { ProfileWithSocials } from "~/services/profile";
-import { getProfileWithSocials } from "~/services/profile";
+//import { getProfileWithSocials } from "~/services/profile";
 import type { Category, Counts, Model } from "@prisma/client";
-import { db } from "~/utils/db.server";
+//import { db } from "~/utils/db.server";
 import { MODELS_LIMIT } from "~/utils/constants";
 import ModelList from "~/components/ModelList";
-import { getSortFilter } from "~/utils/loader";
-import { sub } from "date-fns";
+//import { getSortFilter } from "~/utils/loader";
+//import { sub } from "date-fns";
 
 export const meta: MetaFunction<LoaderData> = ({ data, location }) => {
   const d = data as LoaderData;
@@ -61,6 +61,8 @@ export type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  return redirect("/");
+  /*
   const { session } = await getSession(request);
 
   const user = session?.user;
@@ -159,6 +161,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     page,
     categories,
   });
+  */
 };
 
 export default function Index() {

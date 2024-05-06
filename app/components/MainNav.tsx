@@ -48,7 +48,7 @@ const nav1 = [
 
 const nav2 = [
   { title: "All Models", href: (profile?: Profile | null) => "/all", icon: GlobeAltIcon },
-  { title: "Trending", href: (profile?: Profile | null) => "/trending", icon: ArrowTrendingUpIcon },
+  //{ title: "Trending", href: (profile?: Profile | null) => "/trending", icon: ArrowTrendingUpIcon },
   { title: "Popular", href: (profile?: Profile | null) => "/popular", icon: ChartBarIcon },
 ];
 
